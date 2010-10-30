@@ -8,9 +8,22 @@
 
 #include <stdio.h>
 
+int accept(int socket, const struct sockaddr* address, socklen_t* address_len) {
+        return lv2Errno(lv2NetAccept(socket, address, (lv2_socklen_t *)address_len));
+}
+
+int bind(int socket, const struct sockaddr* address, socklen_t address_len) {
+	return lv2Errno(lv2NetBind(socket, address, (lv2_socklen_t)address_len));
+}
+
 int connect(int socket, const struct sockaddr* address, socklen_t address_len)
 {
 	return lv2Errno(lv2NetConnect(socket, address, (lv2_socklen_t)address_len));
+}
+
+int listen(int socket, int backlog)
+{
+	return lv2Errno(lv2NetListen(socket, backlog));
 }
 
 int socket(int domain, int type, int protocol)

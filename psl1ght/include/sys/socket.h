@@ -89,7 +89,7 @@ struct linger
 #define PF_INET			AF_INET
 #define PF_INET6		AF_INET6
 
-int accept(int socket, struct sockaddr* address, socklen_t* address_len);
+int accept(int socket, const struct sockaddr* address, socklen_t* address_len);
 int bind(int socket, const struct sockaddr* address, socklen_t address_len);
 int connect(int socket, const struct sockaddr* address, socklen_t address_len);
 int getpeername(int socket, struct sockaddr* address, socklen_t* address_len);

@@ -1,5 +1,4 @@
 #define LIBRARY_NAME "sysPrxForUser"
-#define LIBRARY_NAME_PADDED "sysPrxForUser\0\0"
 #define LIBRARY_SYMBOL sysPrxForUser
 
 #define LIBRARY_HEADER_1	0x2c000001

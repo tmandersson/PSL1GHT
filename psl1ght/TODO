@@ -1,0 +1,8 @@
+TODO:
+GFX Output - High Priority
+ - avsettings, configure resolution etc
+ - framebuffer, we dont particuly care about 3d, just something to draw to
+Input - Low Priority
+ - controller buttons
+Finish Networking - medium priority
+Add threading - medium priority (because it should be easy)

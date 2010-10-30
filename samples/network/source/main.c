@@ -46,7 +46,7 @@ void tcp_test()
 		return;
 	}
 	printf("Connected to server successfully!\n");
-	ret = send(s, TESTSTRING, strlen(TESTSTRING), 0);
+	ret = write(s, TESTSTRING, strlen(TESTSTRING));
 	if (ret < 0)
 		printf("Unable to send to server: %d\n", errno);
 	else
@@ -58,7 +58,7 @@ void tcp_test()
 	else
 		printf("Socket shutdown successfully!\n");
 
-	ret = lv2NetClose(s); // TODO: close() doesn't differentiate sockets from files yet.
+	ret = close(s);
 	if (ret < 0)
 		printf("Unable to close socket: %d\n", ret);
 	else
@@ -89,7 +89,7 @@ void udp_test()
 	else
 		printf("Sent %d bytes to server!\n", ret);
 
-	ret = lv2NetClose(s); // TODO: close() doesn't differentiate sockets from files yet.
+	ret = close(s);
 	if (ret < 0)
 		printf("Unable to close socket: %d\n", ret);
 	else

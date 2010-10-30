@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#include <sys/socket.h>
+
 #define DEFAULT_FILE_MODE (S_IRWXU | S_IRWXG | S_IRWXO)
 
 int open(const char* path, int oflag, ...)
@@ -38,13 +40,19 @@ int open(const char* path, int oflag, ...)
 	return fd;
 }
 
+int net_close(int fd);
 int close(int fd)
 {
+	if (fd & SOCKET_FD_MASK)
+		return net_close(fd);
 	return lv2Errno(lv2FsClose(fd));
 }
 
 ssize_t write(int fd, const void* buffer, size_t size)
 {
+	if (fd & SOCKET_FD_MASK)
+		return send(fd, buffer, size, 0);
+
 	u64 written;
 	int ret;
 	if (fd == stdout->_file || fd == stderr->_file) {
@@ -60,6 +68,9 @@ ssize_t write(int fd, const void* buffer, size_t size)
 
 ssize_t read(int fd, void* buffer, size_t size)
 {
+	if (fd & SOCKET_FD_MASK)
+		return recv(fd, buffer, size, 0);
+
 	u64 bytes;
 	int ret;
 	

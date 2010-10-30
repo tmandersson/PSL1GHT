@@ -8,9 +8,11 @@
 
 #include <stdio.h>
 
+#define FD(socket) (socket & ~SOCKET_FD_MASK)
+
 int connect(int socket, const struct sockaddr* address, socklen_t address_len)
 {
-	return lv2Errno(lv2NetConnect(socket, address, (lv2_socklen_t)address_len));
+	return lv2Errno(lv2NetConnect(FD(socket), address, (lv2_socklen_t)address_len));
 }
 
 int socket(int domain, int type, int protocol)
@@ -18,18 +20,18 @@ int socket(int domain, int type, int protocol)
 	s32 ret = lv2NetSocket(domain, type, protocol);
 	if (ret < 0)
 		return lv2Errno(ret);
-	return ret;
+	return ret | SOCKET_FD_MASK;
 }
 
 ssize_t send(int socket, const void* message, size_t length, int flags)
 {
-	return sendto(socket, message, length, flags, NULL, 0);
+	return sendto(FD(socket), message, length, flags, NULL, 0);
 }
 
 ssize_t sendto(int socket, const void* message, size_t length, int flags,
 		const struct sockaddr* dest_addr, socklen_t dest_len)
 {
-	s32 ret = lv2NetSendto(socket, message, length, flags, dest_addr, dest_len);
+	s32 ret = lv2NetSendto(FD(socket), message, length, flags, dest_addr, dest_len);
 	if (ret < 0)
 		return lv2Errno(ret);
 	return ret;
@@ -37,15 +39,20 @@ ssize_t sendto(int socket, const void* message, size_t length, int flags,
 
 int shutdown(int socket, int how)
 {
-	return lv2Errno(lv2NetShutdown(socket, how));
+	return lv2Errno(lv2NetShutdown(FD(socket), how));
+}
+
+int net_close(int fd)
+{
+	return lv2NetClose(FD(fd));
 }
 
 int inet_aton(const char* cp, struct in_addr* inp)
 {
-	u32 num1;
-	u32 num2;
-	u32 num3;
-	u32 num4;
+	unsigned int num1;
+	unsigned int num2;
+	unsigned int num3;
+	unsigned int num4;
 	if (sscanf(cp, "%u.%u.%u.%u", &num1, &num2, &num3, &num4) != 4)
 		return 0;
 	if ((num1 | num2 | num3 | num4) & 0xFFFFFF00)

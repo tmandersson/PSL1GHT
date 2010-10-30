@@ -7,6 +7,7 @@ LD			:= $(CC)
 STRIP		:= $(PREFIX)strip
 RAW2H		:= $(PSL1GHT)/bin/raw2h
 FSELF		:= $(PSL1GHT)/bin/make_fself.py
+SPRX		:= $(PSL1GHT)/bin/sprxlinker
 
 CFLAGS		:= -g \
 			   -I$(PSL1GHT)/include
@@ -38,6 +39,7 @@ DEPSOPTIONS	=	-MMD -MP -MF $(DEPSDIR)/$*.d
 
 %.self: %.elf
 	@$(STRIP) $< -o $(BUILDDIR)/$(notdir $<)
+	@$(SPRX) $(BUILDDIR)/$(notdir $<)
 	@$(FSELF) $(BUILDDIR)/$(notdir $<) $@
 
 %.bin.h: %.bin

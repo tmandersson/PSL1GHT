@@ -5,8 +5,8 @@
 
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCE		:=	source
-INCLUDE		:=	include
+SOURCE		:=	../common
+INCLUDE		:=	.
 DATA		:=	data
 LIBS		:=	
 
@@ -53,11 +53,12 @@ DEPENDS	:= $(OFILES:.o=.d)
 $(OUTPUT).a: sprx.o
 
 lib.o: lib.c
-	$(CC) $(DEPSOPTIONS) -S $(CFLAGS) $(INCLUDES) $< -o lib.S
-	$(CC) $(DEPSOPTIONS) -c lib.S -o $@
+	@echo "[CC]  $(notdir $<)"
+	@$(CC) $(DEPSOPTIONS) -S $(CFLAGS) $(INCLUDES) $< -o lib.S
+	@$(CC) $(DEPSOPTIONS) -c lib.S -o $@
 
 sprx.o: stub.o lib.o
-	$(LD) -r stub.o lib.o -o $@
+	@$(LD) -r stub.o lib.o -o $@
 
 -include $(DEPENDS)
 

@@ -3,7 +3,7 @@
 	oris	reg, reg, (sym)@highest; \
 	sldi	reg, reg, 0x20; \
 	oris	reg, reg, (sym)@h; \
-	ori		reg, reg, (sym)@l \
+	ori		reg, reg, (sym)@l
 	
 
 .global ._start

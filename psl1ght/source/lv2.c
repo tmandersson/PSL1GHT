@@ -5,9 +5,9 @@
 
 s32 lv2Errno(s32 error)
 {
-	if (!error)
-		return 0;
-
+	if (error >= 0)
+		return error;
+	printf("Error found: %d\n", error);
 	errno = EINVAL; // TODO: Actually convert the error codes
 	return -1;
 }

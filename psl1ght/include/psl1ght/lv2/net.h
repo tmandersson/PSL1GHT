@@ -34,6 +34,7 @@ LV2_SYSCALL lv2NetAccept(int socket, const struct sockaddr* address, lv2_socklen
 LV2_SYSCALL lv2NetBind(int socket, const struct sockaddr* address, lv2_socklen_t address_len) { return Lv2Syscall3(701, socket, (u64)address, address_len); }
 LV2_SYSCALL lv2NetConnect(int socket, const struct sockaddr* address, lv2_socklen_t address_len) { return Lv2Syscall3(702, socket, (u64)address, address_len); }
 LV2_SYSCALL lv2NetListen(int socket, int backlog) { return Lv2Syscall2(706, socket, backlog); }
+LV2_SYSCALL lv2NetRecvFrom(int socket, void* buffer, size_t length, int flags,	struct sockaddr* address, socklen_t* address_len) { return Lv2Syscall6(707, socket, (u64)buffer, length, flags, (u64)address, (u64)address_len); }
 LV2_SYSCALL lv2NetSendto(int socket, const void* message, size_t length, int flags, const struct sockaddr* dest_addr, socklen_t dest_len) { return Lv2Syscall6(710, socket, (u64)message, length, flags, (u64)dest_addr, dest_len); }
 LV2_SYSCALL lv2NetShutdown(int socket, int how) { return Lv2Syscall2(712, socket, how); }
 LV2_SYSCALL lv2NetSocket(int domain, int type, int protocol) { return Lv2Syscall3(713, domain, type, protocol); }

@@ -40,26 +40,24 @@ int main(int argc, char *argv[]) {
         set to default port if no arguments were supplied  */
 
     if ( argc == 2 ) {
-	port = strtol(argv[1], &endptr, 0);
-	if ( *endptr ) {
-	    fprintf(stderr, "ECHOSERV: Invalid port number.\n");
-	    exit(EXIT_FAILURE);
-	}
-    }
-    else if ( argc < 2 ) {
-	port = ECHO_PORT;
-    }
-    else {
-	fprintf(stderr, "ECHOSERV: Invalid arguments.\n");
-	exit(EXIT_FAILURE);
+		port = strtol(argv[1], &endptr, 0);
+		if ( *endptr ) {
+			fprintf(stderr, "ECHOSERV: Invalid port number.\n");
+			exit(EXIT_FAILURE);
+		}
+    }else if ( argc < 2 ) {
+		port = ECHO_PORT;
+    }else{
+		fprintf(stderr, "ECHOSERV: Invalid arguments.\n");
+		exit(EXIT_FAILURE);
     }
 
 	
     /*  Create the listening socket  */
 
     if ( (list_s = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
-	fprintf(stderr, "ECHOSERV: Error creating listening socket.\n");
-	exit(EXIT_FAILURE);
+		fprintf(stderr, "ECHOSERV: Error creating listening socket.\n");
+		exit(EXIT_FAILURE);
     }
 
 
@@ -76,13 +74,13 @@ int main(int argc, char *argv[]) {
 	listening socket, and call listen()  */
 
     if ( bind(list_s, (struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ) {
-	fprintf(stderr, "ECHOSERV: Error calling bind()\n");
-	exit(EXIT_FAILURE);
+		fprintf(stderr, "ECHOSERV: Error calling bind()\n");
+		exit(EXIT_FAILURE);
     }
 
     if ( listen(list_s, LISTENQ) < 0 ) {
-	fprintf(stderr, "ECHOSERV: Error calling listen()\n");
-	exit(EXIT_FAILURE);
+		fprintf(stderr, "ECHOSERV: Error calling listen()\n");
+		exit(EXIT_FAILURE);
     }
 
     
@@ -91,27 +89,27 @@ int main(int argc, char *argv[]) {
 
     while ( 1 ) {
 
-	/*  Wait for a connection, then accept() it  */
+		/*  Wait for a connection, then accept() it  */
 
-	if ( (conn_s = accept(list_s, NULL, NULL) ) < 0 ) {
-	    fprintf(stderr, "ECHOSERV: Error calling accept()\n");
-	    exit(EXIT_FAILURE);
-	}
-
-
-	/*  Retrieve an input line from the connected socket
-	    then simply write it back to the same socket.     */
-
-	Readline(conn_s, buffer, MAX_LINE-1);
-	Writeline(conn_s, buffer, strlen(buffer));
+		if ( (conn_s = accept(list_s, NULL, NULL) ) < 0 ) {
+			fprintf(stderr, "ECHOSERV: Error calling accept()\n");
+			exit(EXIT_FAILURE);
+		}
 
 
-	/*  Close the connected socket  */
+		/*  Retrieve an input line from the connected socket
+			then simply write it back to the same socket.     */
 
-	if ( close(conn_s) < 0 ) {
-	    fprintf(stderr, "ECHOSERV: Error calling close()\n");
-	    exit(EXIT_FAILURE);
-	}
+		Readline(conn_s, buffer, MAX_LINE-1);
+		Writeline(conn_s, buffer, strlen(buffer));
+
+
+		/*  Close the connected socket  */
+
+		if ( close(conn_s) < 0 ) {
+			fprintf(stderr, "ECHOSERV: Error calling close()\n");
+			exit(EXIT_FAILURE);
+		}
     }
 }
 

@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 int accept(int socket, const struct sockaddr* address, socklen_t* address_len) {
-        return lv2Errno(lv2NetAccept(socket, address, (lv2_socklen_t *)address_len));
+    return lv2Errno(lv2NetAccept(socket, address, (lv2_socklen_t *)address_len));
 }
 
 int bind(int socket, const struct sockaddr* address, socklen_t address_len) {
@@ -39,13 +39,22 @@ ssize_t send(int socket, const void* message, size_t length, int flags)
 	return sendto(socket, message, length, flags, NULL, 0);
 }
 
-ssize_t sendto(int socket, const void* message, size_t length, int flags,
-		const struct sockaddr* dest_addr, socklen_t dest_len)
+ssize_t sendto(int socket, const void* message, size_t length, int flags, const struct sockaddr* dest_addr, socklen_t dest_len)
 {
 	s32 ret = lv2NetSendto(socket, message, length, flags, dest_addr, dest_len);
 	if (ret < 0)
 		return lv2Errno(ret);
 	return ret;
+}
+
+ssize_t recv(int s, void *buf, size_t len, int flags)
+{
+	return recvfrom(s,buf,len,flags,NULL,NULL);
+}
+
+ssize_t recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
+{
+	return 0;
 }
 
 int shutdown(int socket, int how)

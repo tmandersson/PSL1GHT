@@ -38,8 +38,8 @@ building any of the examples or other apps that use PSL1GHT.
 Status
 ------
 
-At the moment, PSL1GHT has basic libc support, with stdout debugging, file
-access, etc. It doesn't have any way to access the screen/graphics. You can
-call lv2 syscalls and do some fun stuff with that, but it doesn't link to
-PS3 dynamic libraries yet which is where all the exciting functionality
-comes in.
+At the moment, PSL1GHT has basic libc support with stdout debugging, file
+access, and network support. It doesn't have any way to access the screen or
+graphics at the moment. You can call lv2 syscalls and do some fun stuff with
+that, and you can link to the PS3 dynamic libraries (sprx) to bring in all of
+the exciting functionality.

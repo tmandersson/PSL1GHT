@@ -8,25 +8,34 @@
 
 #include <stdio.h>
 
+#define FD(socket) (socket & ~SOCKET_FD_MASK)
+
 int accept(int socket, const struct sockaddr* address, socklen_t* address_len) {
+<<<<<<< HEAD
     s32 ret = lv2NetAccept(socket, address, (lv2_socklen_t *)address_len);
 	if (ret < 0)
 		return lv2Errno(ret);
 	return ret;
+=======
+	s32 ret = lv2NetAccept(FD(socket), address, (lv2_socklen_t *)address_len);
+	if (ret < 0)
+		return lv2Errno(ret);
+	return ret | SOCKET_FD_MASK;
+>>>>>>> a8cfb2a8a063bc658bca7500e000416e1d368fc7
 }
 
 int bind(int socket, const struct sockaddr* address, socklen_t address_len) {
-	return lv2Errno(lv2NetBind(socket, address, (lv2_socklen_t)address_len));
+	return lv2Errno(lv2NetBind(FD(socket), address, (lv2_socklen_t)address_len));
 }
 
 int connect(int socket, const struct sockaddr* address, socklen_t address_len)
 {
-	return lv2Errno(lv2NetConnect(socket, address, (lv2_socklen_t)address_len));
+	return lv2Errno(lv2NetConnect(FD(socket), address, (lv2_socklen_t)address_len));
 }
 
 int listen(int socket, int backlog)
 {
-	return lv2Errno(lv2NetListen(socket, backlog));
+	return lv2Errno(lv2NetListen(FD(socket), backlog));
 }
 
 int socket(int domain, int type, int protocol)
@@ -34,7 +43,7 @@ int socket(int domain, int type, int protocol)
 	s32 ret = lv2NetSocket(domain, type, protocol);
 	if (ret < 0)
 		return lv2Errno(ret);
-	return ret;
+	return ret | SOCKET_FD_MASK;
 }
 
 ssize_t send(int socket, const void* message, size_t length, int flags)
@@ -44,10 +53,7 @@ ssize_t send(int socket, const void* message, size_t length, int flags)
 
 ssize_t sendto(int socket, const void* message, size_t length, int flags, const struct sockaddr* dest_addr, socklen_t dest_len)
 {
-	s32 ret = lv2NetSendto(socket, message, length, flags, dest_addr, dest_len);
-	if (ret < 0)
-		return lv2Errno(ret);
-	return ret;
+	return lv2Errno(lv2NetSendto(FD(socket), message, length, flags, dest_addr, dest_len));
 }
 
 ssize_t recv(int s, void *buf, size_t len, int flags)
@@ -57,23 +63,32 @@ ssize_t recv(int s, void *buf, size_t len, int flags)
 
 ssize_t recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
 {
+<<<<<<< HEAD
 	s32 ret = lv2NetRecvFrom(s, buf, len, flags, from, fromlen);
 	if (ret < 0)
 		return lv2Errno(ret);
 	return ret;
+=======
+	return lv2Errno(lv2NetRecvFrom(FD(s), buf, len, flags, from, fromlen));
+>>>>>>> a8cfb2a8a063bc658bca7500e000416e1d368fc7
 }
 
 int shutdown(int socket, int how)
 {
-	return lv2Errno(lv2NetShutdown(socket, how));
+	return lv2Errno(lv2NetShutdown(FD(socket), how));
+}
+
+int net_close(int socket)
+{
+	return lv2Errno(lv2NetClose(FD(socket)));
 }
 
 int inet_aton(const char* cp, struct in_addr* inp)
 {
-	u32 num1;
-	u32 num2;
-	u32 num3;
-	u32 num4;
+	unsigned int num1;
+	unsigned int num2;
+	unsigned int num3;
+	unsigned int num4;
 	if (sscanf(cp, "%u.%u.%u.%u", &num1, &num2, &num3, &num4) != 4)
 		return 0;
 	if ((num1 | num2 | num3 | num4) & 0xFFFFFF00)

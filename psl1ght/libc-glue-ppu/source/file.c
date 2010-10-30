@@ -45,6 +45,7 @@ int close(int fd)
 {
 	if (fd & SOCKET_FD_MASK)
 		return net_close(fd);
+
 	return lv2Errno(lv2FsClose(fd));
 }
 

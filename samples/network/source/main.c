@@ -5,6 +5,7 @@
 #include <psl1ght/lv2/net.h>
 
 #include <stdio.h>
+#include <unistd.h>
 #include <malloc.h>
 #include <string.h>
 #include <errno.h>

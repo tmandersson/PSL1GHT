@@ -9,7 +9,10 @@
 #include <stdio.h>
 
 int accept(int socket, const struct sockaddr* address, socklen_t* address_len) {
-    return lv2Errno(lv2NetAccept(socket, address, (lv2_socklen_t *)address_len));
+    s32 ret = lv2NetAccept(socket, address, (lv2_socklen_t *)address_len);
+	if (ret < 0)
+		return lv2Errno(ret);
+	return ret;
 }
 
 int bind(int socket, const struct sockaddr* address, socklen_t address_len) {
@@ -54,7 +57,10 @@ ssize_t recv(int s, void *buf, size_t len, int flags)
 
 ssize_t recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
 {
-	return 0;
+	s32 ret = lv2NetRecvFrom(s, buf, len, flags, from, fromlen);
+	if (ret < 0)
+		return lv2Errno(ret);
+	return ret;
 }
 
 int shutdown(int socket, int how)

@@ -1,0 +1,52 @@
+PREFIX		:= ppu-
+AR			:= $(PREFIX)ar
+AS			:= $(PREFIX)gcc
+CC			:= $(PREFIX)gcc
+CXX			:= $(PREFIX)g++
+LD			:= $(CC)
+STRIP		:= $(PREFIX)strip
+RAW2H		:= $(PSL1GHT)/bin/raw2h
+FSELF		:= $(PSL1GHT)/bin/fself.py
+SFO			:= $(PSL1GHT)/bin/sfo.py
+SFOXML		:= $(PSL1GHT)/bin/sfo.xml
+ICON0		:= $(PSL1GHT)/bin/ICON0.PNG
+PKG			:= $(PSL1GHT)/bin/pkg.py
+SPRX		:= $(PSL1GHT)/bin/sprxlinker
+
+CFLAGS		:= -g \
+			   -I$(PSL1GHT)/include
+CXXFLAGS	:= $(CFLAGS)
+LDFLAGS		:= -T $(PSL1GHT)/lib/linker.x \
+			   -B$(PSL1GHT)/lib
+
+DEPSOPTIONS	=	-MMD -MP -MF $(DEPSDIR)/$*.d
+
+%.o: %.c
+	@echo "[CC]  $(notdir $<)"
+	@$(CC) $(DEPSOPTIONS) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+%.o: %.cpp
+	@echo "[CXX] $(notdir $<)"
+	@$(CC) $(DEPSOPTIONS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+%.o: %.S
+	@echo "[CC]  $(notdir $<)"
+	@$(AS) $(DEPSOPTIONS) -x assembler-with-cpp $(ASFLAGS) $(INCLUDES) -c $< -o $@
+
+%.a:
+	@echo "[AR]  $(notdir $@)"
+	@$(AR) -rcs $@ $^
+
+%.elf:
+	@echo "[LD]  $(notdir $@)"
+	@$(LD) $^ $(LIBPATHS) $(LIBS) $(LDFLAGS) -o $@
+
+%.self: %.elf
+	@$(STRIP) $< -o $(BUILDDIR)/$(notdir $<)
+	@$(SPRX) $(BUILDDIR)/$(notdir $<)
+	@$(FSELF) $(BUILDDIR)/$(notdir $<) $@
+
+%.bin.h: %.bin
+	@echo "[R2H] $(notdir $<)"
+	@$(RAW2H) $< $(BUILDDIR)/$(notdir $<).h $(notdir $(basename $<)_bin)
+

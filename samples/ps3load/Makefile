@@ -8,9 +8,10 @@ include $(PSL1GHT)/Makefile.base
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCE		:=	source
-INCLUDE		:=	include
+INCLUDE		:=	include zlib
 DATA		:=	data
-LIBS		:=	
+LIBS		:=	-lz
+LIBDIRS		:=	zlib
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99
 CXXFLAGS	+= -g -O2 -Wall
@@ -36,26 +37,20 @@ export BINFILES	:=	$(BINFILES:.bin=.bin.h)
 
 export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 					-I$(CURDIR)/$(BUILD)
+export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir))
 
 .PHONY: $(BUILD) clean
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
+	@make --no-print-directory -C zlib
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 clean:
 	@echo Clean...
+	@make --no-print-directory -C zlib clean
 	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
-pkg: $(BUILD)
-	@echo Creating PKG...
-	@mkdir -p $(BUILD)/pkg
-	@mkdir -p $(BUILD)/pkg/USRDIR
-	@cp $(ICON0) $(BUILD)/pkg/
-	$(FSELF) -n $(BUILD)/$(TARGET).elf $(BUILD)/pkg/USRDIR/EBOOT.BIN
-	$(SFO) -f $(SFOXML) $(BUILD)/pkg/PARAM.SFO
-	@cd $(BUILD)
-	$(PKG) --contentid UP0001-TEST00000_00-0000000000000000 pkg $(TARGET).pkg
-	
+
 run: $(BUILD)
 	@WIILOAD=$(PS3LOAD) $(WIILOAD) $(OUTPUT).self
 

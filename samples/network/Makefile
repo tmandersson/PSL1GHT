@@ -56,6 +56,9 @@ pkg: $(BUILD)
 	@cd $(BUILD)
 	$(PKG) --contentid UP0001-TEST00000_00-0000000000000000 pkg $(TARGET).pkg
 	
+run: $(BUILD)
+	@WIILOAD=$(PS3LOAD) $(WIILOAD) $(OUTPUT).self
+
 else
 
 DEPENDS	:= $(OFILES:.o=.d)

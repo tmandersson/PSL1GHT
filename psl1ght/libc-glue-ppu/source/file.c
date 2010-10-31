@@ -11,20 +11,19 @@
 #include <sys/socket.h>
 
 #define DEFAULT_FILE_MODE (S_IRWXU | S_IRWXG | S_IRWXO)
-
 int open(const char* path, int oflag, ...)
 {
 	Lv2FsFile fd;
 
 	int lv2flag = oflag & (O_ACCMODE | LV2_O_MSELF);
 	if (oflag & O_CREAT)
-		oflag |= LV2_O_CREAT;
+		lv2flag |= LV2_O_CREAT;
 	if (oflag & O_TRUNC)
-		oflag |= LV2_O_TRUNC;
+		lv2flag |= LV2_O_TRUNC;
 	if (oflag & O_EXCL)
-		oflag |= LV2_O_EXCL;
+		lv2flag |= LV2_O_EXCL;
 	if (oflag & O_APPEND)
-		oflag |= LV2_O_APPEND;
+		lv2flag |= LV2_O_APPEND;
 
 	int mode = 0;
 	if (oflag & O_WRONLY)

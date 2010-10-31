@@ -17,7 +17,8 @@ a full newlib environment; at the moment only two toolchains do so:
 * [ps3toolchain](http://github.com/ooPo/ps3toolchain)
 
 The SDK also includes a few standalone tools to help compilation. A host gcc
-is required to build raw2h, and Python 2.x is required to run make_fself.py
+is required to build raw2h, and sprxlinker requires libelf. Python 2.x is
+required to run make_fself.py
 
 Building
 --------

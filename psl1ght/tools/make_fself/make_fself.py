@@ -51,18 +51,23 @@ class phdrOffset(Struct):
 		self.unk3	= Struct.uint32
 		self.unk4	= Struct.uint32
 
-class Digest(Struct):
+class DigestSubHeader(Struct):
 	__endian__ = Struct.BE
 	def __format__(self):
-		self.type1		= Struct.uint32
-		self.size1		= Struct.uint32
-		self.continue1		= Struct.uint64
+		self.type		= Struct.uint32
+		self.size		= Struct.uint32
+		self.cont		= Struct.uint64
+
+class DigestType2(Struct):
+	__endian__ = Struct.BE
+	def __format__(self):
 		self.magicBits		= Struct.uint8[0x14]
 		self.digest		= Struct.uint8[0x14]
 		self.padding		= Struct.uint8[0x08]
-		self.type2		= Struct.uint32
-		self.size2		= Struct.uint32
-		self.continue2		= Struct.uint64
+
+class DigestTypeNPDRM(Struct):
+	__endian__ = Struct.BE
+	def __format__(self):
 		self.magic 		= Struct.uint32
 		self.unk1 		= Struct.uint32
 		self.drmType 		= Struct.uint32
@@ -110,8 +115,8 @@ def padding(address, alignment):
 	padding = alignment - (address % alignment)
 	return "\0" * padding
 
-def readElf(filename):
-	with open(filename, 'rb') as fp:
+def readElf(infile):
+	with infile as fp:
 		data = fp.read()
 		ehdr = Elf64_ehdr()
 		ehdr.unpack(data[0:len(ehdr)])
@@ -125,12 +130,46 @@ def readElf(filename):
 		
 		return data, ehdr, phdrs
 
-def createFself(filename, outfile="EBOOT.BIN"):
-	elf, ehdr, phdrs = readElf(filename)
+def genDigest(out, npdrm):
+	digestSubHeader = DigestSubHeader()
+	digestType2 = DigestType2()
+	digestTypeNPDRM = DigestTypeNPDRM()
+
+	digestSubHeader.type = 2
+	digestSubHeader.size = 0x40
+	if npdrm:
+		digestSubHeader.cont = 1
+	out.write(digestSubHeader.pack())
+
+	digestType2.magicBits = (0x62, 0x7c, 0xb1, 0x80, 0x8a, 0xb9, 0x38, 0xe3, 0x2c, 0x8c, 0x09, 0x17, 0x08, 0x72, 0x6a, 0x57, 0x9e, 0x25, 0x86, 0xe4)
+	out.write(digestType2.pack())
+
+	if not npdrm:
+		return
+
+	digestSubHeader.type = 3
+	digestSubHeader.size = 0x90
+	out.write(digestSubHeader.pack())
+
+	digestTypeNPDRM.magic = 0x4e504400
+	digestTypeNPDRM.unk1 = 1
+	digestTypeNPDRM.drmType = 2
+	digestTypeNPDRM.unk2 = 1
+	digestTypeNPDRM.contentID = [0x30] * 0x2f + [0]
+	digestTypeNPDRM.fileSHA1 = (0x42, 0x69, 0x74, 0x65, 0x20, 0x4d, 0x65, 0x2c, 0x20, 0x53, 0x6f, 0x6e, 0x79, 0x00, 0xde, 0x07)
+	digestTypeNPDRM.notSHA1 = [0xab] * 0x10
+	digestTypeNPDRM.notXORKLSHA1 = [0x01] * 0x0f + [0x02]
+	out.write(digestTypeNPDRM.pack())
+
+
+def createFself(infile, out, npdrm):
+	elf, ehdr, phdrs = readElf(infile)
 	
 	header = SelfHeader()
 	appinfo = AppInfo()
-	digest = Digest()
+	digestSubHeader = DigestSubHeader()
+	digestType2 = DigestType2()
+	digestTypeNPDRM = DigestTypeNPDRM()
 	phdr = Elf64_phdr()
 	phdrOffsets = phdrOffset()
 
@@ -150,9 +189,12 @@ def createFself(filename, outfile="EBOOT.BIN"):
 	
 	digestOffset = header.phdrOffsets + len(phdrs) * len(phdrOffsets)
 	header.digest = align(digestOffset, 0x10)
-	header.digestSize = len(digest)
+	header.digestSize = len(digestSubHeader) + len(digestType2
+)
+	if npdrm:
+		header.digestSize += len(digestSubHeader) + len(digestTypeNPDRM)
 
-	endofHeader = header.digest + len(digest)
+	endofHeader = header.digest + header.digestSize
 	elfOffset = align(endofHeader, 0x80)
 
 	header.shdr = elfOffset + ehdr.shoff
@@ -161,27 +203,11 @@ def createFself(filename, outfile="EBOOT.BIN"):
 
 	appinfo.authid = 0x1010000001000003
 	appinfo.unknown = 0x1000002
-	appinfo.appType = 0x4
+	if npdrm:
+		appinfo.appType = 0x8
+	else:
+		appinfo.appType = 0x4
 	appinfo.appVersion = 0x0001000000000000
-
-	digest.type0 = 1
-	digest.size0 = 0x30
-	digest.continue0 = 1
-	digest.type1 = 2
-	digest.size1 = 0x40
-	digest.continue1 = 1
-	digest.magicBits = (0x62, 0x7c, 0xb1, 0x80, 0x8a, 0xb9, 0x38, 0xe3, 0x2c, 0x8c, 0x09, 0x17, 0x08, 0x72, 0x6a, 0x57, 0x9e, 0x25, 0x86, 0xe4)
-	digest.type2 = 3
-	digest.size2 = 0x90
-	digest.continue2 = 0
-	digest.magic = 0x4e504400
-	digest.unk1 = 1
-	digest.drmType = 2
-	digest.unk2 = 1
-	digest.contentID = [0x30] * 0x2f + [0]
-	digest.fileSHA1 = (0x42, 0x69, 0x74, 0x65, 0x20, 0x4d, 0x65, 0x2c, 0x20, 0x53, 0x6f, 0x6e, 0x79, 0x00, 0xde, 0x07)
-	digest.notSHA1 = [0xaa] * 0x10
-	digest.notXORKLSHA1 = [0x00] * 0x0f + [0x01]
 
 	offsets = []
 	for phdr in phdrs:
@@ -197,8 +223,6 @@ def createFself(filename, outfile="EBOOT.BIN"):
 			offset.unk4 = 0
 		offsets.append(offset)
 
-	out = open(outfile, 'wb')
-
 	out.write(header.pack())
 	out.write(padding(len(header), 0x10))
 	out.write(appinfo.pack())
@@ -210,16 +234,23 @@ def createFself(filename, outfile="EBOOT.BIN"):
 	for offset in offsets:
 		out.write(offset.pack())
 	out.write(padding(digestOffset, 0x10))
-	out.write(digest.pack())
+	genDigest(out, npdrm)
 	out.write(padding(endofHeader, 0x80))
 	out.write(elf)
 
 import sys
 
-if len(sys.argv) == 2:
-	createFself(sys.argv[1])
-elif len(sys.argv) == 3:
-	createFself(sys.argv[1], sys.argv[2])
-else:
-	print "make_fself.py usage:\n  make_self.py input.elf [output]\n  If output file is not specified, make_fself.py will default to EBOOT.BIN"
+import argparse
+
+parser = argparse.ArgumentParser(description='Generate a fself from an elf')
+parser.add_argument('elf', type=argparse.FileType('rb'), help='Input elf file')
+parser.add_argument('output', type=argparse.FileType('wb'), help='Output fself file')
+parser.add_argument('--npdrm', action='store_true', help='Generate a NPDRM fself sutiable for usage in pkg files')
+
+def main(argv):
+	args = parser.parse_args()
+	createFself(args.elf, args.output, args.npdrm)
+
+if __name__ == "__main__":
+	main(sys.argv)
 

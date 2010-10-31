@@ -1,28 +1,32 @@
 #include "config.h"
 
+#include <stdint.h>
+
 typedef struct {
-	int unk1;
-	int unk2;
-	int zero1;
-	int zero2;
+	uint32_t header1;
+	uint16_t header2;
+	uint16_t imports;
+	uint32_t zero1;
+	uint32_t zero2;
 	const char* name;
 	const void* fnid;
 	const void* fstub;
-	int zero5;
-	int zero6;
-	int zero7;
-	int zero8;
-} prx_header;
+	uint32_t zero3;
+	uint32_t zero4;
+	uint32_t zero5;
+	uint32_t zero6;
+} __attribute__((__packed__)) prx_header;
 
-extern unsigned int LIBRARY_SYMBOL __attribute__((section(".rodata.sceFNID")));
+extern uint32_t LIBRARY_SYMBOL __attribute__((section(".rodata.sceFNID")));
 static const void* scefstub[0] __attribute__((section(".data.sceFStub." LIBRARY_NAME)));
 
-static const int version __attribute__((section(".rodata.sceResident"))) = 0;
+static const uint32_t version __attribute__((section(".rodata.sceResident"))) = 0;
 static const const char name[] __attribute__((section(".rodata.sceResident"))) = LIBRARY_NAME;
 
 prx_header header __attribute__((section(".lib.stub"))) = {
 	LIBRARY_HEADER_1,
 	LIBRARY_HEADER_2,
+	0,
 	0,
 	0,
 	name,
@@ -37,6 +41,6 @@ prx_header header __attribute__((section(".lib.stub"))) = {
 #define EXPORT(name, fnid) \
 	extern void* __##name; \
 	const void* name##_stub __attribute__((section(".data.sceFStub." LIBRARY_NAME))) = &__##name; \
-	const unsigned int name##_fnid __attribute__((section(".rodata.sceFNID"))) = fnid;
+	const uint32_t name##_fnid __attribute__((section(".rodata.sceFNID"))) = fnid;
 
 #include "exports.c"

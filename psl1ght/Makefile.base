@@ -8,6 +8,7 @@ STRIP		:= $(PREFIX)strip
 RAW2H		:= $(PSL1GHT)/bin/raw2h
 FSELF		:= $(PSL1GHT)/bin/fself.py
 SFO			:= $(PSL1GHT)/bin/sfo.py
+WIILOAD		:= wiiload
 SFOXML		:= $(PSL1GHT)/bin/sfo.xml
 ICON0		:= $(PSL1GHT)/bin/ICON0.PNG
 PKG			:= $(PSL1GHT)/bin/pkg.py

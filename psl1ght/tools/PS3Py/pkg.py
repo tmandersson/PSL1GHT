@@ -320,7 +320,8 @@ def unpack(filename):
 				if debug:
 					print fileD
 				fileD.dump(directory, decData, header)
-def getFiles(files, folder):
+def getFiles(files, folder, original):
+	oldfolder = folder
 	foundFiles = glob.glob( os.path.join(folder, '*') )
 	sortedList = []
 	for filepath in foundFiles:
@@ -331,7 +332,7 @@ def getFiles(files, folder):
 			sortedList.append(filepath)
 	for filepath in sortedList:
 		newpath = filepath.replace("\\", "/")
-		newpath = "/".join(newpath.split("/")[1:])
+		newpath = newpath[len(original):]
 		if os.path.isdir(filepath):
 			folder = FileHeader()
 			folder.fileName = newpath
@@ -343,7 +344,7 @@ def getFiles(files, folder):
 			folder.flags		= TYPE_OVERWRITE_ALLOWED | TYPE_DIRECTORY
 			folder.padding 		= 0
 			files.append(folder)
-			getFiles(files, filepath)
+			getFiles(files, filepath, original)
 		else:
 			file = FileHeader()
 			file.fileName = newpath
@@ -409,7 +410,7 @@ def pack(folder, contentid, outname=None):
 	
 	
 	files = []
-	getFiles(files, folder)
+	getFiles(files, folder, folder)
 	header.itemCount = len(files)
 	dataToEncrypt = ""
 	fileDescLength = 0

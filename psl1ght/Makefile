@@ -12,6 +12,7 @@ all: $(STUBS)
 	@make -f Makefile.lib --no-print-directory
 	@make -C libc-glue-ppu --no-print-directory
 	@make -C sprx/liblv2 --no-print-directory
+	@make -C sprx/libsysutil --no-print-directory
 
 clean:
 	rm -f $(STUBS) stub/crt1.o stub.a
@@ -20,10 +21,11 @@ clean:
 	@make -f Makefile.lib clean --no-print-directory
 	@make -C libc-glue-ppu clean --no-print-directory
 	@make -C sprx/liblv2 clean --no-print-directory
+	@make -C sprx/libsysutil clean --no-print-directory
 
 install: all
 	@mkdir -p $(PSL1GHT)/include $(PSL1GHT)/lib $(PSL1GHT)/bin
-	@cp linker.x libpsl1ght.a libc-glue-ppu/libc-glue-ppu.a stub/crt1.o sprx/liblv2/liblv2.a $(PSL1GHT)/lib/
+	@cp linker.x libpsl1ght.a libc-glue-ppu/libc-glue-ppu.a stub/crt1.o sprx/*/*.a $(PSL1GHT)/lib/
 	@cp -r include $(PSL1GHT)/
 	@cp Makefile.base $(PSL1GHT)/
 	@cp tools/raw2h/raw2h tools/sprxlinker/sprxlinker $(PSL1GHT)/bin/

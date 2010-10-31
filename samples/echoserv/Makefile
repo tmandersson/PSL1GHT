@@ -47,6 +47,9 @@ clean:
 	@echo Clean...
 	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
 
+run: $(BUILD)
+	@WIILOAD=$(PS3LOAD) $(WIILOAD) $(OUTPUT).self
+
 else
 
 DEPENDS	:= $(OFILES:.o=.d)

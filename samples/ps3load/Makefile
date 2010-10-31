@@ -8,9 +8,10 @@ include $(PSL1GHT)/Makefile.base
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCE		:=	source
-INCLUDE		:=	include
+INCLUDE		:=	include zlib
 DATA		:=	data
-LIBS		:=	
+LIBS		:=	-lz
+LIBDIRS		:=	zlib
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99
 CXXFLAGS	+= -g -O2 -Wall
@@ -36,15 +37,18 @@ export BINFILES	:=	$(BINFILES:.bin=.bin.h)
 
 export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 					-I$(CURDIR)/$(BUILD)
+export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir))
 
 .PHONY: $(BUILD) clean
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
+	@make --no-print-directory -C zlib
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 clean:
 	@echo Clean...
+	@make --no-print-directory -C zlib clean
 	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
 
 run: $(BUILD)

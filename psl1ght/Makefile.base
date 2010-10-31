@@ -8,6 +8,7 @@ STRIP		:= $(PREFIX)strip
 RAW2H		:= $(PSL1GHT)/bin/raw2h
 FSELF		:= $(PSL1GHT)/bin/make_fself.py
 SPRX		:= $(PSL1GHT)/bin/sprxlinker
+WIILOAD		:= wiiload
 
 CFLAGS		:= -g \
 			   -I$(PSL1GHT)/include

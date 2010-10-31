@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     char      buffer[MAX_LINE];      /*  character buffer          */
     char     *endptr;                /*  for strtol()              */
 
-
+	fprintf(stdout, "Starting ECHOServer.\n");
     /*  Get port number from the command line, and
         set to default port if no arguments were supplied  */
 

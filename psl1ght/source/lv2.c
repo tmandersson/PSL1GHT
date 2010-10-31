@@ -2,6 +2,7 @@
 #include <psl1ght/lv2/errno.h>
 
 #include <errno.h>
+#include <stdio.h>
 
 s32 lv2Errno(s32 error)
 {

@@ -27,8 +27,7 @@ install: all
 	@cp -r include $(PSL1GHT)/
 	@cp Makefile.base $(PSL1GHT)/
 	@cp tools/raw2h/raw2h tools/sprxlinker/sprxlinker $(PSL1GHT)/bin/
-	@cp tools/make_fself/make_fself.py $(PSL1GHT)/bin/
-	@cp tools/make_fself/Struct.py $(PSL1GHT)/bin/
+	@cp tools/PS3Py/make_fself.py tools/PS3Py/Struct.py $(PSL1GHT)/bin/
 
 %.o: %.c
 	$(CC) -Iinclude -c $< -o $@

@@ -11,17 +11,10 @@
 #define FD(socket) (socket & ~SOCKET_FD_MASK)
 
 int accept(int socket, const struct sockaddr* address, socklen_t* address_len) {
-<<<<<<< HEAD
-    s32 ret = lv2NetAccept(socket, address, (lv2_socklen_t *)address_len);
-	if (ret < 0)
-		return lv2Errno(ret);
-	return ret;
-=======
 	s32 ret = lv2NetAccept(FD(socket), address, (lv2_socklen_t *)address_len);
 	if (ret < 0)
 		return lv2Errno(ret);
 	return ret | SOCKET_FD_MASK;
->>>>>>> a8cfb2a8a063bc658bca7500e000416e1d368fc7
 }
 
 int bind(int socket, const struct sockaddr* address, socklen_t address_len) {
@@ -63,14 +56,7 @@ ssize_t recv(int s, void *buf, size_t len, int flags)
 
 ssize_t recvfrom(int s, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
 {
-<<<<<<< HEAD
-	s32 ret = lv2NetRecvFrom(s, buf, len, flags, from, fromlen);
-	if (ret < 0)
-		return lv2Errno(ret);
-	return ret;
-=======
 	return lv2Errno(lv2NetRecvFrom(FD(s), buf, len, flags, from, fromlen));
->>>>>>> a8cfb2a8a063bc658bca7500e000416e1d368fc7
 }
 
 int shutdown(int socket, int how)

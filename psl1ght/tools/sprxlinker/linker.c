@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #ifdef __BIG_ENDIAN__
 #define BE16(num) (num)
@@ -68,7 +69,7 @@ int main(int argc, const char* argv[])
 	}
 
 	elf_version(EV_CURRENT);
-	Elf* elf = elf_begin(fd, ELF_C_RDWR, NULL);
+	Elf* elf = elf_begin(fd, ELF_C_READ, NULL);
 	if (!elf) {
 		fprintf(stderr, "libelf could not read elf file.\n");
 		return 1;
@@ -82,6 +83,7 @@ int main(int argc, const char* argv[])
 
 	Elf_Scn* stubsection = GetSection(elf, ".lib.stub");
 	Elf_Data* stubdata = elf_getdata(stubsection, NULL);
+	Elf64_Shdr* stubshdr = elf64_getshdr(stubsection);
 	Stub* stubbase = (Stub*)stubdata->d_buf;
 	size_t stubcount = stubdata->d_size / sizeof(Stub);
 	Elf_Scn* fnidsection = GetSection(elf, ".rodata.sceFNID");
@@ -98,12 +100,11 @@ int main(int argc, const char* argv[])
 		}
 		uint16_t fnidcount = (end - fnid) / 4;
 		if (BE16(stub->imports) != fnidcount) {
-			stub->imports = BE16(fnidcount);
-			elf_flagdata(stubdata, ELF_C_SET, ELF_F_DIRTY);
+			lseek(fd, stubshdr->sh_offset + (stub - stubbase) * sizeof(Stub) + offsetof(Stub, imports), SEEK_SET);
+			fnidcount = BE16(fnidcount);
+			write(fd, &fnidcount, sizeof(fnidcount));
 		}
 	}
-
-	elf_update(elf, ELF_C_WRITE);
 
 	elf_end(elf);
 

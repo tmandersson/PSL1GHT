@@ -49,8 +49,16 @@ $(BUILD):
 clean:
 	@echo Clean...
 	@make --no-print-directory -C zlib clean
-	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
-
+	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a $(OUTPUT).pkg
+pkg: $(BUILD)
+	@echo Creating PKG...
+	@mkdir -p $(BUILD)/pkg
+	@mkdir -p $(BUILD)/pkg/USRDIR
+	@cp $(ICON0) $(BUILD)/pkg/
+	$(FSELF) -n $(BUILD)/$(TARGET).elf $(BUILD)/pkg/USRDIR/EBOOT.BIN
+	$(SFO) -f $(SFOXML) $(BUILD)/pkg/PARAM.SFO
+	@cd $(BUILD)
+	$(PKG) --contentid UP0001-TEST00000_00-0000000000000000 pkg $(OUTPUT).pkg
 run: $(BUILD)
 	@WIILOAD=$(PS3LOAD) $(WIILOAD) $(OUTPUT).self
 

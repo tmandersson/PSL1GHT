@@ -45,7 +45,7 @@ $(BUILD):
 
 clean:
 	@echo Clean...
-	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
+	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a $(OUTPUT).pkg
 <<<<<<< HEAD
 pkg: $(BUILD)
 	@echo Creating PKG...
@@ -55,7 +55,7 @@ pkg: $(BUILD)
 	$(FSELF) -n $(BUILD)/$(TARGET).elf $(BUILD)/pkg/USRDIR/EBOOT.BIN
 	$(SFO) -f $(SFOXML) $(BUILD)/pkg/PARAM.SFO
 	@cd $(BUILD)
-	$(PKG) --contentid UP0001-TEST00000_00-0000000000000000 pkg $(TARGET).pkg
+	$(PKG) --contentid UP0001-TEST00000_00-0000000000000000 pkg $(OUTPUT).pkg
 	
 	@echo Hopefully it worked :) Look for $(TARGET).pkg
 =======

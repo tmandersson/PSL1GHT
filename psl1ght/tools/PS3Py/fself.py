@@ -2,6 +2,8 @@
 from __future__ import with_statement
 from Struct import Struct
 import struct
+import getopt
+import sys
 
 """
 	This is a quick and dirty implementation of make_fself based on the
@@ -116,7 +118,7 @@ def padding(address, alignment):
 	return "\0" * padding
 
 def readElf(infile):
-	with infile as fp:
+	with open(infile, 'rb') as fp:
 		data = fp.read()
 		ehdr = Elf64_ehdr()
 		ehdr.unpack(data[0:len(ehdr)])
@@ -162,7 +164,7 @@ def genDigest(out, npdrm):
 	out.write(digestTypeNPDRM.pack())
 
 
-def createFself(infile, out, npdrm):
+def createFself(npdrm, infile, outfile="EBOOT.BIN"):
 	elf, ehdr, phdrs = readElf(infile)
 	
 	header = SelfHeader()
@@ -222,7 +224,7 @@ def createFself(infile, out, npdrm):
 		else:
 			offset.unk4 = 0
 		offsets.append(offset)
-
+	out = open(outfile, 'wb')
 	out.write(header.pack())
 	out.write(padding(len(header), 0x10))
 	out.write(appinfo.pack())
@@ -238,19 +240,35 @@ def createFself(infile, out, npdrm):
 	out.write(padding(endofHeader, 0x80))
 	out.write(elf)
 
-import sys
 
-import argparse
-
-parser = argparse.ArgumentParser(description='Generate a fself from an elf')
-parser.add_argument('elf', type=argparse.FileType('rb'), help='Input elf file')
-parser.add_argument('output', type=argparse.FileType('wb'), help='Output fself file')
-parser.add_argument('--npdrm', action='store_true', help='Generate a NPDRM fself sutiable for usage in pkg files')
-
-def main(argv):
-	args = parser.parse_args()
-	createFself(args.elf, args.output, args.npdrm)
-
+def usage():
+	print """fself.py usage:
+	fself.py [options] input.elf output.self
+	If output file is not specified, fself.py will default to EBOOT.BIN
+	Options:
+		--npdrm: will output a file for use with pkg.py."""
+def main():
+	try:
+		opts, args = getopt.getopt(sys.argv[1:], "hn", ["help", "npdrm"])
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
+	npdrm = False
+	for opt, arg in opts:
+		if opt in ("-h", "--help"):
+			usage()
+			sys.exit(2)
+		elif opt in ("-n", "--npdrm"):
+			npdrm = True
+		else:
+			usage()
+			
+	if len(args) == 1:
+		createFself(npdrm, args[0])
+	elif len(args) == 2:
+		createFself(npdrm, args[0], args[1])
+	else:
+		usage()
 if __name__ == "__main__":
-	main(sys.argv)
-
+	main()
+	

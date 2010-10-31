@@ -18,7 +18,7 @@ a full newlib environment; at the moment only two toolchains do so:
 
 The SDK also includes a few standalone tools to help compilation. A host gcc
 is required to build raw2h, and sprxlinker requires libelf. Python 2.x is
-required to run make_fself.py
+required to run fself.py
 
 Building
 --------

@@ -46,7 +46,7 @@ $(BUILD):
 clean:
 	@echo Clean...
 	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a $(OUTPUT).pkg
-<<<<<<< HEAD
+
 pkg: $(BUILD)
 	@echo Creating PKG...
 	@mkdir -p $(BUILD)/pkg
@@ -58,12 +58,10 @@ pkg: $(BUILD)
 	$(PKG) --contentid UP0001-TEST00000_00-0000000000000000 pkg $(OUTPUT).pkg
 	
 	@echo Hopefully it worked :) Look for $(TARGET).pkg
-=======
 
 run: $(BUILD)
 	@WIILOAD=$(PS3LOAD) $(WIILOAD) $(OUTPUT).self
 
->>>>>>> bc58f82aeacff5321b2e8b5f6a8a5e4c58c20c80
 else
 
 DEPENDS	:= $(OFILES:.o=.d)

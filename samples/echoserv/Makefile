@@ -46,6 +46,7 @@ $(BUILD):
 clean:
 	@echo Clean...
 	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a $(OUTPUT).pkg
+
 pkg: $(BUILD)
 	@echo Creating PKG...
 	@mkdir -p $(BUILD)/pkg

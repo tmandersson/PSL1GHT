@@ -151,6 +151,7 @@ def genDigest(out, npdrm):
 
 	digestSubHeader.type = 3
 	digestSubHeader.size = 0x90
+	digestSubHeader.cont = 0
 	out.write(digestSubHeader.pack())
 
 	digestTypeNPDRM.magic = 0x4e504400

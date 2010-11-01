@@ -42,7 +42,8 @@ typedef enum
 };
 
 #define BUTTON_DOWN(pd, btn) ((((pd.button[2] & 0xFF) | ((pd.button[3] & 0xFF)<<8)) & (1 << btn)) == (1 << btn))
-#define BUTTON_DOWN(pd, btn) (!BUTTON_DOWN(pd,btn))
+#define BUTTON_UP(pd, btn) (!BUTTON_DOWN(pd,btn))
+
 #define PAD_MAX_CODES 64
 typedef struct PadData{
 	s32 len;

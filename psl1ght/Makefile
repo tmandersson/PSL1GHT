@@ -8,6 +8,7 @@ STUBS		:= $(SFILES:.S=.o) $(CFILES:.c=.o)
 all: $(STUBS)
 	@ppu-ld -r $(STUBS) -o stub/crt1.o
 	@make -C tools/raw2h --no-print-directory
+	@make -C tools/ps3load --no-print-directory
 	@make -C tools/sprxlinker --no-print-directory
 	@make -f Makefile.lib --no-print-directory
 	@make -C libc-glue-ppu --no-print-directory
@@ -19,6 +20,7 @@ all: $(STUBS)
 clean:
 	rm -f $(STUBS) stub/crt1.o stub.a
 	@make -C tools/raw2h clean --no-print-directory
+	@make -C tools/ps3load clean --no-print-directory
 	@make -C tools/sprxlinker clean --no-print-directory
 	@make -f Makefile.lib clean --no-print-directory
 	@make -C libc-glue-ppu clean --no-print-directory
@@ -32,7 +34,7 @@ install: all
 	@cp linker.x libpsl1ght.a libc-glue-ppu/libc-glue-ppu.a stub/crt1.o sprx/*/*.a $(PSL1GHT)/lib/
 	@cp -r include $(PSL1GHT)/
 	@cp Makefile.base $(PSL1GHT)/
-	@cp tools/raw2h/raw2h tools/sprxlinker/sprxlinker $(PSL1GHT)/bin/
+	@cp tools/raw2h/raw2h tools/ps3load/ps3load tools/sprxlinker/sprxlinker $(PSL1GHT)/bin/
 	@cp tools/PS3Py/fself.py $(PSL1GHT)/bin/
 	@cp tools/PS3Py/Struct.py $(PSL1GHT)/bin/
 	@cp tools/PS3Py/sfo.py $(PSL1GHT)/bin/

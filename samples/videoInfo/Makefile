@@ -59,9 +59,9 @@ pkg: $(BUILD)
 	@$(FSELF) -n $(BUILD)/$(TARGET).elf $(BUILD)/pkg/USRDIR/EBOOT.BIN
 	@$(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILD)/pkg/PARAM.SFO
 	@$(PKG) --contentid $(CONTENTID) $(BUILD)/pkg/ $(OUTPUT).pkg
-
+	
 run: $(BUILD)
-	@WIILOAD=$(PS3LOAD) $(WIILOAD) $(OUTPUT).self
+	@$(PS3LOADAPP) $(OUTPUT).self
 
 else
 

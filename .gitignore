@@ -1,6 +1,12 @@
-samples/ps3load/zlib/
+*.a
+*.o
 *.elf
 *.self
 *.pkg
-samples/*/build
-psl1ght/build
+*/build
+*/*/build
+*/*/*/build
+psl1ght/tools/raw2h/raw2h
+psl1ght/tools/sprxlinker/sprxlinker
+samples/ps3load/zlib/*.h
+samples/ps3load/zlib/zlib-*

@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     char      buffer[MAX_LINE];      /*  character buffer          */
     char     *endptr;                /*  for strtol()              */
 
-
+	fprintf(stdout, "Starting ECHOServer.\n");
     /*  Get port number from the command line, and
         set to default port if no arguments were supplied  */
 
@@ -83,11 +83,11 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
     }
 
-    
+    char* message = "Welcome to ECHOServer test.\nType exit and hit enter to close app, otherwise type anything you want and hit enter and I will replay it back to you free of charge. :)";
     /*  Enter an infinite loop to respond
         to client requests and echo input  */
-
-    while ( 1 ) {
+	int run = 1;
+    while ( run ) {
 
 		/*  Wait for a connection, then accept() it  */
 
@@ -96,11 +96,14 @@ int main(int argc, char *argv[]) {
 			exit(EXIT_FAILURE);
 		}
 
+		Writeline(conn_s, message, strlen(message));
 
 		/*  Retrieve an input line from the connected socket
 			then simply write it back to the same socket.     */
 
 		Readline(conn_s, buffer, MAX_LINE-1);
+		if(strncmp("exit", buffer, 4) == 0)
+			run = 0;
 		Writeline(conn_s, buffer, strlen(buffer));
 
 

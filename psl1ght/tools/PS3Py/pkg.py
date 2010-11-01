@@ -430,7 +430,6 @@ def pack(folder, contentid, outname=None):
 	fileDescLength = len(dataToEncrypt)
 	for file in files:
 		if not file.flags & 0xFF == TYPE_DIRECTORY:
-			print folder, file.fileName
 			path = os.path.join(folder, file.fileName)
 			fp = open(path, 'rb')
 			fileData = fp.read()

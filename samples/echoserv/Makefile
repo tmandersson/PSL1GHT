@@ -12,7 +12,9 @@ INCLUDE		:=	include
 DATA		:=	data
 LIBS		:=	
 
-CONTENTID	:=	UP0001-TEST00000_00-0000000000000000
+TITLE		:=	ECHOServer - PSL1GHT
+APPID		:=	TEST00000
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99
 CXXFLAGS	+= -g -O2 -Wall
@@ -55,9 +57,9 @@ pkg: $(BUILD)
 	@mkdir -p $(BUILD)/pkg/USRDIR
 	@cp $(ICON0) $(BUILD)/pkg/
 	@$(FSELF) -n $(BUILD)/$(TARGET).elf $(BUILD)/pkg/USRDIR/EBOOT.BIN
-	@$(SFO) -f $(SFOXML) $(BUILD)/pkg/PARAM.SFO
+	@$(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILD)/pkg/PARAM.SFO
 	@$(PKG) --contentid $(CONTENTID) $(BUILD)/pkg/ $(OUTPUT).pkg
-
+	
 run: $(BUILD)
 	@WIILOAD=$(PS3LOAD) $(WIILOAD) $(OUTPUT).self
 

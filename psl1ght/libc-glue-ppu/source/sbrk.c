@@ -4,8 +4,12 @@
 #include <errno.h>
 
 // 64kb page allocations
-#define PAGE_SIZE		0x10000
-#define PAGE_SIZE_FLAG	0x200
+//#define PAGE_SIZE		0x10000
+//#define PAGE_SIZE_FLAG	0x200
+
+// 1mb page allocations
+#define PAGE_SIZE		0x100000
+#define PAGE_SIZE_FLAG	0x400
 
 #define ROUND_UP(p, round) \
 	((p + round - 1) & ~(round - 1))

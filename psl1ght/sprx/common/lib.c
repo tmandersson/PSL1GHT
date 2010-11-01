@@ -23,7 +23,7 @@ static const void* scefstub[0] __attribute__((section(".data.sceFStub." LIBRARY_
 static const uint32_t version __attribute__((section(".rodata.sceResident"))) = 0;
 static const const char name[] __attribute__((section(".rodata.sceResident"))) = LIBRARY_NAME;
 
-prx_header header __attribute__((section(".lib.stub"))) = {
+static prx_header header __attribute__((section(".lib.stub"))) = {
 	LIBRARY_HEADER_1,
 	LIBRARY_HEADER_2,
 	0,

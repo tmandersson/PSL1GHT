@@ -61,7 +61,7 @@ pkg: $(BUILD)
 	@$(PKG) --contentid $(CONTENTID) $(BUILD)/pkg/ $(OUTPUT).pkg
 
 run: $(BUILD)
-	@WIILOAD=$(PS3LOAD) $(WIILOAD) $(OUTPUT).self
+	@$(PS3LOADAPP) $(OUTPUT).self
 
 else
 

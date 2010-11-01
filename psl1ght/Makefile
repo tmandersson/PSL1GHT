@@ -14,6 +14,7 @@ all: $(STUBS)
 	@make -C sprx/liblv2 --no-print-directory
 	@make -C sprx/libsysutil --no-print-directory
 	@make -C sprx/libgcm_sys --no-print-directory
+	@make -C sprx/libio --no-print-directory
 
 clean:
 	rm -f $(STUBS) stub/crt1.o stub.a
@@ -24,6 +25,7 @@ clean:
 	@make -C sprx/liblv2 clean --no-print-directory
 	@make -C sprx/libsysutil clean --no-print-directory
 	@make -C sprx/libgcm_sys clean --no-print-directory
+	@make -C sprx/libio clean --no-print-directory
 
 install: all
 	@mkdir -p $(PSL1GHT)/include $(PSL1GHT)/lib $(PSL1GHT)/bin

@@ -1,3 +1,6 @@
-
-/psl1ght/sprx/liblv2/build
-/psl1ght/sprx/liblv2/liblv2.a
+samples/ps3load/zlib/
+*.elf
+*.self
+*.pkg
+samples/*/build
+psl1ght/build

@@ -15,31 +15,31 @@ extern "C" {
 typedef struct {
 	uint16_t width;
 	uint16_t height;
-} videoResolution;
+} VideoResolution;
 
 typedef struct {
 	uint8_t resolution;
 	uint8_t scanMode; // Interlaced or Progressive
 	uint8_t conversion;
 	uint8_t aspect;
-	uint8_t unknown[2];
+	uint8_t padding[2];
 	uint16_t refreshRates;
-} videoDisplayMode;
+} VideoDisplayMode;
 
 #define VIDEO_STATE_DISABLED	0
 #define VIDEO_STATE_ENABLED 	1
 #define VIDEO_STATE_BUSY	3
 
-typedef struct {
+ typedef struct {
 	uint8_t state;
 	uint8_t colorSpace;
-	uint8_t unknown[6];
-	videoDisplayMode* displayMode;
-} videoState;
+	uint8_t padding[6];
+	VideoDisplayMode displayMode;
+} VideoState;
 
-int videoGetResolution(int resolutionId, videoResolution* resolution);
+int videoGetResolution(int resolutionId, VideoResolution* resolution);
 int videoConfigure(int videoOut, int resolutionId, int option, int waitForEvent);
-int videoGetState(int videoOut, int deviceIndex, videoState *state);
+int videoGetState(int videoOut, int deviceIndex, VideoState *state);
 
 
 #ifdef __cplusplus

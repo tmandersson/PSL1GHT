@@ -18,6 +18,31 @@ typedef struct PadInfo{
 } PadInfo;
 
 
+#define PAD_BUTTON_UP (0)
+#define PAD_BUTTON_DOWN (1)
+
+typedef enum
+{
+	BTN_SELECT = 0,
+	BTN_L3,
+	BTN_R3,
+	BTN_START,
+	BTN_UP,
+	BTN_RIGHT,
+	BTN_DOWN,
+	BTN_LEFT,
+	BTN_L2,
+	BTN_R2,
+	BTN_L1,
+	BTN_R1,
+	BTN_TRIANGLE,
+	BTN_CIRCLE,
+	BTN_CROSS,
+	BTN_SQUARE
+};
+
+#define BUTTON_DOWN(pd, btn) ((((pd.button[2] & 0xFF) | ((pd.button[3] & 0xFF)<<8)) & (1 << btn)) == (1 << btn))
+#define BUTTON_DOWN(pd, btn) (!BUTTON_DOWN(pd,btn))
 #define PAD_MAX_CODES 64
 typedef struct PadData{
 	s32 len;

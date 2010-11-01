@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
     char      buffer[MAX_LINE];      /*  character buffer          */
     char     *endptr;                /*  for strtol()              */
 	PadInfo padinfo;
+	PadData paddata;
 	
 	fprintf(stdout, "Starting Pad Test.\n");
     /*  Get port number from the command line, and
@@ -102,10 +103,22 @@ int main(int argc, char *argv[]) {
 	
 	sprintf(buffer, "PadInfo:\r\nMax Pads: %u\r\nConnected Pads: %u\r\nInfo Field: %08x\r\n", padinfo.max, padinfo.connected, padinfo.info);
 	Writeline(conn_s, buffer, strlen(buffer));
-	int i;
+	int i,j;
 	for(i=0; i<MAX_PADS; i++){
-		sprintf(buffer, "Controller %u:\r\nVendor ID: %hx\r\nProduct ID: %hx\r\nStatus: %hhu\r\n", i, padinfo.vendor_id[i], padinfo.product_id[i], padinfo.status[i]);
-		Writeline(conn_s, buffer, strlen(buffer));
+		if(padinfo.status[i]){
+			sprintf(buffer, "Controller %u:\r\nVendor ID: %hx\r\nProduct ID: %hx\r\nStatus: %hhu\r\n", i, padinfo.vendor_id[i], padinfo.product_id[i], padinfo.status[i]);
+			Writeline(conn_s, buffer, strlen(buffer));
+			
+			sprintf(buffer, "Calling ioPadGetData(%d) returned %d\r\n", i, ioPadGetData(i, &paddata));
+			Writeline(conn_s, buffer, strlen(buffer));
+			sprintf(buffer, "Pad Data:\r\nLength: %d\r\n", paddata.len);
+			Writeline(conn_s, buffer, strlen(buffer));
+			for(j=0;j<paddata.len; j++){
+				sprintf(buffer, "paddata.button[%d]: %04X\r\n", j, paddata.button[j]);
+				Writeline(conn_s, buffer, strlen(buffer));
+			}
+		}
+		
 	}
 	sprintf(buffer, "Calling ioPadEnd() returned %d\r\n", ioPadEnd());
 	Writeline(conn_s, buffer, strlen(buffer));

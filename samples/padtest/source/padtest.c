@@ -35,7 +35,8 @@ int main(int argc, char *argv[]) {
     struct    sockaddr_in servaddr;  /*  socket address structure  */
     char      buffer[MAX_LINE];      /*  character buffer          */
     char     *endptr;                /*  for strtol()              */
-
+	PadInfo padinfo;
+	
 	fprintf(stdout, "Starting Pad Test.\n");
     /*  Get port number from the command line, and
         set to default port if no arguments were supplied  */
@@ -93,11 +94,20 @@ int main(int argc, char *argv[]) {
 
 	Writeline(conn_s, message, strlen(message));
 	
-	sprintf(buffer, "Calling ioPadInit(%d) returned %d\n", 7, ioPadInit(7));
+	sprintf(buffer, "Calling ioPadInit(%d) returned %d\r\n", 7, ioPadInit(7));
 	Writeline(conn_s, buffer, strlen(buffer));
 	
+	sprintf(buffer, "Calling ioPadGetInfo() returned %d\r\n", ioPadGetInfo(&padinfo));
+	Writeline(conn_s, buffer, strlen(buffer));
 	
-	sprintf(buffer, "Calling ioPadEnd() returned %d\n", ioPadEnd());
+	sprintf(buffer, "PadInfo:\r\nMax Pads: %u\r\nConnected Pads: %u\r\nInfo Field: %08x\r\n", padinfo.max, padinfo.connected, padinfo.info);
+	Writeline(conn_s, buffer, strlen(buffer));
+	int i;
+	for(i=0; i<MAX_PADS; i++){
+		sprintf(buffer, "Controller %u:\r\nVendor ID: %hx\r\nProduct ID: %hx\r\nStatus: %hhu\r\n", i, padinfo.vendor_id[i], padinfo.product_id[i], padinfo.status[i]);
+		Writeline(conn_s, buffer, strlen(buffer));
+	}
+	sprintf(buffer, "Calling ioPadEnd() returned %d\r\n", ioPadEnd());
 	Writeline(conn_s, buffer, strlen(buffer));
 
 	/*  Close the connected socket  */

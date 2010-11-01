@@ -1,6 +1,6 @@
 #pragma once
 
-#include <pslight/types.h>
+#include <psl1ght/types.h>
 #include <stdlib.h>
 
 #ifdef __cplusplus
@@ -34,12 +34,12 @@ typedef struct {
 	uint8_t state;
 	uint8_t colorSpace;
 	uint8_t unknown[6];
-	VideoDisplayMode* displayMode;
-}
+	videoDisplayMode* displayMode;
+} videoState;
 
 int videoGetResolution(int resolutionId, videoResolution* resolution);
 int videoConfigure(int videoOut, int resolutionId, int option, int waitForEvent);
-int videoGetState(int videoOut, int deviceIndex, VideoState *state);
+int videoGetState(int videoOut, int deviceIndex, videoState *state);
 
 
 #ifdef __cplusplus

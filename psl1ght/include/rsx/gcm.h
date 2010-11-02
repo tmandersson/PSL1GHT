@@ -50,7 +50,8 @@ typedef struct {
 	uint32_t ref;
 } gcmControlRegister;
 
-gcmControlRegister *gcmGetControlRegister(gcmContextData *context);
+gcmControlRegister *gcmGetControlRegister();
+void gcmFlushBuffer(gcmContextData *context);
 
 #ifdef __cplusplus
 }

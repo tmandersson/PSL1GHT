@@ -16,6 +16,7 @@ all: $(STUBS)
 	@make -C sprx/libsysutil --no-print-directory
 	@make -C sprx/libgcm_sys --no-print-directory
 	@make -C sprx/libio --no-print-directory
+	@make -C lib/libreality --no-print-directory
 
 clean:
 	rm -f $(STUBS) stub/crt1.o stub.a
@@ -28,10 +29,11 @@ clean:
 	@make -C sprx/libsysutil clean --no-print-directory
 	@make -C sprx/libgcm_sys clean --no-print-directory
 	@make -C sprx/libio clean --no-print-directory
+	@make -C lib/libreality clean --no-print-directory
 
 install: all
 	@mkdir -p $(PSL1GHT)/include $(PSL1GHT)/lib $(PSL1GHT)/bin
-	@cp linker.x libpsl1ght.a libc-glue-ppu/libc-glue-ppu.a stub/crt1.o sprx/*/*.a $(PSL1GHT)/lib/
+	@cp linker.x libpsl1ght.a libc-glue-ppu/libc-glue-ppu.a stub/crt1.o sprx/*/*.a lib/*/*.a $(PSL1GHT)/lib/
 	@cp -r include $(PSL1GHT)/
 	@cp Makefile.base $(PSL1GHT)/
 	@cp tools/raw2h/raw2h tools/ps3load/ps3load tools/sprxlinker/sprxlinker $(PSL1GHT)/bin/

@@ -19,12 +19,12 @@ typedef struct{
 	u32 callback;
 } gcmContextData;
 
-int gcmInitBody(u32 *contex, const u32 cmdSize, const u32 ioSize, const void* ioAddress);
+s32 gcmInitBody(u32 *contex, const u32 cmdSize, const u32 ioSize, const void* ioAddress);
 
 #define GCM_FLIP_VSYNC 2
 #define GCM_FLIP_HSYNC 1
 #define GCM_FLIP_HSYNC_AND_BREAK_EVERYTHING 3
-void gcmSetFlipMode(int mode);
+void gcmSetFlipMode(s32 mode);
 
 typedef struct {
 	u32 localAddress;

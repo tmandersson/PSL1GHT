@@ -25,6 +25,10 @@ gcmContextData *realityInit(const uint32_t cmdSize, const uint32_t ioSize, const
 
 int realityAddressToOffset(void *ptr, uint32_t *offset);
 
+void *realityAllocateAlignedRsxMemory(int alignment, int size);
+
+void *realityAllocateRsxMemory(int size);
+
 #ifdef __cplusplus
 }
 #endif

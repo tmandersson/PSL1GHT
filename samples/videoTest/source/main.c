@@ -16,8 +16,7 @@
 
 gcmContextData *context;
 
-int screen_width;
-int screen_height;
+VideoResolution res;
 int aspect;
 int *rsx_memory;
 
@@ -34,26 +33,28 @@ void flip(int buffer) {
 }
 
 void init_screen() {
-	int ret;
-	
-	VideoState state;
-	ret = videoGetState(0, 0, &state); // Get the state of the display
+	// Allocate a 1Mb buffer, alligned to a 1Mb boundary to be our shared IO memory with the RSX.
+	void *host_addr = memalign(1024*1024, 1024*1024);
+	assert(host_addr != NULL);
 
-	assert(ret == 0);
+	// Initilise Reality, which sets up the command buffer and shared IO memory
+	context = realityInit(0x10000, 1024*1024, host_addr); 
+	assert(context != NULL);
+
+	VideoState state;
+	assert(videoGetState(0, 0, &state) == 0); // Get the state of the display
+
 	assert(state.state == 0); // Make sure display is enabled
 
-	VideoResolution res;
-	videoGetResolution(state.displayMode.resolution, &res);
-	assert(ret == 0);
+	assert(videoGetResolution(state.displayMode.resolution, &res) == 0);
 
-	screen_width = res.width; 
-	screen_height = res.height; // Save resolution for later
-
+	
+	// Setup the video stuff 
 	VideoConfiguration vconfig;
 	memset(&vconfig, 0, sizeof(VideoConfiguration));
 	vconfig.resolution = state.displayMode.resolution;
 	vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
-	vconfig.pitch = screen_width * 4;
+	vconfig.pitch = res.width * 4;
 
 	assert(videoConfigure(0, &vconfig, NULL, 0) == 0);
 
@@ -65,7 +66,7 @@ void init_screen() {
 		aspect = 16.0/9.0;
 	}
 
-	int buffer_size = 4 * screen_width * screen_height; // each pixel is 4 bytes
+	int buffer_size = 4 * res.width * res.height; // each pixel is 4 bytes
 	printf("buffers will be 0x%x bytes\n", buffer_size);
 	
 	gcmSetFlipMode(GCM_FLIP_VSYNC);
@@ -73,30 +74,23 @@ void init_screen() {
 	gcmConfiguration config;
 	gcmGetConfiguration(&config);
 
-	printf("localMemory:\t0x%08x-%08x\nioMemory:\t0x%08x-%08x\n",
-		config.localAddress, config.localAddress + config.localSize,
-		config.ioAddress, config.ioAddress + config.ioSize);
-
-	printf("Frequencys:\n\tcore:\t%i\n\tmemory:\t%i\n",
-		config.coreFreq, config.memoryFreq);
-
-	// double cast to prevent warnings.
-	rsx_memory = (unsigned int *) (uint64_t) config.localAddress;
+	int *buffer = realityAllocateAlignedRsxMemory(16, buffer_size);
+	assert(buffer != NULL);
 
 	// Fill the display buffer with something pretty
 	int i, j;
-	for(i = 0; i < screen_height; i++) {
-		int color = (i / (screen_height * 1.0) * 256);
+	for(i = 0; i < res.height; i++) {
+		int color = (i / (res.height * 1.0) * 256);
 		color = (color << 8); // This should make a nice green graident
-		for(j = 0; j < screen_width; j++) rsx_memory[i* screen_width + j] = color;
+		for(j = 0; j < res.width; j++) buffer[i* res.width + j] = color;
 	}
 
 	uint32_t offset;
-	assert(realityAddressToOffset(rsx_memory, &offset) == 0);
+	assert(realityAddressToOffset(buffer, &offset) == 0);
 
 	printf("Offset in RSX memory is 0x%08x\n", offset);
 
-	assert(gcmSetDisplayBuffer(0, offset, screen_width * 4, screen_width, screen_height) == 0);
+	assert(gcmSetDisplayBuffer(0, offset, res.width * 4, res.width, res.height) == 0);
 	gcmResetFlipStatus();
 	printf("ok, lets try flipping the buffer onto the screen\n");
 	
@@ -110,14 +104,6 @@ void init_screen() {
 
 int main(int argc, const char* argv[])
 {
-	// Allocate a 1Mb buffer, alligned to a 1Mb boundary to be our shared IO memory with the RSX.
-	void *host_addr = memalign(1024*1024, 1024*1024);
-	assert(host_addr != NULL);
-
-	// Initilise Reality, which sets up the command buffer and shared IO memory
-	context = realityInit(0x10000, 1024*1024, host_addr); 
-	assert(context != NULL);
-
 	init_screen();
 
 	ioPadInit(7);

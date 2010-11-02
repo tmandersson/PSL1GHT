@@ -15,6 +15,7 @@
 #include <arpa/inet.h>        /*  inet (3) funtions         */
 #include <unistd.h>           /*  misc. UNIX functions      */
 #include <io/pad.h> 
+#include <io/mouse.h> 
 
 #include "helper.h"           /*  our own helper functions  */
 
@@ -103,7 +104,7 @@ int main(int argc, char *argv[]) {
 	
 	sprintf(buffer, "PadInfo:\r\nMax Pads: %u\r\nConnected Pads: %u\r\nInfo Field: %08x\r\n", padinfo.max, padinfo.connected, padinfo.info);
 	Writeline(conn_s, buffer, strlen(buffer));
-	int i,j;
+	int i;
 	for(i=0; i<MAX_PADS; i++){
 		if(padinfo.status[i]){
 			sprintf(buffer, "Controller %u:\r\nVendor ID: %hx\r\nProduct ID: %hx\r\nStatus: %hhu\r\n", i, padinfo.vendor_id[i], padinfo.product_id[i], padinfo.status[i]);
@@ -113,13 +114,60 @@ int main(int argc, char *argv[]) {
 			Writeline(conn_s, buffer, strlen(buffer));
 			sprintf(buffer, "Pad Data:\r\nLength: %d\r\n", paddata.len);
 			Writeline(conn_s, buffer, strlen(buffer));
-			for(j=0;j<paddata.len; j++){
-				sprintf(buffer, "paddata.button[%d]: %04X\r\n", j, paddata.button[j]);
-				Writeline(conn_s, buffer, strlen(buffer));
-			}
+			
+			sprintf(buffer, "X..... %d\r\n", paddata.BTN_CROSS);
+			Writeline(conn_s, buffer, strlen(buffer));
+			sprintf(buffer, "O..... %d\r\n", paddata.BTN_CIRCLE);
+			Writeline(conn_s, buffer, strlen(buffer));
+			sprintf(buffer, "/\\.... %d\r\n", paddata.BTN_TRIANGLE);
+			Writeline(conn_s, buffer, strlen(buffer));
+			sprintf(buffer, "[].... %d\r\n", paddata.BTN_SQUARE);
+			Writeline(conn_s, buffer, strlen(buffer));
+			
+			sprintf(buffer, "LEFT.. %d\r\n", paddata.BTN_LEFT);
+			Writeline(conn_s, buffer, strlen(buffer));
+			sprintf(buffer, "RIGHT. %d\r\n", paddata.BTN_RIGHT);
+			Writeline(conn_s, buffer, strlen(buffer));
+			sprintf(buffer, "DOWN.. %d\r\n", paddata.BTN_DOWN);
+			Writeline(conn_s, buffer, strlen(buffer));
+			sprintf(buffer, "UP.... %d\r\n", paddata.BTN_UP);
+			Writeline(conn_s, buffer, strlen(buffer));
+			
+			PadActParam actparam;
+			actparam.small_motor = 1;
+			actparam.large_motor = 0;
+			
+			sprintf(buffer, "Vibrating small motor... ");
+			Writeline(conn_s, buffer, strlen(buffer));
+			
+			ioPadSetActDirect(i, &actparam);
+			usleep(2000000);
+			
+			sprintf(buffer, "Finished.\r\n");
+			Writeline(conn_s, buffer, strlen(buffer));
+
+			actparam.small_motor = 0;
+			actparam.large_motor = 255;
+			
+			sprintf(buffer, "Vibrating large motor... ");
+			Writeline(conn_s, buffer, strlen(buffer));
+			
+			ioPadSetActDirect(i, &actparam);
+			usleep(2000000);
+			
+			sprintf(buffer, "Finished.\r\n");
+			Writeline(conn_s, buffer, strlen(buffer));
+			
 		}
 		
 	}
+	
+	
+	
+	
+	sprintf(buffer, "Finished.\r\n");
+	Writeline(conn_s, buffer, strlen(buffer));
+	
 	sprintf(buffer, "Calling ioPadEnd() returned %d\r\n", ioPadEnd());
 	Writeline(conn_s, buffer, strlen(buffer));
 

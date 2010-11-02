@@ -32,4 +32,4 @@ LIBRARY_SYMBOL:
 	name: \
 		.quad __##name, .TOC.@tocbase, 0
 
-#include "exports.c"
+#include "exports.h"

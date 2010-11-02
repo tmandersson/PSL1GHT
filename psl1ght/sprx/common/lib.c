@@ -43,4 +43,4 @@ static prx_header header __attribute__((section(".lib.stub"))) = {
 	const void* name##_stub __attribute__((section(".data.sceFStub." LIBRARY_NAME))) = &__##name; \
 	const uint32_t name##_fnid __attribute__((section(".rodata.sceFNID"))) = fnid;
 
-#include "exports.c"
+#include "exports.h"

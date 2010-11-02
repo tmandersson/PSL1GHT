@@ -4,7 +4,7 @@
 void realityFlushBuffer(gcmContextData *context) {
 	gcmControlRegister *control = gcmGetControlRegister(context);
 	__asm __volatile__("sync"); // Sync, to make sure the command was written;
-	uint32_t offset;
+	u32 offset;
 	gcmAddressToOffset(context->current, &offset);
 	control->put = offset;
 }
@@ -16,18 +16,18 @@ void realityFlushBuffer(gcmContextData *context) {
  * 
  * Returns a context structure.
  */
-gcmContextData *realityInit(const uint32_t cmdSize, const uint32_t ioSize, const void* ioAddress) {
-	uint32_t contextPointer;
-	int ret = gcmInitBody(&contextPointer, cmdSize, ioSize, ioAddress);
+gcmContextData *realityInit(const u32 cmdSize, const u32 ioSize, const void* ioAddress) {
+	u32 contextPointer;
+	s32 ret = gcmInitBody(&contextPointer, cmdSize, ioSize, ioAddress);
 	if (ret == 0) {
 		// Double cast fixes warning about diffrent pointer sizes.
-		gcmContextData *context = (gcmContextData *) (uint64_t) contextPointer;
+		gcmContextData *context = (gcmContextData *) (u64) contextPointer;
 		return context;
 	}
 	return NULL;
 }
 
-int realityAddressToOffset(void* ptr, uint32_t *offset) {
+int realityAddressToOffset(void* ptr, u32 *offset) {
 	// Double cast for warnings.
-	return gcmAddressToOffset((uint32_t) (uint64_t) ptr, offset);
+	return gcmAddressToOffset((u32) (u64) ptr, offset);
 }

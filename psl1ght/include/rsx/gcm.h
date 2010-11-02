@@ -20,8 +20,8 @@ int gcmInitBody(void **contex, const uint32_t cmdSize, const uint32_t ioSize, co
 void gcmSetFlipMode(int mode);
 
 typedef struct {
-	int localAddress;
-	int ioAddress;
+	uint32_t localAddress;
+	uint32_t ioAddress;
 	int localSize;
 	int ioSize;
 	int memoryFreq;

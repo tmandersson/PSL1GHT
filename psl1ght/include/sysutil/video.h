@@ -42,7 +42,20 @@ typedef struct {
 } VideoState;
 
 int videoGetResolution(int resolutionId, VideoResolution* resolution);
-int videoConfigure(int videoOut, int resolutionId, int option, int blocking);
+
+#define VIDEO_BUFFER_FORMAT_XRGB	0
+#define VIDEO_BUFFER_FORMAT_XBGR	1
+#define VIDEO_BUFFER_FORMAT_FLOAT	2
+
+typedef struct {
+	uint8_t resolution;
+	uint8_t	format;
+	uint8_t aspect;
+	uint8_t padding[9];
+	uint32_t pitch;
+} VideoConfiguration;
+
+int videoConfigure(int videoOut, VideoConfiguration *config, void *option, int blocking);
 int videoGetState(int videoOut, int deviceIndex, VideoState *state);
 
 

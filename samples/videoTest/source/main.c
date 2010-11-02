@@ -4,18 +4,40 @@
 #include <malloc.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
+
 
 #include <sysutil/video.h>
 #include <rsx/gcm.h>
 
 #include <psl1ght/lv2.h>
 
-void *context;
+gcmContextData *context;
 
 int screen_width;
 int screen_height;
 int aspect;
 int *rsx_memory;
+
+void flushBuffer(gcmContextData *context) {
+	gcmControlRegister *control = gcmGetControlRegister(context);
+	__asm __volatile__("sync"); // Sync, to make sure the command was written;
+	int offset;
+	gcmAddressToOffset(context->current, &offset);
+	control->put = offset;
+}
+
+void waitFlip() {
+	while(gcmGetFlipStatus() != 0) 
+		usleep(200);
+	gcmResetFlipStatus();
+}
+
+void flip(int buffer) {
+	assert(gcmSetFlip(context, buffer) == 0);
+	flushBuffer(context);
+	gcmSetWaitFlip(context); // Block until flip has finished
+}
 
 void init_screen() {
 	int ret;
@@ -32,6 +54,17 @@ void init_screen() {
 
 	screen_width = res.width; 
 	screen_height = res.height; // Save resolution for later
+
+	VideoConfiguration vconfig;
+	memset(&vconfig, 0, sizeof(VideoConfiguration));
+	vconfig.resolution = state.displayMode.resolution;
+	vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
+	vconfig.pitch = screen_width * 4;
+
+	assert(videoConfigure(0, &vconfig, NULL, 0) == 0);
+
+	assert(videoGetState(0, 0, &state) == 0); 
+
 	if(state.displayMode.aspect == VIDEO_ASPECT_4_3) { // Aspect might be useful too
 		aspect = 4.0/3.0;
 	} else { 
@@ -59,18 +92,23 @@ void init_screen() {
 	int i, j;
 	for(i = 0; i < screen_height; i++) {
 		int color = (i / (screen_height * 1.0) * 256);
-		color = (color << 8) & (0xff << 24); // This should make a nice green graident
+		color = (color << 8); // This should make a nice green graident
 		for(j = 0; j < screen_width; j++) rsx_memory[i* screen_width + j] = color;
 	}
 
 	int offset;
-	assert(gcmAddressToOffset(config.localAddress, &offset) == 0); // I'm pretty sure this function just subtracts 0xc0000000 
+	assert(gcmAddressToOffset((uint32_t) rsx_memory, &offset) == 0);
+
+	printf("Offset in RSX memory is 0x%08x\n", offset);
 
 	assert(gcmSetDisplayBuffer(0, offset, screen_width * 4, screen_width, screen_height) == 0);
-	
+	gcmResetFlipStatus();
 	printf("ok, lets try flipping the buffer onto the screen\n");
 	
-	assert(gcmSetFlip(context, 0) == 0);
+	flip(0);
+	waitFlip();
+	// And we need to flip again because for some reason our first flip is swallowed
+	flip(0);
 
 	printf("There should now be something on the screen\n");
 }
@@ -92,7 +130,7 @@ int main(int argc, const char* argv[])
 
 	init_screen();
 
-	sleep(10);
+	sleep(30);
 	
 	printf("exiting\n");
 

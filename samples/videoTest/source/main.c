@@ -10,7 +10,7 @@
 
 #include <psl1ght/lv2.h>
 
-unsigned int context;
+void **context;
 
 int screen_width;
 int screen_height;
@@ -53,7 +53,7 @@ void init_screen() {
 	printf("Frequencys:\n\tcore:\t%i\n\tmemory:\t%i\n",
 		config.coreFreq, config.memoryFreq);
 
-	rsx_memory = (int *) config.localAddress;
+	rsx_memory = (unsigned int *) config.localAddress;
 
 	// Fill the display buffer with something pretty
 	int i, j;
@@ -70,7 +70,7 @@ void init_screen() {
 	
 	printf("ok, lets try flipping the buffer onto the screen\n");
 	
-	assert(gcmSetFlip(&context, 0) == 0);
+	assert(gcmSetFlip(context, 0) == 0);
 
 	printf("There should now be something on the screen\n");
 }

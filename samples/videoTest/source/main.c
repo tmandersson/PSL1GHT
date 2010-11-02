@@ -10,7 +10,7 @@
 
 #include <psl1ght/lv2.h>
 
-void **context;
+void *context;
 
 int screen_width;
 int screen_height;
@@ -83,11 +83,18 @@ int main(int argc, const char* argv[])
 
 	printf("Allocated 1Mb buffer @ 0x%08lx\n", (long) host_addr);
 
-	ret = gcmInitBody(&context, 0x10000, 1024*1024, host_addr); // 
-	printf("gcmInitBody(), ret=0x%x, context=0x%08x\n", ret, context);
+	uint32_t temp_context = 0;
+
+	ret = gcmInitBody(&temp_context, 0x10000, 1024*1024, host_addr); 
+	context = temp_context; 
+	printf("gcmInitBody(), ret=0x%x, context=0x%08x\n", ret, temp_context);
 	assert(ret == 0);
 
 	init_screen();
+
+	sleep(10);
+	
+	printf("exiting\n");
 
 	return 0;
 }

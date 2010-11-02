@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-int gcmInitBody(void **contex, const uint32_t cmdSize, const uint32_t ioSize, const void* ioAddress);
+int gcmInitBody(uint32_t *contex, const uint32_t cmdSize, const uint32_t ioSize, const void* ioAddress);
 
 #define GCM_FLIP_VSYNC 2
 #define GCM_FLIP_HSYNC 1

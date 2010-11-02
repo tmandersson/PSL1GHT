@@ -10,7 +10,7 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lgcm_sys
+LIBS		:=	-lgcm_sys -lsysutil
 
 TITLE		:=	Template - PSL1GHT
 APPID		:=	TEST00003

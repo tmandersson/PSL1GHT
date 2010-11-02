@@ -12,6 +12,10 @@ extern "C" {
 #define VIDEO_RESOLUTION_480	4
 #define VIDEO_RESOLUTION_576	5
 
+#define VIDEO_ASPECT_AUTO	0
+#define VIDEO_ASPECT_4_3	1
+#define VIDEO_ASPECT_16_9	2
+
 typedef struct {
 	uint16_t width;
 	uint16_t height;
@@ -38,7 +42,7 @@ typedef struct {
 } VideoState;
 
 int videoGetResolution(int resolutionId, VideoResolution* resolution);
-int videoConfigure(int videoOut, int resolutionId, int option, int waitForEvent);
+int videoConfigure(int videoOut, int resolutionId, int option, int blocking);
 int videoGetState(int videoOut, int deviceIndex, VideoState *state);
 
 

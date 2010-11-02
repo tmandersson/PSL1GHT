@@ -29,17 +29,18 @@ void gcmSetFlipMode(int mode);
 typedef struct {
 	uint32_t localAddress;
 	uint32_t ioAddress;
-	int localSize;
-	int ioSize;
-	int memoryFreq;
-	int coreFreq;
+	int32_t localSize;
+	int32_t ioSize;
+	int32_t memoryFreq;
+	int32_t coreFreq;
 } gcmConfiguration;
 
 void gcmGetConfiguration(gcmConfiguration *config);
-int gcmAddressToOffset(int address, int *offset);
 
-int gcmSetDisplayBuffer(int id, int offset, int pitch, int width, int height);
-int gcmSetFlip(gcmContextData *context, int id);
+int gcmAddressToOffset(uint32_t address, uint32_t *offset);
+
+int gcmSetDisplayBuffer(uint32_t bufferId, uint32_t offset, uint32_t pitch, uint32_t width, uint32_t height);
+int gcmSetFlip(gcmContextData *context, uint32_t bufferId);
 void gcmSetWaitFlip(gcmContextData *context);
 int gcmGetFlipStatus();
 void gcmResetFlipStatus();

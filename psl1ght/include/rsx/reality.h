@@ -1,6 +1,16 @@
+#pragma once
 
+#include <psl1ght/types.h>
 
+#include "rsx/gcm.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* realityFlushBuffer:
+ * Flushes the RSX Command buffer.
+ */
 void realityFlushBuffer(gcmContextData *context);
 
 /* realityInit:
@@ -13,4 +23,8 @@ void realityFlushBuffer(gcmContextData *context);
  */
 gcmContextData *realityInit(const uint32_t cmdSize, const uint32_t ioSize, const void* ioAddress);
 
+int realityAddressToOffset(void *ptr, uint32_t *offset);
 
+#ifdef __cplusplus
+}
+#endif

@@ -80,7 +80,8 @@ void init_screen() {
 	printf("Frequencys:\n\tcore:\t%i\n\tmemory:\t%i\n",
 		config.coreFreq, config.memoryFreq);
 
-	rsx_memory = (unsigned int *) config.localAddress;
+	// double cast to prevent warnings.
+	rsx_memory = (unsigned int *) (uint64_t) config.localAddress;
 
 	// Fill the display buffer with something pretty
 	int i, j;
@@ -90,8 +91,8 @@ void init_screen() {
 		for(j = 0; j < screen_width; j++) rsx_memory[i* screen_width + j] = color;
 	}
 
-	int offset;
-	assert(gcmAddressToOffset((uint32_t) rsx_memory, &offset) == 0);
+	uint32_t offset;
+	assert(realityAddressToOffset(rsx_memory, &offset) == 0);
 
 	printf("Offset in RSX memory is 0x%08x\n", offset);
 
@@ -118,7 +119,6 @@ int main(int argc, const char* argv[])
 	assert(context != NULL);
 
 	init_screen();
-
 
 	ioPadInit(7);
 

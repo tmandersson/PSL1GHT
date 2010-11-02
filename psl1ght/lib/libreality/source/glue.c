@@ -1,9 +1,10 @@
+#include "rsx/reality.h"
 #include "rsx/gcm.h"
 
 void realityFlushBuffer(gcmContextData *context) {
 	gcmControlRegister *control = gcmGetControlRegister(context);
 	__asm __volatile__("sync"); // Sync, to make sure the command was written;
-	int offset;
+	uint32_t offset;
 	gcmAddressToOffset(context->current, &offset);
 	control->put = offset;
 }
@@ -24,4 +25,9 @@ gcmContextData *realityInit(const uint32_t cmdSize, const uint32_t ioSize, const
 		return context;
 	}
 	return NULL;
+}
+
+int realityAddressToOffset(void* ptr, uint32_t *offset) {
+	// Double cast for warnings.
+	return gcmAddressToOffset((uint32_t) (uint64_t) ptr, offset);
 }

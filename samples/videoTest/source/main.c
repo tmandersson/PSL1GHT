@@ -6,9 +6,11 @@
 #include <assert.h>
 #include <unistd.h>
 
-
 #include <sysutil/video.h>
 #include <rsx/gcm.h>
+#include <rsx/reality.h>
+
+#include <io/pad.h>
 
 #include <psl1ght/lv2.h>
 
@@ -19,14 +21,6 @@ int screen_height;
 int aspect;
 int *rsx_memory;
 
-void flushBuffer(gcmContextData *context) {
-	gcmControlRegister *control = gcmGetControlRegister(context);
-	__asm __volatile__("sync"); // Sync, to make sure the command was written;
-	int offset;
-	gcmAddressToOffset(context->current, &offset);
-	control->put = offset;
-}
-
 void waitFlip() {
 	while(gcmGetFlipStatus() != 0) 
 		usleep(200);
@@ -35,7 +29,7 @@ void waitFlip() {
 
 void flip(int buffer) {
 	assert(gcmSetFlip(context, buffer) == 0);
-	flushBuffer(context);
+	realityFlushBuffer(context);
 	gcmSetWaitFlip(context); // Block until flip has finished
 }
 
@@ -115,20 +109,18 @@ void init_screen() {
 
 int main(int argc, const char* argv[])
 {
-	int ret;
-	void *host_addr = memalign(1024*1024, 1024*1024); // Allocate a 1Mb buffer, alligned to a 1mb boundary.
-	assert(host_addr != 0);
+	// Allocate a 1Mb buffer, alligned to a 1Mb boundary to be our shared IO memory with the RSX.
+	void *host_addr = memalign(1024*1024, 1024*1024);
+	assert(host_addr != NULL);
 
-	printf("Allocated 1Mb buffer @ 0x%08lx\n", (long) host_addr);
-
-	uint32_t temp_context = 0;
-
-	ret = gcmInitBody(&temp_context, 0x10000, 1024*1024, host_addr); 
-	context = temp_context; 
-	printf("gcmInitBody(), ret=0x%x, context=0x%08x\n", ret, temp_context);
-	assert(ret == 0);
+	// Initilise Reality, which sets up the command buffer and shared IO memory
+	context = realityInit(0x10000, 1024*1024, host_addr); 
+	assert(context != NULL);
 
 	init_screen();
+
+
+	ioPadInit(7);
 
 	sleep(30);
 	

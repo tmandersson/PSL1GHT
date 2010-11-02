@@ -1,5 +1,5 @@
 EXPORT(gcmInitBody, 0x15bae46b);
-EXPORT(gcmAddressToOffset, 0x2a6fba9c);
+EXPORT(gcmAddressToOffset, 0x21ac3697);
 EXPORT(gcmFunc15, 0x3a33c1fd);
 EXPORT(gcmSetFlipMode, 0x4ae8d215);
 EXPORT(gcmGetFlipStatus, 0x72a577ce);

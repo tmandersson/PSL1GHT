@@ -13,13 +13,13 @@ extern "C" {
 #endif
 
 typedef struct{
-	uint32_t begin;
-	uint32_t end;
-	uint32_t current;
-	uint32_t callback;
+	u32 begin;
+	u32 end;
+	u32 current;
+	u32 callback;
 } gcmContextData;
 
-int gcmInitBody(uint32_t *contex, const uint32_t cmdSize, const uint32_t ioSize, const void* ioAddress);
+int gcmInitBody(u32 *contex, const u32 cmdSize, const u32 ioSize, const void* ioAddress);
 
 #define GCM_FLIP_VSYNC 2
 #define GCM_FLIP_HSYNC 1
@@ -27,28 +27,28 @@ int gcmInitBody(uint32_t *contex, const uint32_t cmdSize, const uint32_t ioSize,
 void gcmSetFlipMode(int mode);
 
 typedef struct {
-	uint32_t localAddress;
-	uint32_t ioAddress;
-	int32_t localSize;
-	int32_t ioSize;
-	int32_t memoryFreq;
-	int32_t coreFreq;
+	u32 localAddress;
+	u32 ioAddress;
+	s32 localSize;
+	s32 ioSize;
+	s32 memoryFreq;
+	s32 coreFreq;
 } gcmConfiguration;
 
 void gcmGetConfiguration(gcmConfiguration *config);
 
-int gcmAddressToOffset(uint32_t address, uint32_t *offset);
+s32 gcmAddressToOffset(u32 address, u32 *offset);
 
-int gcmSetDisplayBuffer(uint32_t bufferId, uint32_t offset, uint32_t pitch, uint32_t width, uint32_t height);
-int gcmSetFlip(gcmContextData *context, uint32_t bufferId);
+s32 gcmSetDisplayBuffer(u32 bufferId, u32 offset, u32 pitch, u32 width, u32 height);
+s32 gcmSetFlip(gcmContextData *context, u32 bufferId);
 void gcmSetWaitFlip(gcmContextData *context);
-int gcmGetFlipStatus();
+s32 gcmGetFlipStatus();
 void gcmResetFlipStatus();
 
 typedef struct {
-	uint32_t put;
-	uint32_t get;
-	uint32_t ref;
+	u32 put;
+	u32 get;
+	u32 ref;
 } gcmControlRegister;
 
 gcmControlRegister *gcmGetControlRegister();

@@ -21,13 +21,13 @@ void realityFlushBuffer(gcmContextData *context);
  * 
  * Returns a context structure that controls the current status of thecommand buffer.
  */
-gcmContextData *realityInit(const uint32_t cmdSize, const uint32_t ioSize, const void* ioAddress);
+gcmContextData *realityInit(const u32 cmdSize, const u32 ioSize, const void* ioAddress);
 
-int realityAddressToOffset(void *ptr, uint32_t *offset);
+s32 realityAddressToOffset(void *ptr, u32 *offset);
 
-void *realityAllocateAlignedRsxMemory(int alignment, int size);
+void *realityAllocateAlignedRsxMemory(s32 alignment, s32 size);
 
-void *realityAllocateRsxMemory(int size);
+void *realityAllocateRsxMemory(s32 size);
 
 #ifdef __cplusplus
 }

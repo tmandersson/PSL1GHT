@@ -14,6 +14,23 @@ extern "C" {
 
 int gcmInitBody(void **contex, const uint32_t cmdSize, const uint32_t ioSize, const void* ioAddress);
 
+#define GCM_FLIP_VSYNC 2
+#define GCM_FLIP_HSYNC 1
+#define GCM_FLIP_HSYNC_AND_BREAK_EVERYTHING 3
+void gcmSetFlipMode(int mode);
+
+typedef struct {
+	int localAddress;
+	int ioAddress;
+	int localSize;
+	int ioSize;
+	int memoryFreq;
+	int coreFreq;
+} gcmConfiguration;
+
+void gcmGetConfigturation(gcmConfiguration *config);
+
+
 
 #ifdef __cplusplus
 }

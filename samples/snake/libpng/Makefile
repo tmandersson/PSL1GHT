@@ -1,12 +1,12 @@
 
-all: libpng.a pnglib.h pngconf.h
+all: libpng.a png.h pngconf.h
 
 libpng.a:
 	@./build.sh
 	@cp lib/libpng.a ./
 
-pnglib.h:
-	@cp include/pnglib.h ./
+png.h:
+	@cp include/png.h ./
 
 pngconf.h:
 	@cp include/pngconf.h ./

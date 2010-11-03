@@ -46,7 +46,9 @@ Status
 ------
 
 Graphics
+
 Simple Framebuffer: Yes
+
 3D: No
 
 Input

@@ -6,6 +6,12 @@ way to compile user apps to run from the XMB using the open-source PS3
 toolchains available.
 
 
+Credits
+-------
+
+Tempus - default package ICON0.PNG
+
+
 Environment
 -----------
 
@@ -39,8 +45,29 @@ building any of the examples or other apps that use PSL1GHT.
 Status
 ------
 
-At the moment, PSL1GHT has basic libc support with stdout debugging, file
-access, and network support. It doesn't have any way to access the screen or
-graphics at the moment. You can call lv2 syscalls and do some fun stuff with
-that, and you can link to the PS3 dynamic libraries (sprx) to bring in all of
-the exciting functionality.
+Graphics
+Simple Framebuffer: Yes
+3D: No
+
+Input
+Ps3 controllers fully supported.
+
+Networking
+The main functions for sockets are available, berkleys based.
+
+SPRX's
+Any libraries available to ps3 apps can be used, the exports just need to be filled out.
+Currently we support:
+libio
+|
+|-> libpad
+|-> libmouse
+liblv2
+libsysutil
+More to come.
+
+File Access
+As far as I know, only fstat is missing.
+
+Stdout Debugging
+Using Kammy's lv2 hook you can debug output to stdout using udp.

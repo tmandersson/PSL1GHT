@@ -11,7 +11,7 @@ Credits
 
     AerialX  - Founder, Author
     MattP    - Author
-    phiren   - Author
+    phiren   - Author, Awesome Guy
     Tempus   - PSL1GHT Logo
 
 
@@ -51,14 +51,14 @@ Current Status
 
 ### Graphics
 
-Currently, PSL1GHT supports an animatable framebuffer for graphics display.
-It can poll information about the display, like resolution and refresh rate.
+Currently, PSL1GHT supports a double buffered framebuffer directly in the 
+RSX's memory for 2D graphical display.
 3D support is not currently implemented.
 
 ### Input
 
 PS3 controllers are fully supported, and pressing the PS button brings up the
-in-game XMB menu.
+in-game XMB menu, assuming the framebuffer is working.
 
 ### Filesystem Access
 

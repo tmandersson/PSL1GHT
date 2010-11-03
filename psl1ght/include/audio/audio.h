@@ -27,12 +27,12 @@ typedef struct{
 } AudioPortParam;
 
 typedef struct{
-	u32   *readIndex;
-	u32   status;
-	u64   channelCount;
-	u64   numBlocks;
-	u32   portSize;
-	float *audioDataStart;
+	u32 readIndex;//pointer to u32
+	u32 status;
+	u64 channelCount;
+	u64 numBlocks;
+	u32 portSize;
+	u32 audioDataStart;//pointer to float
 } AudioPortConfig;
 
 int audioInit(void);

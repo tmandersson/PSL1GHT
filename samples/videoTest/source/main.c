@@ -23,7 +23,9 @@
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
 VideoResolution res; // Screen Resolution
-s32 *buffer; // The buffer we will be drawing into.
+
+int currentBuffer = 0;
+s32 *buffer[2]; // The buffer we will be drawing into.
 
 void waitFlip() { // Block the PPU thread untill the previous flip operation has finished.
 	while(gcmGetFlipStatus() != 0) 
@@ -69,40 +71,48 @@ void init_screen() {
 	
 	gcmSetFlipMode(GCM_FLIP_VSYNC); // Wait for VSYNC to flip
 
-	// Allocate a buffer for the RSX to draw to the screen
-	buffer = realityAllocateAlignedRsxMemory(16, buffer_size);
-	assert(buffer != NULL);
+	// Allocate two buffers for the RSX to draw to the screen (double buffering)
+	buffer[0] = realityAllocateAlignedRsxMemory(16, buffer_size);
+	buffer[1] = realityAllocateAlignedRsxMemory(16, buffer_size);
+	assert(buffer[0] != NULL && buffer[1] != NULL);
 
-	u32 offset;
-	assert(realityAddressToOffset(buffer, &offset) == 0);
-	// Setup the display buffer
-	assert(gcmSetDisplayBuffer(0, offset, res.width * 4, res.width, res.height) == 0);
+	u32 offset[2];
+	assert(realityAddressToOffset(buffer[0], &offset[0]) == 0);
+	assert(realityAddressToOffset(buffer[1], &offset[1]) == 0);
+	// Setup the display buffers
+	assert(gcmSetDisplayBuffer(0, offset[0], res.width * 4, res.width, res.height) == 0);
+	assert(gcmSetDisplayBuffer(1, offset[1], res.width * 4, res.width, res.height) == 0);
+
+	gcmResetFlipStatus();
+	flip(1);
+}
+
+void drawFrame(int *buffer, long frame) {
+	s32 i, j;
+	for(i = 0; i < res.height; i++) {
+		s32 color = (i / (res.height * 1.0) * 256);
+		// This should make a nice black to green graident
+		color = (color << 8) | ((frame % 255) << 16);
+		for(j = 0; j < res.width; j++)
+			buffer[i* res.width + j] = color;
+	}
+
 }
 
 s32 main(s32 argc, const char* argv[])
 {
 	PadInfo padinfo;
 	PadData paddata;
+	int i;
 	
 	init_screen();
 	ioPadInit(7);
-	
-	// Ok, everything is setup.
-	// Fill the display buffer with something pretty
-	s32 i, j;
-	for(i = 0; i < res.height; i++) {
-		s32 color = (i / (res.height * 1.0) * 256);
-		// This should make a nice black to green graident
-		color = (color << 8);
-		for(j = 0; j < res.width; j++)
-			buffer[i* res.width + j] = color;
-	}
 
-	gcmResetFlipStatus();
+	long frame = 0; // To keep track of how many frames we have rendered.
 	
-	
-	u8 running = 1;
-	while(running){
+	// Ok, everything is setup. Now for the main loop.
+	while(1){
+		// Check the pads.
 		ioPadGetInfo(&padinfo);
 		for(i=0; i<MAX_PADS; i++){
 			if(padinfo.status[i]){
@@ -114,10 +124,12 @@ s32 main(s32 argc, const char* argv[])
 			}
 			
 		}
-		flip(0);
-		waitFlip();
+
+		waitFlip(); // Wait for the last flip to finish, so we can draw to the old buffer
+		drawFrame(buffer[currentBuffer], frame++); // Draw into the unused buffer
+		flip(currentBuffer); // Flip buffer onto screen
+		currentBuffer = !currentBuffer;
 	}
-	sleep(30);
 	
 	return 0;
 }

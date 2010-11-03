@@ -25,9 +25,9 @@ gcmContextData *realityInit(const u32 cmdSize, const u32 ioSize, const void* ioA
 
 s32 realityAddressToOffset(void *ptr, u32 *offset);
 
-void *realityAllocateAlignedRsxMemory(s32 alignment, s32 size);
-
-void *realityAllocateRsxMemory(s32 size);
+// RSX memory allocators
+void *rsxMemAlign(s32 alignment, s32 size);
+void *rsxMem(s32 size);
 
 #ifdef __cplusplus
 }

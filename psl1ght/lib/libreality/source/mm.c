@@ -5,7 +5,7 @@ gcmConfiguration config;
 void *heap_pointer;
 
 // Really dumb allocater
-void *realityAllocateAlignedRsxMemory(s32 alignment, s32 size) {
+void *rsxMemAlign(s32 alignment, s32 size) {
 	if (!initialized) {
 		gcmGetConfiguration(&config);
 		initialized = 1;
@@ -19,7 +19,7 @@ void *realityAllocateAlignedRsxMemory(s32 alignment, s32 size) {
 	return pointer;
 }
 
-void *realityAllocateRsxMemory(s32 size) {
+void *rsxMem(s32 size) {
 	return realityAllocateAlignedRsxMemory(size, 0);
 }
 

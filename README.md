@@ -60,6 +60,8 @@ RSX's memory for 2D graphical display.
 PS3 controllers are fully supported, and pressing the PS button brings up the
 in-game XMB menu, assuming the framebuffer is working.
 
+But you can't currently quit from the xmb without your ps3 giving up and rebooting.
+
 ### Filesystem Access
 
 Full filesystem support is available, with access to the internal PS3 hard

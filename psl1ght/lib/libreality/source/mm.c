@@ -4,7 +4,7 @@ s8 initialized = 0;
 gcmConfiguration config;
 void *heap_pointer;
 
-// Really dumb allocater
+// Really dumb allocater, It will do until we start dealing with textures and vertex buffers.
 void *rsxMemAlign(s32 alignment, s32 size) {
 	if (!initialized) {
 		gcmGetConfiguration(&config);

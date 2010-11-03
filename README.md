@@ -1,15 +1,18 @@
 PSL1GHT
 =======
 
-PSL1GHT is a lightweight PlayStation 3 homebrew SDK, provided as a temporary
-way to compile user apps to run from the XMB using the open-source PS3
-toolchains available.
+PSL1GHT is a lightweight PlayStation 3 homebrew SDK that uses the open-source
+PlayStation 3 toolchains to compile user applications that will run from the
+XMB menu (GameOS homebrew).
 
 
 Credits
 -------
 
-Tempus - default package ICON0.PNG
+AerialX  - Founder, Author
+MattP    - Author
+phiren   - Author
+Tempus   - PSL1GHT Logo
 
 
 Environment
@@ -23,8 +26,9 @@ a full newlib environment; at the moment only two toolchains do so:
 * [ps3toolchain](http://github.com/ooPo/ps3toolchain)
 
 The SDK also includes a few standalone tools to help compilation. A host gcc
-is required to build raw2h, and sprxlinker requires libelf. Python 2.x is
-required to run fself.py
+is required to build raw2h, ps3load, and sprxlinker requires libelf. Python 2.x
+is required to run fself.py, sfo.py, and pkg.py.
+
 
 Building
 --------
@@ -42,32 +46,52 @@ install it to, for example...
 building any of the examples or other apps that use PSL1GHT.
 
 
-Status
-------
+Current Status
+--------------
 
-Graphics  
-Simple Framebuffer: Yes  
-3D: No  
+### Graphics
 
-Input  
-Ps3 controllers fully supported.  
+Currently, PSL1GHT supports an animatable framebuffer for graphics display.
+It can poll information about the display, like resolution and refresh rate.
+3D support is not currently implemented.
 
-Networking  
-The main functions for sockets are available, berkleys based.  
+### Input
 
-SPRX's  
-Any libraries available to ps3 apps can be used, the exports just need to be filled out.  
-Currently we support:  
-libio  
-|  
-|-> libpad  
-|-> libmouse  
-liblv2  
-libsysutil  
-More to come.  
+PS3 controllers are fully supported, and pressing the PS button brings up the
+in-game XMB menu.
 
-File Access  
-As far as I know, only fstat is missing.  
+### Filesystem Access
 
-Stdout Debugging  
-Using Kammy's lv2 hook you can debug output to stdout using udp.  
+Full filesystem support is available, with access to the internal PS3 hard
+drive, game disc contents, and external devices like USB drives. Only stat,
+fstat, and directory iteration is missing, though it can be done using the lv2
+filesystem interface directly (see include/psl1ght/lv2/filesystem.h)
+
+### Networking
+
+Berkeley sockets are available for use in PSL1GHT, though some of the
+implementation remains incomplete at this time (hostname lookups, for example).
+
+### STDOUT Debugging
+
+By default, PSL1GHT applications redirect stdout and stderr to the lv2 TTY
+interface. Kammy's ethdebug module can be used to retrieve this live debugging
+information over UDP broadcast packets.
+See [Kammy](http://github.com/AerialX/Kammy) for more information and a
+precompiled ethdebug hook loader.
+
+### SPRX Linking
+
+Any dynamic libraries available to normal PS3 applications can be used with
+PSL1GHT, they just need to be made into a stub library and have the exports
+filled out. See any of the examples in psl1ght/sprx for information on the
+creation of SPRX stub libraries.
+
+The following libraries are currently supported:
+* libio
+    * libpad
+    * libmouse
+* liblv2
+* libsysutil
+* libgcm_sys
+

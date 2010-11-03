@@ -20,7 +20,7 @@ void *rsxMemAlign(s32 alignment, s32 size) {
 }
 
 void *rsxMem(s32 size) {
-	return realityAllocateAlignedRsxMemory(size, 0);
+	return rsxMemAlign(size, 0);
 }
 
 

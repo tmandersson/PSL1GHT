@@ -21,7 +21,7 @@
 #include <psl1ght/lv2.h>
 
 #include "pngloader.h"
-//#include "testpng.bin.h"
+#include "testpng.bin.h"
 
 gcmContextData *context; // Context to keep track of the RSX buffer.
 

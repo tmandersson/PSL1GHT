@@ -42,7 +42,7 @@ void parseRGB(struct image *image, png_structp png_ptr,
 // I can't be bothered handling errors correctly, lets just abort
 struct image *loadPng(const uint8_t *png) {
 	// Make sure we have a valid png here.
-	assert(!png_check_sig((png_bytep) png, 8));
+	assert(png_sig_cmp((png_bytep) png, 0, 8) == 0);
 	
 	// get PNG file info struct
 	png_structp png_ptr = NULL;

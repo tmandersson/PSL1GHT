@@ -9,10 +9,10 @@ XMB menu (GameOS homebrew).
 Credits
 -------
 
-AerialX  - Founder, Author
-MattP    - Author
-phiren   - Author
-Tempus   - PSL1GHT Logo
+    AerialX  - Founder, Author
+    MattP    - Author
+    phiren   - Author
+    Tempus   - PSL1GHT Logo
 
 
 Environment

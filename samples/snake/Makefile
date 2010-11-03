@@ -8,10 +8,10 @@ include $(PSL1GHT)/Makefile.base
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCE		:=	source
-INCLUDE		:=	include libpng
+INCLUDE		:=	include libpng/include
 DATA		:=	data
-LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lpng
-LIBDIRS		:=	libpng
+LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lpng -lz -lm
+LIBDIRS		:=	libpng/lib
 
 
 TITLE		:=	Snake

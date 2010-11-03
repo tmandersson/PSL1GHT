@@ -1,5 +1,7 @@
 
-all:
+all: lib/libpng.a
+
+lib/libpng.a:
 	@./build.sh
 
 

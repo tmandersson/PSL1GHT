@@ -45,31 +45,29 @@ building any of the examples or other apps that use PSL1GHT.
 Status
 ------
 
-Graphics
+Graphics  
+Simple Framebuffer: Yes  
+3D: No  
 
-Simple Framebuffer: Yes
+Input  
+Ps3 controllers fully supported.  
 
-3D: No
+Networking  
+The main functions for sockets are available, berkleys based.  
 
-Input
-Ps3 controllers fully supported.
+SPRX's  
+Any libraries available to ps3 apps can be used, the exports just need to be filled out.  
+Currently we support:  
+libio  
+|  
+|-> libpad  
+|-> libmouse  
+liblv2  
+libsysutil  
+More to come.  
 
-Networking
-The main functions for sockets are available, berkleys based.
+File Access  
+As far as I know, only fstat is missing.  
 
-SPRX's
-Any libraries available to ps3 apps can be used, the exports just need to be filled out.
-Currently we support:
-libio
-|
-|-> libpad
-|-> libmouse
-liblv2
-libsysutil
-More to come.
-
-File Access
-As far as I know, only fstat is missing.
-
-Stdout Debugging
-Using Kammy's lv2 hook you can debug output to stdout using udp.
+Stdout Debugging  
+Using Kammy's lv2 hook you can debug output to stdout using udp.  

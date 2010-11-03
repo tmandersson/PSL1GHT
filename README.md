@@ -88,6 +88,7 @@ filled out. See any of the examples in psl1ght/sprx for information on the
 creation of SPRX stub libraries.
 
 The following libraries are currently supported:
+
 * libio
     * libpad
     * libmouse

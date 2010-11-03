@@ -1,4 +1,7 @@
-/* Now double buffered with animation.
+/* Note: this example only has a single buffer so it is only possible
+ * 	 to draw a single image to the screen.
+ * 	 if you want animation you will need a second buffer and to flip
+ * 	 between them.
  */ 
 
 #include <psl1ght/lv2.h>
@@ -17,9 +20,14 @@
 
 #include <psl1ght/lv2.h>
 
+#include "pngloader.h"
+#include "testpng.bin.h"
+
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
 VideoResolution res; // Screen Resolution
+
+struct image *image;
 
 int currentBuffer = 0;
 s32 *buffer[2]; // The buffer we will be drawing into.
@@ -85,14 +93,15 @@ void init_screen() {
 }
 
 void drawFrame(int *buffer, long frame) {
-	s32 i, j;
+	/*s32 i, j;
 	for(i = 0; i < res.height; i++) {
 		s32 color = (i / (res.height * 1.0) * 256);
 		// This should make a nice black to green graident
 		color = (color << 8) | ((frame % 255) << 16);
 		for(j = 0; j < res.width; j++)
 			buffer[i* res.width + j] = color;
-	}
+	}*/
+	memcpy(buffer, image->data, image->width * image->height * sizeof(uint32_t));
 
 }
 
@@ -104,6 +113,10 @@ s32 main(s32 argc, const char* argv[])
 	
 	init_screen();
 	ioPadInit(7);
+
+	image = loadPng(testpng_bin);
+
+	printf("Loaded %ix%i png\n", image->width, image->height);
 
 	long frame = 0; // To keep track of how many frames we have rendered.
 	

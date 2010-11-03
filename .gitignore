@@ -6,5 +6,6 @@
 build/
 psl1ght/tools/raw2h/raw2h
 psl1ght/tools/sprxlinker/sprxlinker
+psl1ght/tools/ps3load/ps3load
 samples/ps3load/zlib/*.h
 samples/ps3load/zlib/zlib-*

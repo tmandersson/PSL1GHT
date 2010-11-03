@@ -22,6 +22,7 @@
 
 #include "pngloader.h"
 #include "testpng.bin.h"
+#include "draw.h"
 
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
@@ -30,7 +31,7 @@ VideoResolution res; // Screen Resolution
 struct image *image;
 
 int currentBuffer = 0;
-s32 *buffer[2]; // The buffer we will be drawing into.
+buffer *buffers[2]; // The buffer we will be drawing into.
 
 void waitFlip() { // Block the PPU thread untill the previous flip operation has finished.
 	while(gcmGetFlipStatus() != 0) 
@@ -42,6 +43,20 @@ void flip(s32 buffer) {
 	assert(gcmSetFlip(context, buffer) == 0);
 	realityFlushBuffer(context);
 	gcmSetWaitFlip(context); // Prevent the RSX from continuing until the flip has finished.
+}
+
+void makeBuffer(int id, int size) {
+	buffer *buf = malloc(sizeof(buffer));
+	buf->ptr = rsxMemAlign(16, size);
+	assert(buf->ptr != NULL);
+
+	assert(realityAddressToOffset(buf->ptr, &buf->offset) == 0);
+	// Register the display buffer with the RSX
+	assert(gcmSetDisplayBuffer(id, buf->offset, res.width * 4, res.width, res.height) == 0);
+	
+	buf->width = res.width;
+	buf->height = res.height;
+	buffers[id] = buf;
 }
 
 // Initilize everything. You can probally skip over this function.
@@ -77,22 +92,14 @@ void init_screen() {
 	gcmSetFlipMode(GCM_FLIP_VSYNC); // Wait for VSYNC to flip
 
 	// Allocate two buffers for the RSX to draw to the screen (double buffering)
-	buffer[0] = rsxMemAlign(16, buffer_size);
-	buffer[1] = rsxMemAlign(16, buffer_size);
-	assert(buffer[0] != NULL && buffer[1] != NULL);
-
-	u32 offset[2];
-	assert(realityAddressToOffset(buffer[0], &offset[0]) == 0);
-	assert(realityAddressToOffset(buffer[1], &offset[1]) == 0);
-	// Setup the display buffers
-	assert(gcmSetDisplayBuffer(0, offset[0], res.width * 4, res.width, res.height) == 0);
-	assert(gcmSetDisplayBuffer(1, offset[1], res.width * 4, res.width, res.height) == 0);
+	makeBuffer(0, buffer_size);
+	makeBuffer(1, buffer_size);
 
 	gcmResetFlipStatus();
 	flip(1);
 }
 
-void drawFrame(int *buffer, long frame) {
+void drawFrame(buffer *buffer, long frame) {
 	/*s32 i, j;
 	for(i = 0; i < res.height; i++) {
 		s32 color = (i / (res.height * 1.0) * 256);
@@ -136,7 +143,7 @@ s32 main(s32 argc, const char* argv[])
 		}
 
 		waitFlip(); // Wait for the last flip to finish, so we can draw to the old buffer
-		drawFrame(buffer[currentBuffer], frame++); // Draw into the unused buffer
+		drawFrame(buffers[currentBuffer], frame++); // Draw into the unused buffer
 		flip(currentBuffer); // Flip buffer onto screen
 		currentBuffer = !currentBuffer;
 	}

@@ -12,6 +12,8 @@ make
 make install
 popd
 
+rm lib/*.so*
+
 ppkgver=1.4.4
 
 wget -c http://sourceforge.net/projects/libpng/files/01-libpng-master/$ppkgver/libpng-$ppkgver.tar.xz/download -O libpng-$ppkgver.tar.xz

@@ -10,7 +10,7 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-laudio -lm -lsysmodule
+LIBS		:=	-laudio -lm 
 
 TITLE		:=	Template - PSL1GHT
 APPID		:=	TEST00003

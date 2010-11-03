@@ -21,7 +21,7 @@
 #include <psl1ght/lv2.h>
 
 #include "pngloader.h"
-//#include "testpng.bin.h"
+#include "testpng.bin.h"
 
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
@@ -77,8 +77,8 @@ void init_screen() {
 	gcmSetFlipMode(GCM_FLIP_VSYNC); // Wait for VSYNC to flip
 
 	// Allocate two buffers for the RSX to draw to the screen (double buffering)
-	buffer[0] = realityAllocateAlignedRsxMemory(16, buffer_size);
-	buffer[1] = realityAllocateAlignedRsxMemory(16, buffer_size);
+	buffer[0] = rsxMemAlign(16, buffer_size);
+	buffer[1] = rsxMemAlign(16, buffer_size);
 	assert(buffer[0] != NULL && buffer[1] != NULL);
 
 	u32 offset[2];
@@ -93,15 +93,15 @@ void init_screen() {
 }
 
 void drawFrame(int *buffer, long frame) {
-	s32 i, j;
+	/*s32 i, j;
 	for(i = 0; i < res.height; i++) {
 		s32 color = (i / (res.height * 1.0) * 256);
 		// This should make a nice black to green graident
 		color = (color << 8) | ((frame % 255) << 16);
 		for(j = 0; j < res.width; j++)
 			buffer[i* res.width + j] = color;
-	}
-	//memcpy(buffer, image->data, image->width * image->height * sizeof(uint32_t));
+	}*/
+	memcpy(buffer, image->data, image->width * image->height * sizeof(uint32_t));
 
 }
 
@@ -114,7 +114,9 @@ s32 main(s32 argc, const char* argv[])
 	init_screen();
 	ioPadInit(7);
 
-	//image = loadPng(testpng_bin);
+	image = loadPng(testpng_bin);
+
+	printf("Loaded %ix%i png\n", image->width, image->height);
 
 	long frame = 0; // To keep track of how many frames we have rendered.
 	

@@ -12,10 +12,12 @@ make
 make install
 popd
 
+rm lib/*.so*
+
 ppkgver=1.4.4
 
-wget -c http://sourceforge.net/projects/libpng/files/01-libpng-master/$ppkgver/libpng-$ppkgver.tar.xz/download -O libpng-$ppkgver.tar.xz
-tar xvf libpng-$ppkgver.tar.xz
+wget -c http://sourceforge.net/projects/libpng/files/01-libpng-master/$ppkgver/libpng-$ppkgver.tar.gz/download -O libpng-$ppkgver.tar.gz
+tar xvf libpng-$ppkgver.tar.gz
 pushd libpng-$ppkgver
 CFLAGS="-g -O2 -Wall -L$PREFIX/lib -I$PREFIX/include" ./configure --host=powerpc64-linux --disable-shared --enable-static --prefix=$PREFIX
 make

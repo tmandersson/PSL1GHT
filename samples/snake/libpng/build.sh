@@ -24,3 +24,9 @@ make
 make install
 popd
 
+
+pushd pixman*
+CFLAGS="-g -O2 -Wall -DPIXMAN_NO_TLS" ./configure --prefix=/home/phire/ps3/PSL1GHT/samples/snake/libpng/ --host=powerpc64-linux --disable-shared --enable-static
+make
+make install
+popd

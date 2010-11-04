@@ -3,10 +3,15 @@
 #include <psl1ght/lv2/errno.h>
 
 #include <sys/socket.h>
+#include <sys/select.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 
 #include <stdio.h>
+#include <errno.h>
+
+int h_errno = 0;
 
 #define FD(socket) (socket & ~SOCKET_FD_MASK)
 
@@ -95,4 +100,10 @@ int inet_pton(int af, const char* src, void* dst)
 	}
 
 	return 1;
+}
+
+int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct timeval* timeout)
+{
+	errno = ENOSYS;
+	return -1;
 }

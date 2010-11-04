@@ -108,7 +108,7 @@ void drawFrame(buffer *buffer, long frame) {
 		for(j = 0; j < res.width; j++)
 			buffer[i* res.width + j] = color;
 	}*/
-	memcpy(buffer, image->data, image->width * image->height * sizeof(uint32_t));
+	memcpy(buffer->ptr, image->data, image->width * image->height * sizeof(uint32_t));
 
 }
 

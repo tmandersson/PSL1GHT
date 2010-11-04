@@ -8,10 +8,9 @@ include $(PSL1GHT)/Makefile.base
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCE		:=	source
-INCLUDE		:=	include libpng/include
+INCLUDE		:=	include
 DATA		:=	data
 LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lpng -lz -lm
-LIBDIRS		:=	libpng/lib
 
 
 TITLE		:=	Snake
@@ -48,12 +47,10 @@ export LIBPATHS :=      $(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir))
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
-	@make --no-print-directory -C libpng
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 clean:
 	@echo Clean...
-	#@make --no-print-directory -C libpng clean
 	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a $(OUTPUT).pkg
 
 pkg: $(BUILD)

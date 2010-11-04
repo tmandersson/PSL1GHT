@@ -2,9 +2,7 @@
 
 #include <psl1ght/types.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_BEGIN
 
 #define AUDIO_BLOCK_SAMPLES   256
 
@@ -43,6 +41,4 @@ int audioGetPortConfig(u32 portNum, AudioPortConfig *portConfig);
 int audioPortClose(u32 portNum);
 int audioQuit(void);
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_END

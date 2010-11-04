@@ -8,9 +8,7 @@
 #include <psl1ght/types.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_BEGIN
 
 typedef struct{
 	u32 begin;
@@ -54,6 +52,4 @@ typedef struct {
 gcmControlRegister *gcmGetControlRegister();
 void gcmFlushBuffer(gcmContextData *context);
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_END

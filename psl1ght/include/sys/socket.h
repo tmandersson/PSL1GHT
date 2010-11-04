@@ -89,7 +89,11 @@ struct linger
 #define PF_INET			AF_INET
 #define PF_INET6		AF_INET6
 
+#define ESHUTDOWN		110
+
 #define SOCKET_FD_MASK	0x40000000
+
+EXTERN_BEGIN
 
 int accept(int socket, const struct sockaddr* address, socklen_t* address_len);
 int bind(int socket, const struct sockaddr* address, socklen_t address_len);
@@ -113,3 +117,4 @@ int shutdown(int socket, int how);
 int socket(int domain, int type, int protocol);
 int socketpair(int domain, int type, int protocol, int socket_vector[2]);
 
+EXTERN_END

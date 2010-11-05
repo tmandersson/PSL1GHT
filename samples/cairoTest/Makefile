@@ -13,8 +13,8 @@ DATA		:=	data
 LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lcairo -lm -lfreetype -lz -lpixman-1 -lpng
 
 
-TITLE		:=	Snake
-APPID		:=	Snake00003
+TITLE		:=	CairoAnimationTest
+APPID		:=	CairoAni0003
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99

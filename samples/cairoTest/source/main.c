@@ -29,17 +29,16 @@ gcmContextData *context; // Context to keep track of the RSX buffer.
 
 VideoResolution res; // Screen Resolution
 
-struct image *image;
-
 int currentBuffer = 0;
 buffer *buffers[2]; // The buffer we will be drawing into.
 
 void waitFlip() { // Block the PPU thread untill the previous flip operation has finished.
 	while(gcmGetFlipStatus() != 0) 
-		usleep(200);
+		usleep(200);  // Sleep, to not stress the cpu.
 	gcmResetFlipStatus();
 }
 
+// Flip a buffer onto the screen.
 void flip(s32 buffer) {
 	assert(gcmSetFlip(context, buffer) == 0);
 	realityFlushBuffer(context);
@@ -100,10 +99,14 @@ void init_screen() {
 	flip(1);
 }
 
+// Draw a single frame, do all your drawing/animation from in here.
 void drawFrame(buffer *buffer, long frame) {
 	cairo_t *cr;
 
-	// 
+	/* We are just going to attach cairo directly to the buffer in the rsx memory.
+	 * If this gets too slow later with blending, we will need to create a buffer
+         * on cell then copy the finished result accross.
+	 */
 	cairo_surface_t *surface = cairo_image_surface_create_for_data((u8 *) buffer->ptr, 
 		CAIRO_FORMAT_RGB24, buffer->width, buffer->height, buffer->width * 4);
 	assert(surface != NULL);
@@ -114,12 +117,12 @@ void drawFrame(buffer *buffer, long frame) {
 	cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); // White
 	cairo_paint(cr);
 
-	cairo_set_line_width(cr, 30.0);
+	cairo_set_line_width(cr, 30.0); // 30 pixel wide line
 	cairo_set_source_rgb (cr, 1.0, 0.5, 0.0); // Orange
 
-	float angle = (frame % 600) / 300.0; // Rotation animaton
+	float angle = (frame % 600) / 300.0; // Rotation animaton, rotate once every 10 seconds.
 	cairo_arc(cr, res.width/2, res.height/2, res.height/3, angle*M_PI, (angle-0.3)*M_PI);
-	cairo_stroke(cr);
+	cairo_stroke(cr); // Stroke the arc with our 30px wide orange line
 
 	cairo_destroy(cr); // Realease Surface
 	cairo_surface_finish(surface);
@@ -155,7 +158,7 @@ s32 main(s32 argc, const char* argv[])
 		waitFlip(); // Wait for the last flip to finish, so we can draw to the old buffer
 		drawFrame(buffers[currentBuffer], frame++); // Draw into the unused buffer
 		flip(currentBuffer); // Flip buffer onto screen
-		currentBuffer = !currentBuffer;
+		currentBuffer = !currentBuffer; 
 	}
 	
 	return 0;

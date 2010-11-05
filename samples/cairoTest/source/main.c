@@ -1,9 +1,3 @@
-/* Note: this example only has a single buffer so it is only possible
- * 	 to draw a single image to the screen.
- * 	 if you want animation you will need a second buffer and to flip
- * 	 between them.
- */ 
-
 #include <psl1ght/lv2.h>
 
 #include <stdio.h>

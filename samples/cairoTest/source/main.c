@@ -21,7 +21,6 @@
 #include <psl1ght/lv2.h>
 
 #include <cairo/cairo.h>
-#include "testpng.bin.h"
 #include "draw.h"
 
 #include <math.h>
@@ -104,6 +103,7 @@ void init_screen() {
 void drawFrame(buffer *buffer, long frame) {
 	cairo_t *cr;
 
+	// 
 	cairo_surface_t *surface = cairo_image_surface_create_for_data((u8 *) buffer->ptr, 
 		CAIRO_FORMAT_RGB24, buffer->width, buffer->height, buffer->width * 4);
 	assert(surface != NULL);
@@ -111,13 +111,14 @@ void drawFrame(buffer *buffer, long frame) {
 	assert(cr != NULL);
 
 	// Lets start by clearing everything
-	cairo_rectangle(cr, 0, 0, buffer->width, buffer->height);
 	cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); // White
-	//cario_fill(cr);
+	cairo_paint(cr);
 
-	cairo_set_line_width(cr, 10.0);
-	cairo_set_source_rgb (cr, 1.0, 0.5, 0.0); // Yellow, maybe
-	cairo_arc(cr, 128.0, 128.0, 76.0, 0, 2*M_PI);
+	cairo_set_line_width(cr, 30.0);
+	cairo_set_source_rgb (cr, 1.0, 0.5, 0.0); // Orange
+
+	float angle = (frame % 600) / 300.0; // Rotation animaton
+	cairo_arc(cr, res.width/2, res.height/2, res.height/3, angle*M_PI, (angle-0.3)*M_PI);
 	cairo_stroke(cr);
 
 	cairo_destroy(cr); // Realease Surface

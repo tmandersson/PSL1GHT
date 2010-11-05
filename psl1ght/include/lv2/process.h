@@ -3,9 +3,7 @@
 #include <psl1ght/types.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_BEGIN
 
 void sysProcessExit(int status) __attribute__((noreturn));
 
@@ -21,6 +19,4 @@ void sysProcessExitSpawn2(
 		void* data, size_t size,
 		int priority, u64 flags);
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_END

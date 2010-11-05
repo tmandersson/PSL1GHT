@@ -3,11 +3,10 @@
 #include <psl1ght/types.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#define MAX_PADS (127)
-#define MAX_PORT_NUM (7)
+EXTERN_BEGIN
+
+#define MAX_PADS		127
+#define MAX_PORT_NUM	7
 typedef struct PadInfo
 {
 	u32 max;					/* max pads allowed to connect */
@@ -173,6 +172,5 @@ s32 ioPadGetInfo2(PadInfo2*);
 s32 ioPadPeriphGetInfo(PadPeriphInfo*);
 s32 ioPadPeriphGetData(u32 port, PadPeriphData*);
 s32 ioPadSetPortSetting(u32 port, u32 setting);
-#ifdef __cplusplus
-}
-#endif
+
+EXTERN_END

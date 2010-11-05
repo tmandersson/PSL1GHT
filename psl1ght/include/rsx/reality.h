@@ -4,9 +4,7 @@
 
 #include "rsx/gcm.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_BEGIN
 
 /* realityFlushBuffer:
  * Flushes the RSX Command buffer.
@@ -29,6 +27,4 @@ s32 realityAddressToOffset(void *ptr, u32 *offset);
 void *rsxMemAlign(s32 alignment, s32 size);
 void *rsxMem(s32 size);
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_END

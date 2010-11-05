@@ -23,3 +23,10 @@ typedef volatile uint32_t	vu32;
 typedef volatile int64_t	vs64;
 typedef volatile uint64_t	vu64;
 
+#ifdef __cplusplus
+#define EXTERN_BEGIN	extern "C" {
+#define EXTERN_END		}
+#else
+#define EXTERN_BEGIN
+#define EXTERN_END
+#endif

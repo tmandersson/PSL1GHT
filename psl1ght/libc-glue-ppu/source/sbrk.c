@@ -36,7 +36,7 @@ void* sbrk(long increment)
 	}
 	char* addr = (char*)(u64)taddr;
 	if (pageend != addr)
-		memend = (char*)(u64)addr;
+		memend = addr;
 	pageend = addr + allocsize;
 	char* ret = memend;
 	memend += increment;

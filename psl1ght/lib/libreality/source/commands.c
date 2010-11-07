@@ -1,11 +1,12 @@
 #include <rsx/commands.h>
+#include <rsx/nv40.h>
 
 void realitySetClearColor(gcmContextData *context, uint32_t color) {
 	if(checkCommandBufferLength(context, 8) == 0) {
-		commandBufferPut(context, 0x41D90);
-		commandBufferPut(context, color);
+		commandBufferPutCmd1(context, NV30_3D_CLEAR_COLOR_VALUE, color);
 	}
 }
+
 
 int checkCommandBufferLength(gcmContextData *context, uint32_t len) {
 	if (context->current + len > context->end) {
@@ -23,3 +24,90 @@ void commandBufferPut(gcmContextData* context, uint32_t value) {
 	 *buffer++ = value;
 	context->current = (uint32_t)(uint64_t) buffer;
 }
+
+void inline commandBufferPutCmd1(gcmContextData* context, uint32_t command, uint32_t v1) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 1 << 18;
+	*buffer++ = v1;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline commandBufferPutCmd2(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 2 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline commandBufferPutCmd3(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 3 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline commandBufferPutCmd4(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 4 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline commandBufferPutCmd5(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 5 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	*buffer++ = v5;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline commandBufferPutCmd6(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v6) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 6 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	*buffer++ = v5;
+	*buffer++ = v6;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline commandBufferPutCmd7(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v6, uint32_t v7) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 7 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	*buffer++ = v5;
+	*buffer++ = v6;
+	*buffer++ = v7;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline commandBufferPutCmd8(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v6, uint32_t v7, uint32_t v8) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 8 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	*buffer++ = v5;
+	*buffer++ = v6;
+	*buffer++ = v7;
+	*buffer++ = v8;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+
+

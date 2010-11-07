@@ -7,6 +7,10 @@
 s32 sys_ppu_thread_create(sys_ppu_thread_t * threadid, void (*entry) (u64 arg), u64 arg, s32 priority, u64 stacksize, u64 flags, char * threadname);
 s32 sys_ppu_thread_get_id(sys_ppu_thread_t * threadid);
 void sys_ppu_thread_exit(u64 val);
+s32 sys_lwmutex_create(sys_lwmutex_t *lwmutex, const sys_lwmutexattr_t *lwmutex_attr);
+void sys_lwmutex_destroy(sys_lwmutex_t *lwmutex);
+s32 sys_lwmutex_lock(sys_lwmutex_t *lwmutex);
+void sys_lwmutex_unlock(sys_lwmutex_t *lwmutex);
 
 LV2_SYSCALL lv2ThreadYield() { return Lv2Syscall0(43); }
 LV2_SYSCALL lv2ThreadJoin(sys_ppu_thread_t threadid, u64 *retval) { return Lv2Syscall2(44, threadid, (u64)retval); }

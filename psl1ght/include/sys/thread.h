@@ -16,6 +16,21 @@ typedef struct sys_ppu_thread_stack_t {
 	u32 size;
 }sys_ppu_thread_stack_t;
 
+typedef struct sys_lwmutex_t {
+	u32 ownerthread;
+	u32 numwaiting;
+	u32 flags;
+	u32 nestcount;
+	u32 dunno;
+}sys_lwmutex_t;
+
+typedef struct sys_lwmutexattr_t {
+	u32 magic0x02; /* set to 0x02 */
+	u32 magic0x10; /* set to 0x10 */
+	u32 magic0_first; /* set to 0 */
+	u32 magic0_second;  /* set to 0 */
+}sys_lwmutexattr_t;
+
 s32 sys_ppu_thread_create_ex(sys_ppu_thread_t * threadid, opd32* opdentry, u64 arg, s32 priority, u64 stacksize, u64 flags, char * threadname);
 
 void sys_ppu_thread_yield();

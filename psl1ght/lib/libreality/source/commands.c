@@ -2,14 +2,12 @@
 
 void realitySetClearColor(gcmContextData *context, uint32_t color) {
 	if(checkCommandBufferLength(context, 8) == 0) {
-		uint32_t *buffer = (uint32_t *)(uint64_t) context->current;
-		*buffer++ = 0x41D90;
-		*buffer++ = color;
-		context->current = (uint64_t) buffer;
+		commandBufferPut(context, 0x41D90);
+		commandBufferPut(context, color);
 	}
 }
 
-__attribute__ ((noinline)) int checkCommandBufferLength(gcmContextData *context, uint32_t len) {
+int checkCommandBufferLength(gcmContextData *context, uint32_t len) {
 	if (context->current + len > context->end) {
 		int retval; // It's a bit messy, but it works.
 		int tocval = ((uint32_t *)(uint64_t) context->callback)[1];
@@ -20,8 +18,8 @@ __attribute__ ((noinline)) int checkCommandBufferLength(gcmContextData *context,
 	return 0;
 }
 
-void commandBufferPut(gcmContextData *context, uint32_t value) {
-	uint32_t *buffer = (uint32_t *)(uint64_t) context->current;
-	*buffer = value;
-	context->current += 4;
+void commandBufferPut(gcmContextData* context, uint32_t value) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	 *buffer++ = value;
+	context->current = (uint32_t)(uint64_t) buffer;
 }

@@ -1,5 +1,4 @@
 TODO:
-Add threading - high priority (because it should be easy)
 Make ps3loader accept a zip containing supporting files, so we don't have to embed data into the elf. -- high priority
 Finish Networking - medium priority
 RSX blitting commands for faster 2d graphics - medium priority

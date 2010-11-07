@@ -102,7 +102,10 @@ int main(int argc, const char* argv[])
 		if (BE16(stub->imports) != fnidcount) {
 			lseek(fd, stubshdr->sh_offset + (stub - stubbase) * sizeof(Stub) + offsetof(Stub, imports), SEEK_SET);
 			fnidcount = BE16(fnidcount);
-			write(fd, &fnidcount, sizeof(fnidcount));
+			if(write(fd, &fnidcount, sizeof(fnidcount)) == -1)
+			{
+				printf("Error occured during write in linker.c\n");
+			}
 		}
 	}
 

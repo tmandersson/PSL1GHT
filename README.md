@@ -38,8 +38,8 @@ Run make install in the psl1ght directory to build it all, and make sure to
 set the environment variable $PSL1GHT to the folder where you wish to
 install it to, for example...
 
-    cd /path/to/psl1ght.git
-    export PSL1GHT=/path/to/psl1ght.git/build
+    cd /path/to/psl1ght.git/psl1ght/
+    export PSL1GHT=/path/to/psl1ght.git/psl1ght/build
     make
     make install
 

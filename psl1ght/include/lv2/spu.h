@@ -1,3 +1,5 @@
+#pragma once
+
 #include <psl1ght/types.h>
 
 #define SYS_SPU_SEGMENT_TYPE_COPY	0x01
@@ -27,10 +29,10 @@ typedef struct {
 EXTERN_BEGIN
 
 int sysSpuElfGetInformation(const void* elf, u32* entryPoint, u32* segmentCount);
-int sysSpuElfGetSegments(const void* elf, sysSpuSegment* segments, u32 segments);
+int sysSpuElfGetSegments(const void* elf, sysSpuSegment* segments, u32 segmentCount);
 
 int sysSpuRawLoad(u32 spu, const char* path, u32* entryPoint);
-int sysSpuRawImageLoad(u32 spu, spu_image* image);
+int sysSpuRawImageLoad(u32 spu, sysSpuImage* image);
 
 int sysSpuImageClose(sysSpuImage* image);
 int sysSpuImageImport(sysSpuImage* image, const void* elf, u32 type);

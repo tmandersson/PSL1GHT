@@ -9,7 +9,12 @@ extern "C" {
 // Set the colour for clearing buffers, should be in ARGB format.
 void realitySetClearColor(gcmContextData *context, uint32_t color);
 
+// For actually clearing the bufders
+void realityClearBuffers(gcmContextData *context, uint32_t buffers);
 
+
+// For when you need to do nothing
+void realityNop(gcmContextData *context);
 
 // Internal function that you shouldn't use unless you are directly manulipting the buffer.
 int checkCommandBufferLength(gcmContextData *context, uint32_t len);

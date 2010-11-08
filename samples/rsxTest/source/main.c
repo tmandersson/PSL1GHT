@@ -23,8 +23,8 @@ gcmContextData *context; // Context to keep track of the RSX buffer.
 VideoResolution res; // Screen Resolution
 
 int currentBuffer = 0;
-s32 *buffer[3]; // The buffer we will be drawing into
-u32 offset[3]; // The offset of the buffers in RSX memory
+s32 *buffer[2]; // The buffer we will be drawing into
+u32 offset[2]; // The offset of the buffers in RSX memory
 int pitch;
 
 void waitFlip() { // Block the PPU thread untill the previous flip operation has finished.
@@ -76,25 +76,13 @@ void init_screen() {
 	// Allocate two buffers for the RSX to draw to the screen (double buffering)
 	buffer[0] = rsxMemAlign(16, buffer_size);
 	buffer[1] = rsxMemAlign(16, buffer_size);
-	buffer[2] = rsxMemAlign(16, buffer_size);
 	assert(buffer[0] != NULL && buffer[1] != NULL);
 
 	assert(realityAddressToOffset(buffer[0], &offset[0]) == 0);
 	assert(realityAddressToOffset(buffer[1], &offset[1]) == 0);
-	assert(realityAddressToOffset(buffer[2], &offset[2]) == 0);
 	// Setup the display buffers
 	assert(gcmSetDisplayBuffer(0, offset[0], pitch, res.width, res.height) == 0);
 	assert(gcmSetDisplayBuffer(1, offset[1], pitch, res.width, res.height) == 0);
-
-	realitySetRenderSurface(context, REALITY_SURFACE_COLOR0, REALITY_LOCATION_RSX_MEMORY, 
-					offset[0], pitch);
-	realitySetRenderSurface(context, REALITY_SURFACE_ZETA, REALITY_LOCATION_RSX_MEMORY, 
-					offset[2], pitch);
-
-
-	realitySelectRenderTarget(context, REALITY_TARGET_0, 
-		REALITY_TARGET_FORMAT_COLOR_X8R8G8B8 | REALITY_TARGET_FORMAT_ZETA_Z24S8 | REALITY_TARGET_FORMAT_TYPE_LINEAR,
-		res.width, res.height, 0, 0);
 
 	gcmResetFlipStatus();
 	flip(1);
@@ -103,11 +91,16 @@ void init_screen() {
 void drawFrame(int *buffer, long frame) {
 	realitySetRenderSurface(context, REALITY_SURFACE_COLOR0, REALITY_LOCATION_RSX_MEMORY, 
 					offset[currentBuffer], pitch);
-	realitySetClearColor(context, 0x88FF0088);
+	realitySelectRenderTarget(context, REALITY_TARGET_0, 
+		REALITY_TARGET_FORMAT_COLOR_X8R8G8B8 | REALITY_TARGET_FORMAT_ZETA_Z24S8 | REALITY_TARGET_FORMAT_TYPE_LINEAR,
+		res.width, res.height, 0, 0);
+
+	realitySetClearColor(context, 0x88FF0088); // This is the most Hidious colour ever.
 	realityClearBuffers(context, REALITY_CLEAR_BUFFERS_COLOR_R |
 				     REALITY_CLEAR_BUFFERS_COLOR_G |
 				     REALITY_CLEAR_BUFFERS_COLOR_B |
 				     REALITY_CLEAR_BUFFERS_COLOR_A);
+	realityNop(context);
 }
 
 s32 main(s32 argc, const char* argv[])

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <rsx/gcm.h>
-//#include <assert.h>
+#include <assert.h>
 
 #ifdef __cplusplus
 extern "C" {

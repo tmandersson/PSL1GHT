@@ -26,7 +26,7 @@ void realityNop(gcmContextData *context);
 
 enum surfaces {REALITY_SURFACE_COLOR0, REALITY_SURFACE_COLOR1, REALITY_SURFACE_COLOR2, 
 		REALITY_SUFACE_COLOR3, REALITY_SURFACE_ZETA};
-void realitySetupRenderSurface(gcmContextData *context, uint8_t sufrace, uint8_t location, uint32_t offset, uint32_t pitch);
+void realitySetRenderSurface(gcmContextData *context, uint8_t sufrace, uint8_t location, uint32_t offset, uint32_t pitch);
 
 #define REALITY_TARGET_NONE	0x00 /* Don't render anything */
 #define REALITY_TARGET_0	0x01 /* Render to color surface 0 */

@@ -24,7 +24,7 @@ const static uint32_t dma_cmds[] = {NV30_3D_DMA_COLOR0, NV30_3D_DMA_COLOR1,
 const static uint32_t pitch_cmds[] = {NV30_3D_COLOR0_PITCH, NV30_3D_COLOR1_PITCH,
 		NV40_3D_COLOR2_PITCH, NV40_3D_COLOR3_PITCH, NV40_3D_ZETA_PITCH};
 
-void realitySetupRenderSurface(gcmContextData *context, uint8_t surface, uint8_t location,
+void realitySetRenderSurface(gcmContextData *context, uint8_t surface, uint8_t location,
 				uint32_t offset, uint32_t pitch) {
 	COMMAND_LENGTH(context, 0x18);
 	commandBufferPutCmd1(context, dma_cmds[surface], location | 0xFEED0000);

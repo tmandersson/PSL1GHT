@@ -7,6 +7,19 @@ void realitySetClearColor(gcmContextData *context, uint32_t color) {
 	}
 }
 
+void realityNop(gcmContextData *context) {
+	if(checkCommandBufferLength(context, 8) == 0) {
+		commandBufferPutCmd1(context, 0x100, 0);
+	}
+}
+
+void realityClearBuffers(gcmContextData *context, uint32_t buffers) {
+	if(checkCommandBufferLength(context, 8) == 0) {
+		commandBufferPutCmd1(context, NV30_3D_CLEAR_BUFFERS, buffers);
+	}
+}	
+
+void realitySetRenderTarget(gcmContextData *context, uint32_t 
 
 int checkCommandBufferLength(gcmContextData *context, uint32_t len) {
 	if (context->current + len > context->end) {

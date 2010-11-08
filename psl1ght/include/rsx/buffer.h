@@ -1,24 +1,105 @@
 #pragma once
 
 #include <rsx/gcm.h>
+#include <assert.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifndef assert
+	#define assert(x) if(!(x)) return;
+#endif
+
+#define COMMAND_LENGTH(context, x) assert(checkCommandBufferLength(context, x) == 0)
+
 // Internal function that you shouldn't use unless you are directly manulipting the buffer.
 int checkCommandBufferLength(gcmContextData *context, uint32_t len);
 void commandBufferPut(gcmContextData *context, uint32_t value);
 
-void inline commandBufferPutCmd1(gcmContextData* context, uint32_t command, uint32_t v1);
-void inline commandBufferPutCmd2(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2);
-void inline commandBufferPutCmd3(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3); 
-void inline commandBufferPutCmd4(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4);
-void inline commandBufferPutCmd5(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5);
-void inline commandBufferPutCmd6(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v7);
-void inline commandBufferPutCmd7(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v6, uint32_t v7);
-void inline commandBufferPutCmd8(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v6, uint32_t v7, uint32_t v8);
+void inline extern commandBufferPutCmd1(gcmContextData* context, uint32_t command, uint32_t v1) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 1 << 18;
+	*buffer++ = v1;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
 
+void inline extern commandBufferPutCmd2(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 2 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline extern commandBufferPutCmd3(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 3 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline extern commandBufferPutCmd4(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 4 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline extern commandBufferPutCmd5(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 5 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	*buffer++ = v5;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline extern commandBufferPutCmd6(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v6) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 6 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	*buffer++ = v5;
+	*buffer++ = v6;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline extern commandBufferPutCmd7(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v6, uint32_t v7) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 7 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	*buffer++ = v5;
+	*buffer++ = v6;
+	*buffer++ = v7;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
+
+void inline extern commandBufferPutCmd8(gcmContextData* context, uint32_t command, uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4, uint32_t v5, uint32_t v6, uint32_t v7, uint32_t v8) {
+	uint32_t* buffer = (uint32_t *)(uint64_t) context->current;
+	*buffer++ = command | 8 << 18;
+	*buffer++ = v1;
+	*buffer++ = v2;
+	*buffer++ = v3;
+	*buffer++ = v4;
+	*buffer++ = v5;
+	*buffer++ = v6;
+	*buffer++ = v7;
+	*buffer++ = v8;
+	context->current = (uint32_t)(uint64_t) buffer;
+}
 
 #ifdef __cplusplus
 }

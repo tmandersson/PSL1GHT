@@ -99,4 +99,5 @@ The following libraries are currently supported:
 * liblv2
 * libsysutil
 * libgcm_sys
-
+* libsysmodule
+* libpngdec

@@ -14,6 +14,7 @@ Credits
     phiren      - Author, Awesome, yet humble guy
     Tempus      - PSL1GHT Logo
     lousyphreak - libaudio
+    Hermes	- Some modifications, sysmodule, libpngdec
 
 
 Environment

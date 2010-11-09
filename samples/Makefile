@@ -1,15 +1,19 @@
+MAKEFILES	:=	$(wildcard **/Makefile)
+SUBDIRS		:=	$(dir $(MAKEFILES))
 
-MAKEFILES :=  $(wildcard **/Makefile)
-SUBDIRS :=  $(dir $(MAKEFILES))
-
-.PHONY: all show
+.PHONY: all pkg clean
 
 all:
-	for dir in $(SUBDIRS); do \
-		$(MAKE) clean pkg -C $$dir; \
+	@for dir in $(SUBDIRS); do \
+		$(MAKE) -C $$dir; \
 	done
 
-show:
-	@echo 'MAKEFILES : ' $(MAKEFILES)
-	@echo 'SUBDIR : ' $(SUBDIR)
+pkg:
+	@for dir in $(SUBDIRS); do \
+		$(MAKE) pkg -C $$dir; \
+	done
 
+clean:
+	@for dir in $(SUBDIRS); do \
+		$(MAKE) clean -C $$dir; \
+	done

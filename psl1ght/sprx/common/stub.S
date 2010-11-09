@@ -11,9 +11,8 @@ LIBRARY_SYMBOL:
 	.global __##name; \
 	__##name: \
 		mflr %r0; \
-		std %r0, 0x10(%r1); \
-		stdu %r1, -0x80(%r1); \
-		std %r2, 0x70(%r1); \
+		std %r0, 0x18(%r1); \
+		std %r2, 0x28(%r1); \
 		li %r2, name##_stub@l; \
 		oris %r2, %r2, name##_stub@ha; \
 		lwz %r2, 0x00(%r2); \
@@ -21,9 +20,8 @@ LIBRARY_SYMBOL:
 		lwz %r2, 0x04(%r2); \
 		mtctr %r0; \
 		bctrl; \
-		ld %r2, 0x70(%r1); \
-		addi %r1, %r1, 0x80; \
-		ld %r0, 0x10(%r1); \
+		ld %r2, 0x28(%r1); \
+		ld %r0, 0x18(%r1); \
 		mtlr %r0; \
 		blr; \
 .align 3; \

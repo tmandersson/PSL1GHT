@@ -20,6 +20,9 @@
 
 #include <psl1ght/lv2.h>
 
+#include "libpng.h"
+#include "psl1ght_png.bin.h" // png in memory
+
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
 VideoResolution res; // Screen Resolution
@@ -99,28 +102,8 @@ void drawFrame(int *buffer, long frame) {
 
 }
 
-
-
-
-
-
-
-
-
-
-#if 1
-
-
-
-#include "libpng.h"
-#include "psl1ght_png.bin.h"
-
-
-
-
-#endif
-
 u32 module_flag;
+
 void unload_modules(){
 
 	if(module_flag & 2)

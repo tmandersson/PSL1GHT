@@ -33,6 +33,22 @@ typedef struct sys_lwmutex_attribute_t {
 	char name[8];
 }sys_lwmutex_attribute_t;
 
+#define MUTEX_ATTR_PROTOCOL  0x0002
+#define MUTEX_ATTR_RECURSIVE 0x0020
+#define MUTEX_ATTR_PSHARED   0x0200
+#define MUTEX_ATTR_ADAPTIVE  0x2000
+typedef u32 sys_mutex_t;
+typedef struct sys_mutex_attribute_t {
+	u32 attr_protocol;
+	u32 attr_recursive;
+	u32 attr_pshared;
+	u32 attr_adaptive;
+	u64 key;
+	s32 flags;
+	u32 pad;
+	char name[8];
+}sys_mutex_attribute_t;
+
 s32 sys_ppu_thread_create_ex(sys_ppu_thread_t * threadid, opd32* opdentry, u64 arg, s32 priority, u64 stacksize, u64 flags, char * threadname);
 
 void sys_ppu_thread_yield();
@@ -44,5 +60,11 @@ s32 sys_ppu_thread_get_priority(sys_ppu_thread_t threadid, s32* priority);
 s32 sys_ppu_thread_get_stack_information(sys_ppu_thread_stack_t *stackinfo);
 s32 sys_ppu_thread_rename(sys_ppu_thread_t id, char* name);
 s32 sys_ppu_thread_recover_page_fault(sys_ppu_thread_t id);
+
+s32 sys_mutex_create(sys_mutex_t * mutexid, const sys_mutex_attribute_t *attr);
+s32 sys_mutex_destroy(sys_mutex_t mutexid);
+s32 sys_mutex_lock(sys_mutex_t mutexid, u64 timeout_usec);
+s32 sys_mutex_trylock(sys_mutex_t mutexid);
+s32 sys_mutex_unlock(sys_mutex_t mutexid);
 
 EXTERN_END

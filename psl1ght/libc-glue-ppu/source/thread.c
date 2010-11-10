@@ -62,3 +62,29 @@ s32 sys_ppu_thread_rename(sys_ppu_thread_t id, char* name)
 {
 	return lv2ThreadRename(id, name);
 }
+
+s32 sys_mutex_create(sys_mutex_t * mutexid, const sys_mutex_attribute_t *attr)
+{
+	return lv2MutexCreate(mutexid, attr);
+}
+
+s32 sys_mutex_destroy(sys_mutex_t mutexid)
+{
+	return lv2MutexDestroy(mutexid);
+}
+
+s32 sys_mutex_lock(sys_mutex_t mutexid, u64 timeout_usec)
+{
+	return lv2MutexLock(mutexid, timeout_usec);
+}
+
+s32 sys_mutex_trylock(sys_mutex_t mutexid)
+{
+	return lv2MutexTrylock(mutexid);
+}
+
+s32 sys_mutex_unlock(sys_mutex_t mutexid)
+{
+	return lv2MutexUnlock(mutexid);
+}
+

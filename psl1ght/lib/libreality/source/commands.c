@@ -3,18 +3,19 @@
 #include <rsx/buffer.h>
 
 void realitySetClearColor(gcmContextData *context, uint32_t color) {
-	COMMAND_LENGTH(context, 0x8);
+	COMMAND_LENGTH(context, 2);
 	commandBufferPutCmd1(context, NV30_3D_CLEAR_COLOR_VALUE, color);
 }
 
 void realityNop(gcmContextData *context) {
-	COMMAND_LENGTH(context, 0x8);
+	COMMAND_LENGTH(context, 2);
 	commandBufferPutCmd1(context, 0x100, 0);
 }
 
 void realityClearBuffers(gcmContextData *context, uint32_t buffers) {
-	COMMAND_LENGTH(context, 0x8);
+	COMMAND_LENGTH(context, 4);
 	commandBufferPutCmd1(context, NV30_3D_CLEAR_BUFFERS, buffers);
+	commandBufferPutCmd1(context, 0x100, 0); // Nop
 }	
 
 const static uint32_t offset_cmds[] = {NV30_3D_COLOR0_OFFSET, NV30_3D_COLOR1_OFFSET,
@@ -26,7 +27,7 @@ const static uint32_t pitch_cmds[] = {NV30_3D_COLOR0_PITCH, NV30_3D_COLOR1_PITCH
 
 void realitySetRenderSurface(gcmContextData *context, uint8_t surface, uint8_t location,
 				uint32_t offset, uint32_t pitch) {
-	COMMAND_LENGTH(context, 0x18);
+	COMMAND_LENGTH(context, 6);
 	commandBufferPutCmd1(context, dma_cmds[surface], location | 0xFEED0000);
 	commandBufferPutCmd1(context, offset_cmds[surface], offset);
 	commandBufferPutCmd1(context, pitch_cmds[surface], pitch);
@@ -34,7 +35,7 @@ void realitySetRenderSurface(gcmContextData *context, uint8_t surface, uint8_t l
 
 void realitySelectRenderTarget(gcmContextData *context, uint8_t target, uint32_t format, 
 				uint16_t width, uint16_t height, uint16_t x, uint16_t y) {
-	COMMAND_LENGTH(context, 0x2c);
+	COMMAND_LENGTH(context, 11);
 
 	format |= (31 - __builtin_clz(width)) << 16;
 	format |= (31 - __builtin_clz(height)) << 24;
@@ -48,7 +49,7 @@ void realitySelectRenderTarget(gcmContextData *context, uint8_t target, uint32_t
 }
 
 void realitySetViewportOffset(gcmContextData *context, uint16_t width, uint16_t height, uint16_t x, uint16_t y) {
-	COMMAND_LENGTH(context, 0x8);
+	COMMAND_LENGTH(context, 2);
 	commandBufferPutCmd1(context, NV30_3D_VIEWPORT_TX_ORIGIN, x | y << 16);
 }
 

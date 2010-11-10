@@ -17,19 +17,21 @@ typedef struct sys_ppu_thread_stack_t {
 }sys_ppu_thread_stack_t;
 
 typedef struct sys_lwmutex_t {
-	u32 ownerthread;
-	u32 numwaiting;
-	u32 flags;
-	u32 nestcount;
-	u32 dunno;
+	u32 owner;
+	u32 waiter;
+	u32 attribute;
+	u32 recursive_count;
+	u32 sleep_queue;
+	u32 pad;
 }sys_lwmutex_t;
 
-typedef struct sys_lwmutexattr_t {
-	u32 magic0x02; /* set to 0x02 */
-	u32 magic0x10; /* set to 0x10 */
-	u32 magic0_first; /* set to 0 */
-	u32 magic0_second;  /* set to 0 */
-}sys_lwmutexattr_t;
+#define LWMUTEX_ATTR_PROTOCOL  0x0002
+#define LWMUTEX_ATTR_RECURSIVE 0x0010
+typedef struct sys_lwmutex_attribute_t {
+	u32 attr_protocol;
+	u32 attr_recursive;
+	char name[8];
+}sys_lwmutex_attribute_t;
 
 s32 sys_ppu_thread_create_ex(sys_ppu_thread_t * threadid, opd32* opdentry, u64 arg, s32 priority, u64 stacksize, u64 flags, char * threadname);
 

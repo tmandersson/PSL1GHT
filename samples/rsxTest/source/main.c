@@ -8,6 +8,7 @@
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
+#include <math.h>
 
 #include <sysutil/video.h>
 #include <rsx/gcm.h>
@@ -89,18 +90,24 @@ void init_screen() {
 }
 
 void drawFrame(int *buffer, long frame) {
+	// Set the color0 target to point at the offset of our current surface
 	realitySetRenderSurface(context, REALITY_SURFACE_COLOR0, REALITY_LOCATION_RSX_MEMORY, 
 					offset[currentBuffer], pitch);
+	// Choose color0 as the render target and tell the rsx about the surface format.
 	realitySelectRenderTarget(context, REALITY_TARGET_0, 
 		REALITY_TARGET_FORMAT_COLOR_X8R8G8B8 | REALITY_TARGET_FORMAT_ZETA_Z24S8 | REALITY_TARGET_FORMAT_TYPE_LINEAR,
 		res.width, res.height, 0, 0);
 
-	realitySetClearColor(context, 0x88FF0088); // This is the most Hidious colour ever.
+	// Just because we can only set the clear color, dosen't mean it has to be boring
+	double cycle = (frame % 200)/100.0;
+	uint8_t color = (sin(cycle*M_PI) + 1.0) * 127 ;
+
+	// set the clear color
+	realitySetClearColor(context, color << 8 | color << 16); // This is the most Hidious colour ever.
+	// Clear the buffers
 	realityClearBuffers(context, REALITY_CLEAR_BUFFERS_COLOR_R |
 				     REALITY_CLEAR_BUFFERS_COLOR_G |
-				     REALITY_CLEAR_BUFFERS_COLOR_B |
-				     REALITY_CLEAR_BUFFERS_COLOR_A);
-	realityNop(context);
+				     REALITY_CLEAR_BUFFERS_COLOR_B);
 }
 
 s32 main(s32 argc, const char* argv[])

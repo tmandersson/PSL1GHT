@@ -131,30 +131,34 @@ EXTERN_BEGIN
 /* Keyboard Led State */
 typedef struct KbLed {
 	union{
-	u32 leds;
-	u32 num_lock	: 1;	/* LED Num Lock 0:OFF 1:ON */
-	u32 caps_lock	: 1;	/* LED Caps Lock 0:OFF 1:ON */
-	u32 scroll_lock	: 1;	/* LED Scroll Lock 0:OFF 1:ON */
-	u32 compose		: 1;	/* LED Compose 0:OFF 1:ON */
-	u32 kana		: 1;	/* LED Kana 0:OFF 1:ON */
-	u32 reserved	: 27;	/* Reserved */
+		u32 leds;
+		struct{
+		u32 reserved	: 27;	/* Reserved MSB */
+		u32 kana		: 1;	/* LED Kana 0:OFF 1:ON Bit4 */
+		u32 compose		: 1;	/* LED Compose 0:OFF 1:ON Bit3 */
+		u32 scroll_lock	: 1;	/* LED Scroll Lock 0:OFF 1:ON Bit2 */
+		u32 caps_lock	: 1;	/* LED Caps Lock 0:OFF 1:ON Bit1 */
+		u32 num_lock	: 1;	/* LED Num Lock 0:OFF 1:ON Bit0 LSB */
+		};
 	};
 } KbLed;
 
 /* Keyboard Modifier Key State */
 typedef struct KbMkey {
 	union{
-	u32 mkeys;
-	u32 l_ctrl		: 1;	/* Modifier Key Left CTRL 0:OFF 1:ON */
-	u32 l_shift		: 1;	/* Modifier Key Left SHIFT 0:OFF 1:ON */
-	u32 l_alt		: 1;	/* Modifier Key Left ALT 0:OFF 1:ON */
-	u32 l_win		: 1;	/* Modifier Key Left WIN 0:OFF 1:ON */
-	u32 r_ctrl		: 1;	/* Modifier Key Right CTRL 0:OFF 1:ON */
-	u32 r_shift		: 1;	/* Modifier Key Right SHIFT 0:OFF 1:ON */
-	u32 r_alt		: 1;	/* Modifier Key Right ALT 0:OFF 1:ON */
-	u32 r_win		: 1;	/* Modifier Key Right WIN 0:OFF 1:ON */
-	/* For Macintosh Keyboard ALT & WIN correspond respectively to OPTION & APPLE keys */
-	u32 reserved	: 24;	/* Reserved */
+		u32 mkeys;
+		struct{
+		u32 reserved	: 24;	/* Reserved MSB */
+		u32 r_win		: 1;	/* Modifier Key Right WIN 0:OFF 1:ON Bit7 */
+		u32 r_alt		: 1;	/* Modifier Key Right ALT 0:OFF 1:ON Bit6 */
+		u32 r_shift		: 1;	/* Modifier Key Right SHIFT 0:OFF 1:ON Bit5 */		
+		u32 r_ctrl		: 1;	/* Modifier Key Right CTRL 0:OFF 1:ON Bit4 */
+		u32 l_win		: 1;	/* Modifier Key Left WIN 0:OFF 1:ON Bit3 */
+		u32 l_alt		: 1;	/* Modifier Key Left ALT 0:OFF 1:ON Bit2 */
+		u32 l_shift		: 1;	/* Modifier Key Left SHIFT 0:OFF 1:ON Bit1 */
+		u32 l_ctrl		: 1;	/* Modifier Key Left CTRL 0:OFF 1:ON Bit0 LSB */
+		/* For Macintosh Keyboard ALT & WIN correspond respectively to OPTION & APPLE keys */
+		};
 	};
 } KbMkey;
 
@@ -202,7 +206,7 @@ typedef enum KbMapping {
 typedef struct KbInfo {
 	u32 max;					/* max kb allowed to connect */
 	u32 connected;				/* how many kb connected */
-	u32 info;					/* Bit 0 lets the system intercept pad? other bits are reserved */
+	u32 info;					/* Bit 0 lets the system intercept keyboard? other bits are reserved */
 	u8 status[MAX_KEYBOARDS];	/* Connections status, status Index equal to Keyboard Number
 								   value 0: Not connected and 1: Connected */
 } KbInfo;
@@ -216,7 +220,7 @@ typedef struct KbConfig {
 /**
  * \brief Initialize Keyboard library
  *
- * \param[in] max : maximum pads allowed to connect
+ * \param[in] max : maximum keyboard allowed to connect
  * \return 0 if OK or else error code
  */
 s32 ioKbInit(const u32 max);

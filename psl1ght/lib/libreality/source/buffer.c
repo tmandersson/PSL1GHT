@@ -1,15 +1,25 @@
 #include <rsx/buffer.h>
 #include <assert.h>
+#include <psl1ght/opd.h>
 
-int checkCommandBufferLength(gcmContextData *context, uint32_t len) {
-	if (context->current + len > context->end) {
-		int retval; // It's a bit messy, but it works.
-		const int tocval = ((uint32_t *)(uint64_t) context->callback)[1];
-		const int procaddr = ((uint32_t *)(uint64_t) context->callback)[0];
-		asm("mr 3,%3; mr 31,2; mr 2,%1; mtctr %2; bctrl; mr 2,31; mr %0,3;" : "=r"(retval) : "r"(tocval), "r"(procaddr), "r"(context) : "r31", "r3");
-		return retval;
-	}
-	return 0;
+// Thanks to shagkur for working out how to get gcc to compile this callback
+// I highly recomend you don't try and "improve" this unless you are a gcc ninja.
+s32 __attribute__((noinline)) rsxContextCallback(gcmContextData *context,u32 count)
+{
+  register s32 result asm("3");
+  asm volatile (
+    "stdu  1,-128(1)\n"
+    "mr    31,2\n"
+    "lwz  0,0(%0)\n"
+    "lwz  2,4(%0)\n"
+    "mtctr  0\n"
+    "bctrl\n"
+    "mr    2,31\n"
+    "addi  1,1,128\n"
+    : : "b"(context->callback)
+    : "r31", "r0", "r1", "r2", "lr"
+  );
+  return result;
 }
 
 void commandBufferPut(gcmContextData* context, uint32_t value) {

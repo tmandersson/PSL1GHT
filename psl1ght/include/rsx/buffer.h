@@ -7,14 +7,16 @@
 extern "C" {
 #endif
 
+
+
 #ifndef assert
-	#define assert(x) if(!(x)) return;
+	#define assert(x) if(!(x)) return
 #endif
 
-#define COMMAND_LENGTH(context, x) assert(checkCommandBufferLength(context, x) == 0)
+#define COMMAND_LENGTH(context, len) if(context->current + len > context->end) assert(rsxContextCallback(context, len/4) == 0)
 
 // Internal function that you shouldn't use unless you are directly manulipting the buffer.
-int checkCommandBufferLength(gcmContextData *context, uint32_t len);
+s32 __attribute__((noinline)) rsxContextCallback(gcmContextData *context,u32 count);
 void commandBufferPut(gcmContextData *context, uint32_t value);
 
 void inline extern commandBufferPutCmd1(gcmContextData* context, uint32_t command, uint32_t v1) {

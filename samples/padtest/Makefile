@@ -13,7 +13,7 @@ DATA		:=	data
 LIBS		:=	-lio
 
 TITLE		:=	Pad Test - PSL1GHT
-APPID		:=	TEST00004
+APPID		:=	TEST0PAD1
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99

@@ -12,8 +12,8 @@ INCLUDE		:=	include
 DATA		:=	data
 LIBS		:=	-lio
 
-TITLE		:=	Template - PSL1GHT
-APPID		:=	TEST00003
+TITLE		:=	Thread Test - PSL1GHT
+APPID		:=	TEST0THRD
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99

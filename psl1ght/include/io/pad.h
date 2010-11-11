@@ -101,12 +101,12 @@ typedef struct PadCapabilityInfo
 	union {
 		u32 info[PAD_CAPABILITY_INFO_MAX];
 		struct {
-			unsigned int ps3spec		:  1;		/* controller meets ps3 specifications */
-			unsigned int has_pressure	:  1;		/* controller has pressure-sensitive buttons */
-			unsigned int has_sensors	:  1;		/* controller has sensors, e.g. sixaxis, X,Y,Z,G */
-			unsigned int has_hps		:  1;		/* controller has high precision stick */
-			unsigned int has_vibrate	:  1;		/* controller has inbuilt vibration motor */
 			unsigned int 				: 27;		/* reserved */
+			unsigned int has_vibrate	:  1;		/* controller has inbuilt vibration motor */
+			unsigned int has_hps		:  1;		/* controller has high precision stick */
+			unsigned int has_sensors	:  1;		/* controller has sensors, e.g. sixaxis, X,Y,Z,G */
+			unsigned int has_pressure	:  1;		/* controller has pressure-sensitive buttons */
+			unsigned int ps3spec		:  1;		/* controller meets ps3 specifications */
 			u32 reserved[PAD_CAPABILITY_INFO_MAX-1];
 		};
 	};

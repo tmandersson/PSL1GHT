@@ -1,3 +1,4 @@
+
 -include Makefile.base
 
 CFILES		:= $(wildcard stub/*.c)
@@ -16,7 +17,10 @@ all: $(STUBS)
 	@make -C sprx/libsysutil --no-print-directory
 	@make -C sprx/libgcm_sys --no-print-directory
 	@make -C sprx/libio --no-print-directory
+	@make -C sprx/libcamera --no-print-directory
+	@make -C sprx/libsysmodule --no-print-directory
 	@make -C sprx/libaudio --no-print-directory
+	@make -C sprx/libpngdec --no-print-directory
 	@make -C lib/libreality --no-print-directory
 
 clean:
@@ -30,7 +34,10 @@ clean:
 	@make -C sprx/libsysutil clean --no-print-directory
 	@make -C sprx/libgcm_sys clean --no-print-directory
 	@make -C sprx/libio clean --no-print-directory
+	@make -C sprx/libcamera clean --no-print-directory
+	@make -C sprx/libsysmodule clean --no-print-directory
 	@make -C sprx/libaudio clean --no-print-directory
+	@make -C sprx/libpngdec clean --no-print-directory
 	@make -C lib/libreality clean --no-print-directory
 
 install: all

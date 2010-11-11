@@ -10,10 +10,10 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lio
+LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lpngdec -lsysmodule
 
-TITLE		:=	Thread Test - PSL1GHT
-APPID		:=	TEST0THRD
+TITLE		:=	pngtest - PSL1GHT
+APPID		:=	TEST00003
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99

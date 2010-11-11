@@ -14,6 +14,7 @@ Credits
     phiren      - Author, Awesome, yet humble guy
     Tempus      - PSL1GHT Logo
     lousyphreak - libaudio
+    Hermes	- Some modifications, sysmodule, libpngdec
 
 
 Environment
@@ -98,4 +99,5 @@ The following libraries are currently supported:
 * liblv2
 * libsysutil
 * libgcm_sys
-
+* libsysmodule
+* libpngdec

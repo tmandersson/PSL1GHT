@@ -10,10 +10,10 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lio
+LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lcamera -lsysmodule
 
-TITLE		:=	Thread Test - PSL1GHT
-APPID		:=	TEST0THRD
+TITLE		:=	Camera Test - PSL1GHT
+APPID		:=	TEST0CAM0
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99

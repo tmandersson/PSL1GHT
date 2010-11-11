@@ -34,6 +34,9 @@ typedef struct opd32 {
 	u32 rtoc;
 } opd32;
 
+
+typedef u32 mem_container_t;
+
 #ifdef __cplusplus
 #define EXTERN_BEGIN	extern "C" {
 #define EXTERN_END		}

@@ -53,3 +53,22 @@ void realitySetViewportOffset(gcmContextData *context, uint16_t width, uint16_t 
 	commandBufferPutCmd1(context, NV30_3D_VIEWPORT_TX_ORIGIN, x | y << 16);
 }
 
+void realityVertexBegin(gcmContextData *context, uint32_t type) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, type);
+}
+
+void realityVertexEnd(gcmContextData *context) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, NV30_3D_VERTEX_BEGIN_END_STOP);
+}
+
+void realityVertex4f(gcmContextData *context, float x, float y, float z, float w) {
+	COMMAND_LENGTH(context, 5);
+	commandBufferPutCmd4(context, NV30_3D_VTX_ATTR_4F(0),
+				 ((ieee32) x).u, 
+				 ((ieee32) y).u,
+				 ((ieee32) z).u, 
+				 ((ieee32) w).u);
+}
+

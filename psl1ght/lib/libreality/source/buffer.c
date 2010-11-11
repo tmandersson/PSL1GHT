@@ -1,6 +1,5 @@
 #include <rsx/buffer.h>
 #include <assert.h>
-#include <psl1ght/opd.h>
 
 // Thanks to shagkur for working out how to get gcc to compile this callback
 // I highly recomend you don't try and "improve" this unless you are a gcc ninja.

@@ -28,6 +28,7 @@ enum surfaces {REALITY_SURFACE_COLOR0, REALITY_SURFACE_COLOR1, REALITY_SURFACE_C
 		REALITY_SURFACE_COLOR3, REALITY_SURFACE_ZETA};
 void realitySetRenderSurface(gcmContextData *context, uint8_t sufrace, uint8_t location, uint32_t offset, uint32_t pitch);
 
+
 #define REALITY_TARGET_NONE	0x00 /* Don't render anything */
 #define REALITY_TARGET_0	0x01 /* Render to color surface 0 */
 #define REALITY_TARGET_1	0x02 /* Render to color surface 1 */
@@ -59,6 +60,23 @@ void realitySetRenderSurface(gcmContextData *context, uint8_t sufrace, uint8_t l
 
 void realitySelectRenderTarget(gcmContextData *context, uint8_t target, uint32_t format, 
 				uint16_t width, uint16_t height, uint16_t x, uint16_t y);
+
+
+// Vertex begin, end and 4f, excatly like glbegin, glend and glvertex.
+// You really should be using vertex buffers instead.
+#define REALITY_POINTS				0x00000001
+#define REALITY_LINES				0x00000002
+#define REALITY_LINE_LOOP			0x00000003
+#define REALITY_LINE_STRIP			0x00000004
+#define REALITY_TRIANGLES			0x00000005
+#define REALITY_TRIANGLE_STRIP			0x00000006
+#define REALITY_TRIANGLE_FAN			0x00000007
+#define REALITY_QUADS				0x00000008
+#define REALITY_QUAD_STRIP			0x00000009
+#define REALITY_POLYGON				0x0000000a
+void realityVertexBegin(gcmContextData *context, uint32_t type);
+void realityVertexEnd(gcmContextData *context);
+void realityVertex4f(gcmContextData *context, float x, float y, float z, float w);
 
 #ifdef __cplusplus
 }

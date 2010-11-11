@@ -17,4 +17,4 @@ clean:
 	rm -rf $(TARGET)
 
 $(TARGET): $(CFILES)
-	$(CC) $(LDFLAGS) $(CFLAGS) $< -o $@
+	$(CC) $< $(LDFLAGS) $(CFLAGS) -o $@

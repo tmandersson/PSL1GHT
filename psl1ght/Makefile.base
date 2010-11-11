@@ -15,10 +15,10 @@ PKG			:= $(PSL1GHT)/bin/pkg.py
 SPRX		:= $(PSL1GHT)/bin/sprxlinker
 
 CFLAGS		:= -g \
-			   -I$(PSL1GHT)/include
+			   -I$(PSL1GHT)/include -I$(PS3DEV)/ppu/include
 CXXFLAGS	:= $(CFLAGS)
 LDFLAGS		:= -T $(PSL1GHT)/lib/linker.x \
-			   -B$(PSL1GHT)/lib
+			   -B$(PSL1GHT)/lib -B$(PS3DEV)/ppu/lib
 
 DEPSOPTIONS	=	-MMD -MP -MF $(DEPSDIR)/$*.d
 
@@ -50,3 +50,4 @@ DEPSOPTIONS	=	-MMD -MP -MF $(DEPSDIR)/$*.d
 %.bin.h: %.bin
 	@echo "[R2H] $(notdir $<)"
 	@$(RAW2H) $< $(BUILDDIR)/$(notdir $<).h $(notdir $(basename $<)_bin)
+

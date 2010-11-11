@@ -22,7 +22,9 @@ typedef enum
 	SYSMODULE_IO,
 	SYSMODULE_PNGDEC,
 	
-	SYSMODULE_USBD = 0x1c
+	SYSMODULE_USBD = 0x1c,
+	
+	SYSMODULE_CAM = 0x23,
 	
 } id_module;
 

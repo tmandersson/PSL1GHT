@@ -5,6 +5,22 @@
 
 EXTERN_BEGIN
 
+#define CAMERA_ERRO_DOUBLE_INIT			0x80140801
+#define CAMERA_ERRO_NEED_INIT			0x80140803
+#define CAMERA_ERRO_BAD_PARAM			0x80140804
+#define CAMERA_ERRO_DOUBLE_OPEN			0x80140805
+#define CAMERA_ERRO_NEED_OPEN			0x80140806
+#define CAMERA_ERRO_NO_DEVICE_FOUND		0x80140807
+#define CAMERA_ERRO_DEVICE_DEACTIVATED	0x80140808
+#define CAMERA_ERRO_NEED_START			0x80140809
+#define CAMERA_ERRO_UNKNOWN_FORMAT		0x8014080a
+#define CAMERA_ERRO_UNKNOWN_RESOLUTION	0x8014080b
+#define CAMERA_ERRO_BAD_FRAMERATE		0x8014080c
+#define CAMERA_ERRO_TIMEOUT				0x8014080d
+#define CAMERA_ERRO_BUSY				0x8014080e
+#define CAMERA_ERRO_FATAL				0x8014080f
+#define CAMERA_ERRO_MUTEX				0x80140810
+
 typedef enum CameraAttribute {
 	CAM_ATTR_GAIN,
 	CAM_ATTR_RED_BLUE_GAIN,
@@ -87,7 +103,7 @@ typedef enum CameraResolution {
 	CAM_RESO_SPECIFIED
 } CameraResolution;
 
-typedef struct CameraInfoEx {
+typedef struct CameraInfo {
 	CameraFormat format;
 	CameraResolution resolution;
 	s32 framerate;
@@ -99,6 +115,24 @@ typedef struct CameraInfoEx {
 	s32 guid;
 	s32 info_ver;
 	mem_container_t container;
+} CameraInfo;
+
+typedef struct CameraInfoEx {
+	CameraFormat format;
+	CameraResolution resolution;
+	s32 framerate;
+	u32 buffer;
+	s32 bytesize;
+	s32 width;
+	s32 height;
+	s32 dev_num;
+	s32 guid;
+
+	s32 info_ver;
+	mem_container_t container;
+
+	s32 readmode;
+	u32 pbuf[2];
 } CameraInfoEx;
 
 typedef struct CameraReadEx {

@@ -10,7 +10,7 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lcamera -lsysmodule -ljpeg
+LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lcamera -lsysmodule -ljpgdec
 
 TITLE		:=	Camera Test - PSL1GHT
 APPID		:=	TEST0CAM0

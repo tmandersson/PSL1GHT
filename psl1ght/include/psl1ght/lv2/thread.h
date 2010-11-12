@@ -27,3 +27,8 @@ LV2_SYSCALL lv2MutexDestroy(sys_mutex_t mutexid) { return Lv2Syscall1(101, mutex
 LV2_SYSCALL lv2MutexLock(sys_mutex_t mutexid, u64 timeout_usec) { return Lv2Syscall2(102, mutexid, timeout_usec); }
 LV2_SYSCALL lv2MutexTrylock(sys_mutex_t mutexid) { return Lv2Syscall1(103, mutexid); }
 LV2_SYSCALL lv2MutexUnlock(sys_mutex_t mutexid) { return Lv2Syscall1(104, mutexid); }
+LV2_SYSCALL lv2CondCreate(sys_cond_t * condid, sys_mutex_t mutexid, const sys_cond_attribute_t *attr) { return Lv2Syscall3(105, (u64)condid, mutexid, (u64)attr); }
+LV2_SYSCALL lv2CondDestroy(sys_cond_t condid) { return Lv2Syscall1(106, condid); }
+LV2_SYSCALL lv2CondWait(sys_cond_t condid, u64 timeout_usec) { return Lv2Syscall2(107, condid, timeout_usec); }
+LV2_SYSCALL lv2CondSignal(sys_cond_t condid) { return Lv2Syscall1(108, condid); }
+LV2_SYSCALL lv2CondSignalAll(sys_cond_t condid) { return Lv2Syscall1(109, condid); }

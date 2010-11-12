@@ -49,6 +49,15 @@ typedef struct sys_mutex_attribute_t {
 	char name[8];
 }sys_mutex_attribute_t;
 
+#define COND_ATTR_PSHARED  0x0200
+typedef u32 sys_cond_t;
+typedef struct sys_cond_attribute_t {
+	u32 attr_pshared;
+	s32 flags;
+	u64 key;
+	char name[8];
+}sys_cond_attribute_t;
+
 s32 sys_ppu_thread_create_ex(sys_ppu_thread_t * threadid, opd32* opdentry, u64 arg, s32 priority, u64 stacksize, u64 flags, char * threadname);
 
 void sys_ppu_thread_yield();
@@ -66,5 +75,10 @@ s32 sys_mutex_destroy(sys_mutex_t mutexid);
 s32 sys_mutex_lock(sys_mutex_t mutexid, u64 timeout_usec);
 s32 sys_mutex_trylock(sys_mutex_t mutexid);
 s32 sys_mutex_unlock(sys_mutex_t mutexid);
+s32 sys_cond_create(sys_cond_t * condid, sys_mutex_t mutexid, const sys_cond_attribute_t *attr);
+s32 sys_cond_destroy(sys_cond_t condid);
+s32 sys_cond_wait(sys_cond_t condid, u64 timeout_usec);
+s32 sys_cond_signal(sys_cond_t condid);
+s32 sys_cond_signal_all(sys_cond_t condid);
 
 EXTERN_END

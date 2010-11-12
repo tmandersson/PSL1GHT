@@ -88,3 +88,28 @@ s32 sys_mutex_unlock(sys_mutex_t mutexid)
 	return lv2MutexUnlock(mutexid);
 }
 
+s32 sys_cond_create(sys_cond_t * condid, sys_mutex_t mutexid, const sys_cond_attribute_t *attr)
+{
+	return lv2CondCreate(condid, mutexid, attr);
+}
+
+s32 sys_cond_destroy(sys_cond_t condid)
+{
+	return lv2CondDestroy(condid);
+}
+
+s32 sys_cond_wait(sys_cond_t condid, u64 timeout_usec)
+{
+	return lv2CondWait(condid, timeout_usec);
+}
+
+s32 sys_cond_signal(sys_cond_t condid)
+{
+	return lv2CondSignal(condid);
+}
+
+s32 sys_cond_signal_all(sys_cond_t condid)
+{
+	return lv2CondSignalAll(condid);
+}
+

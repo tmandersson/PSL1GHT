@@ -198,7 +198,7 @@ void decode_jpg(u8 *buf, s32 size)
 	image = malloc(cinfo.output_width * cinfo.output_height * 3);
 	for(int i=0; i < cinfo.output_height; i++)
 	{
-	 ptr = image + i * 3 * cinfo.output_width;
+		ptr = image + i * 3 * cinfo.output_width;
 		jpeg_read_scanlines(&cinfo, &ptr, 1);
 	}
 	
@@ -309,7 +309,7 @@ s32 main(s32 argc, const char* argv[])
 				cameraReset(0);
 				cameraStart(0);
 			}else if (ret == 0 && readcount!=0 ){
-				u8 * buf = (u8*)(u64)cameraInfo.buffer
+				u8 * buf = (u8*)(u64)cameraInfo.buffer;
 				if(type == CAM_TYPE_PLAYSTATION_EYE){
 					for(i=0;i<cameraInfo.height; i++){
 						for(j=0;j<cameraInfo.width; j += 2){

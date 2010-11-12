@@ -308,7 +308,7 @@ s32 ioPadPeriphGetData(const u32 port, PadPeriphData* pad_periphdata);
  * \brief Set Pad port mode
  *
  * \param[in] port : pad port number 
- * \param[in] mode : pad mode setting (bit1 Pressure-sensitivity mode on, bit2 Six-acis sensor more on)
+ * \param[in] setting : pad mode setting (bit1 Pressure-sensitivity mode on, bit2 Six-acis sensor more on)
  * \return 0 if OK or else error code
  */
 s32 ioPadSetPortSetting(const u32 port, const u32 setting);

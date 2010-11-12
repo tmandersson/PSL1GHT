@@ -5,6 +5,7 @@
 EXTERN_BEGIN
 
 #define MAX_KEYBOARDS	127
+#define MAX_KB_PORT_NUM	7
 #define MAX_KEYCODES	62
 
 /* Raw Data Code and Keypad Code Data definition */
@@ -220,7 +221,7 @@ typedef struct KbConfig {
 /**
  * \brief Initialize Keyboard library
  *
- * \param[in] max : maximum keyboard allowed to connect
+ * \param[in] max : maximum keyboard allowed to connect (max limit is 7)
  * \return 0 if OK or else error code
  */
 s32 ioKbInit(const u32 max);

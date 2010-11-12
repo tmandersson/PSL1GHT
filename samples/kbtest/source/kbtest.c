@@ -14,6 +14,7 @@
   http://www.dest-unreach.org/socat/
   configuration is for example for PS3 IP=10.1.1.1
   socat - TCP:10.1.1.1:2002
+  End of test is a while loop which echo keyboard keys and waits Pad "X" Button to exit.
 */
 
 #include <sys/socket.h>       /*  socket definitions        */
@@ -21,6 +22,7 @@
 #include <arpa/inet.h>        /*  inet (3) funtions         */
 #include <unistd.h>           /*  misc. UNIX functions      */
 #include <io/kb.h> 
+#include <io/pad.h>
 
 #include "helper.h"           /*  our own helper functions  */
 
@@ -32,16 +34,20 @@
 #define ECHO_PORT          (2002)
 #define MAX_LINE           (1000)
 
+char buffer[MAX_LINE];	/* character buffer */
+int conn_s;				/* connection socket */
+
+static u32 receive_exit_request = 0;
+
 int main(int argc, char *argv[]) {
     int       list_s;                /*  listening socket          */
-    int       conn_s;                /*  connection socket         */
     short int port;                  /*  port number               */
     struct    sockaddr_in servaddr;  /*  socket address structure  */
-    char      buffer[MAX_LINE];      /*  character buffer          */
     char     *endptr;                /*  for strtol()              */
 	KbInfo kbinfo;
 	KbConfig kbconfig;
 	KbData kbdata;
+	int i;
 	
 	fprintf(stdout, "Starting Kb Test.\n");
     /*  Get port number from the command line, and
@@ -95,7 +101,7 @@ int main(int argc, char *argv[]) {
 	Writeline(conn_s, message, strlen(message));
 	
 	/* Keyboard ioKbInit()/ioKbGetInfo() Test */
-	sprintf(buffer, "Calling ioKbInit(%d) returned %d\r\n", 7, ioKbInit(7));
+	sprintf(buffer, "Calling ioKbInit(%d) returned %d\r\n", MAX_KB_PORT_NUM, ioKbInit(MAX_KB_PORT_NUM));
 	Writeline(conn_s, buffer, strlen(buffer));
 	
 	sprintf(buffer, "Calling ioKbGetInfo() returned %d\r\n", ioKbGetInfo(&kbinfo));
@@ -103,7 +109,6 @@ int main(int argc, char *argv[]) {
 	
 	sprintf(buffer, "KbInfo:\r\nMax Kbs: %u\r\nConnected Kbs: %u\r\nInfo Field: %08x\r\n", kbinfo.max, kbinfo.connected, kbinfo.info);
 	Writeline(conn_s, buffer, strlen(buffer));
-	int i;
 	for(i=0; i<MAX_KEYBOARDS; i++)
 	{
 		if(kbinfo.status[i])
@@ -171,13 +176,10 @@ int main(int argc, char *argv[]) {
 				Writeline(conn_s, buffer, strlen(buffer));
 				sprintf(buffer, "Kb Data:\r\nnb_keycode: %d\r\n", kbdata.nb_keycode);
 				Writeline(conn_s, buffer, strlen(buffer));
-				for(int j=0; j<MAX_KEYCODES;j++)
+				for(int j=0; j<kbdata.nb_keycode;j++)
 				{
-					if(j < kbdata.nb_keycode)
-					{
-						sprintf(buffer, "keycode[%d]..... %d\r\n", j, kbdata.keycode[j]);
-						Writeline(conn_s, buffer, strlen(buffer));
-					}
+					sprintf(buffer, "keycode[%d]..... %d\r\n", j, kbdata.keycode[j]);
+					Writeline(conn_s, buffer, strlen(buffer));
 				}
 				
 				sprintf(buffer, "led.num_lock..... %d\r\n", kbdata.led.num_lock);
@@ -244,13 +246,10 @@ int main(int argc, char *argv[]) {
 				Writeline(conn_s, buffer, strlen(buffer));
 				sprintf(buffer, "Kb Data:\r\nnb_keycode: %d\r\n", kbdata.nb_keycode);
 				Writeline(conn_s, buffer, strlen(buffer));
-				for(int j=0; j<MAX_KEYCODES;j++)
+				for(int j=0; j<kbdata.nb_keycode;j++)
 				{
-					if(j < kbdata.nb_keycode)
-					{
-						sprintf(buffer, "keycode[%d]..... %d\r\n", j, kbdata.keycode[j]);
-						Writeline(conn_s, buffer, strlen(buffer));
-					}
+					sprintf(buffer, "keycode[%d]..... %d\r\n", j, kbdata.keycode[j]);
+					Writeline(conn_s, buffer, strlen(buffer));
 				}
 				sprintf(buffer, "Finished.\r\n");
 				Writeline(conn_s, buffer, strlen(buffer));
@@ -267,15 +266,12 @@ int main(int argc, char *argv[]) {
 				mapping = kbconfig.mapping;
 				mkey.mkeys = kbdata.mkey.mkeys;
 				led.leds = kbdata.led.leds;
-				for(int j=0; j<MAX_KEYCODES;j++)
+				for(int j=0; j<kbdata.nb_keycode ;j++)
 				{
-					if(j < kbdata.nb_keycode)
-					{
-						rawcode = kbdata.keycode[j];
-						sprintf(buffer, "Calling ioKbCnvRawCode(%d, 0x%08X, 0x%08X, 0x%04X) returned 0x%04X\r\n", mapping, mkey.mkeys, led.leds, rawcode,
-									ioKbCnvRawCode(mapping, mkey, led, rawcode));
-						Writeline(conn_s, buffer, strlen(buffer));
-					}
+					rawcode = kbdata.keycode[j];
+					sprintf(buffer, "Calling ioKbCnvRawCode(%d, 0x%08X, 0x%08X, 0x%04X) returned 0x%04X\r\n", mapping, mkey.mkeys, led.leds, rawcode,
+								ioKbCnvRawCode(mapping, mkey, led, rawcode));
+					Writeline(conn_s, buffer, strlen(buffer));
 				}
 			}
 			
@@ -296,6 +292,88 @@ int main(int argc, char *argv[]) {
 	
 	sprintf(buffer, "Finished.\r\n");
 	Writeline(conn_s, buffer, strlen(buffer));
+
+	sprintf(buffer, "Start infinite loop Keyboard key output, stop it with Pad \"X\" Button.\r\n");
+	Writeline(conn_s, buffer, strlen(buffer));
+	
+	ioPadInit(MAX_PORT_NUM);
+	ioKbInit(MAX_KB_PORT_NUM);
+	
+	sprintf(buffer, "Calling ioKbGetInfo() returned %d\r\n", ioKbGetInfo(&kbinfo));
+	Writeline(conn_s, buffer, strlen(buffer));
+	
+	sprintf(buffer, "KbInfo:\r\nMax Kbs: %u\r\nConnected Kbs: %u\r\nInfo Field: %08x\r\n", kbinfo.max, kbinfo.connected, kbinfo.info);
+	Writeline(conn_s, buffer, strlen(buffer));	
+
+	PadInfo2 padinfo2;
+	PadData paddata;
+	s32 status;
+
+	while(receive_exit_request == 0)
+	{
+		/* Check the pads. */
+		if( ioPadGetInfo2(&padinfo2) == 0)
+		{
+			for(i=0; i<MAX_PORT_NUM; i++)
+			{
+				if(padinfo2.port_status[i])
+				{
+					ioPadGetData(i, &paddata);
+					if(paddata.BTN_CROSS){
+						sprintf(buffer, "PadButton \"X\" Exit.\r\n");
+						Writeline(conn_s, buffer, strlen(buffer));
+						receive_exit_request = 1;					
+					}
+				}		
+			}
+		}
+		/* Check Keyboards and output keys */
+		if( ioKbGetInfo(&kbinfo) == 0)
+		{
+			for(i=0; i<MAX_KEYBOARDS; i++)
+			{
+				if(kbinfo.status[i])
+				{
+					status = ioKbRead(i, &kbdata);
+					if(status != 0)
+					{
+						sprintf(buffer, "Calling ioKbRead(%d) returned %d\r\n", i, ioKbRead(i, &kbdata));
+						Writeline(conn_s, buffer, strlen(buffer));
+					}
+					for(int j=0; j<kbdata.nb_keycode;j++)
+					{
+						u16 keycode;
+						KbMkey mkey;
+						KbLed led;
+						keycode = kbdata.keycode[j];
+						mkey.mkeys = kbdata.mkey.mkeys;
+						led.leds = kbdata.led.leds;
+						if(keycode == 0)
+						{
+							sprintf(buffer, "keycode[%d]=%d/0x%04X mkeys=0x%08X leds=0x%08X\r\n",
+									j, keycode, keycode, mkey.mkeys, led.leds);
+							Writeline(conn_s, buffer, strlen(buffer));
+						}else
+						{
+							sprintf(buffer, "keycode[%d]=%d/0x%04X=%c mkeys=0x%08X leds=0x%08X\r\n",
+									j, keycode, keycode, (keycode&0x00FF), mkey.mkeys, led.leds);
+							Writeline(conn_s, buffer, strlen(buffer));
+						}
+					}
+				}
+			}
+		}
+		usleep(20000);
+	}
+
+	sprintf(buffer, "Finished.\r\n");
+	Writeline(conn_s, buffer, strlen(buffer));
+
+	ioPadEnd();
+	ioKbEnd();
+	
+	sprintf(buffer, "Exit.\r\n");
+	Writeline(conn_s, buffer, strlen(buffer));	
 
 	/*  Close the connected socket  */
 	if ( close(conn_s) < 0 ) {

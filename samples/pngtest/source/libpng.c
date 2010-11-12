@@ -55,8 +55,6 @@ int LoadPNG(PngDatas *png, char *filename)
 	PngDecThreadInParam InThdParam;
 	PngDecThreadOutParam OutThdParam;
 
-	uint64_t build_malloc, build_free; // used to create the fake 32 bits addrs .opd for functions png_malloc() and png_free()
-
 	PngDecInParam inParam;
 	PngDecOutParam outParam;
 	
@@ -71,9 +69,9 @@ int LoadPNG(PngDatas *png, char *filename)
 	InThdParam.enable   = 0;
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
-	InThdParam.addr_malloc_func  = build32_func_addr(png_malloc, &build_malloc); // (see sysmodule.h)
+	InThdParam.addr_malloc_func  = get32_func_addr(png_malloc); // (see sysmodule.h) : note it needs my own sprxlinker modification
 	InThdParam.addr_malloc_arg   = 0; // no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
-	InThdParam.addr_free_func    = build32_func_addr(png_free, &build_free);     // (see sysmodule.h)
+	InThdParam.addr_free_func    = get32_func_addr(png_free);     // (see sysmodule.h)  : note it needs my own sprxlinker modification
 	InThdParam.addr_free_arg    =  0; // no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
 
 

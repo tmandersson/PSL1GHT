@@ -58,6 +58,18 @@ typedef struct sys_cond_attribute_t {
 	char name[8];
 }sys_cond_attribute_t;
 
+#define SEMAPHORE_ATTR_PROTOCOL  0x0002
+#define SEMAPHORE_ATTR_PSHARED   0x0200
+typedef u32 sys_semaphore_t;
+typedef struct sys_semaphore_attribute_t {
+	u32 attr_protocol;
+	u32 attr_pshared;
+	u64 key;
+	s32 flags;
+	u32 pad;
+	char name[8];
+}sys_semaphore_attribute_t;
+
 s32 sys_ppu_thread_create_ex(sys_ppu_thread_t * threadid, opd32* opdentry, u64 arg, s32 priority, u64 stacksize, u64 flags, char * threadname);
 
 void sys_ppu_thread_yield();
@@ -80,5 +92,10 @@ s32 sys_cond_destroy(sys_cond_t condid);
 s32 sys_cond_wait(sys_cond_t condid, u64 timeout_usec);
 s32 sys_cond_signal(sys_cond_t condid);
 s32 sys_cond_signal_all(sys_cond_t condid);
+s32 sys_semaphore_create(sys_semaphore_t *semaid, const sys_semaphore_attribute_t *attr, s32 initial_value, s32 max_value);
+s32 sys_semaphore_destroy(sys_semaphore_t semaid);
+s32 sys_semaphore_wait(sys_semaphore_t semaid, u64 timeout_usec);
+s32 sys_semaphore_trywait(sys_semaphore_t semaid);
+s32 sys_semaphore_post(sys_semaphore_t semaid, s32 count);
 
 EXTERN_END

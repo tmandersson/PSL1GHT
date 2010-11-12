@@ -32,3 +32,8 @@ LV2_SYSCALL lv2CondDestroy(sys_cond_t condid) { return Lv2Syscall1(106, condid);
 LV2_SYSCALL lv2CondWait(sys_cond_t condid, u64 timeout_usec) { return Lv2Syscall2(107, condid, timeout_usec); }
 LV2_SYSCALL lv2CondSignal(sys_cond_t condid) { return Lv2Syscall1(108, condid); }
 LV2_SYSCALL lv2CondSignalAll(sys_cond_t condid) { return Lv2Syscall1(109, condid); }
+LV2_SYSCALL lv2SemaphoreCreate(sys_semaphore_t *semaid, const sys_semaphore_attribute_t *attr, s32 initial_value, s32 max_value) { return Lv2Syscall4(90, (u64)semaid, (u64)attr, initial_value, max_value); }
+LV2_SYSCALL lv2SemaphoreDestroy(sys_semaphore_t semaid) { return Lv2Syscall1(91, semaid); }
+LV2_SYSCALL lv2SemaphoreWait(sys_semaphore_t semaid, u64 timeout_usec) { return Lv2Syscall2(92, semaid, timeout_usec); }
+LV2_SYSCALL lv2SemaphoreTrywait(sys_semaphore_t semaid) { return Lv2Syscall1(93, semaid); }
+LV2_SYSCALL lv2SemaphorePost(sys_semaphore_t semaid, s32 count) { return Lv2Syscall2(94, semaid, count); }

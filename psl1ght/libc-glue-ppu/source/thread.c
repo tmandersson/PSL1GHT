@@ -113,3 +113,27 @@ s32 sys_cond_signal_all(sys_cond_t condid)
 	return lv2CondSignalAll(condid);
 }
 
+s32 sys_semaphore_create(sys_semaphore_t *semaid, const sys_semaphore_attribute_t *attr, s32 initial_value, s32 max_value)
+{
+	return lv2SemaphoreCreate(semaid, attr, initial_value, max_value);
+}
+
+s32 sys_semaphore_destroy(sys_semaphore_t semaid)
+{
+	return lv2SemaphoreDestroy(semaid);
+}
+
+s32 sys_semaphore_wait(sys_semaphore_t semaid, u64 timeout_usec)
+{
+	return lv2SemaphoreWait(semaid, timeout_usec);
+}
+
+s32 sys_semaphore_trywait(sys_semaphore_t semaid)
+{
+	return lv2SemaphoreTrywait(semaid);
+}
+
+s32 sys_semaphore_post(sys_semaphore_t semaid, s32 count)
+{
+	return lv2SemaphorePost(semaid, count);
+}

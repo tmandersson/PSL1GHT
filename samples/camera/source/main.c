@@ -172,61 +172,50 @@ void Convert422(u8* yuv, u32 *rgb1, u32 *rgb2)
 void decode_jpg(u8 *buf, s32 size)
 {
 	int i,j;
-		u8 *image;
-		u8 *ptr;
-		struct jpeg_decompress_struct cinfo;
-	 	struct my_error_mgr jerr;
-	  
-		cinfo.err = jpeg_std_error(&jerr.pub);
-	    jerr.pub.error_exit = my_error_exit;
-		if (setjmp(jerr.setjmp_buffer)) {
-		    /* If we get here, the JPEG code has signaled an error.
-		     * We need to clean up the JPEG object, close the input file, and return.
-		     */
-		    jpeg_destroy_decompress(&cinfo);
-		    return ;
-		  }
-	  	jpeg_create_decompress(&cinfo);
-		//printf("created decompress\n");
-		
-	  	jpeg_mem_src(&cinfo, buf,(int)size);
-		//printf("read from mem our frame\n");
-	
-	  	 jpeg_read_header(&cinfo, TRUE);
-		//printf("read header\n");
-	
-	  	 jpeg_start_decompress(&cinfo);
-		//printf("start decompress\n");
-		/* allocate data and read the image as RGBRGBRGBRGB */
-		image = malloc(cinfo.output_width * cinfo.output_height * 3);
-		for(int i=0; i < cinfo.output_height; i++)
-		{
-		 ptr = image + i * 3 * cinfo.output_width;
-			jpeg_read_scanlines(&cinfo, &ptr, 1);
-		}
-		
-	
-	//	printf("finished decompress\n");
-		//put our decoded frame in our current framebuffer a
-		for(j=0;j<cinfo.output_height;j++)
-		{
-			for(i=0;i<cinfo.output_width;i++)
-			{
-			//	buffer[currentBuffer][j* res.width + i] = ptr[i*3]<<16|ptr[i*3+1]<<8|ptr[i*3+2];
-				buffer[currentBuffer][j* res.width + i] = image[j * 3 * cinfo.output_width+i*3]<<16|image[j * 3 * cinfo.output_width+i*3+1]<<8|image[j * 3 * cinfo.output_width+i*3+2];
-				
-				
-			}
-			
-		}
-		jpeg_finish_decompress(&cinfo);
+	u8 *image;
+	u8 *ptr;
+	struct jpeg_decompress_struct cinfo;
+	struct my_error_mgr jerr;
+  
+	cinfo.err = jpeg_std_error(&jerr.pub);
+	jerr.pub.error_exit = my_error_exit;
+	if(setjmp(jerr.setjmp_buffer)){
+		/* If we get here, the JPEG code has signaled an error.
+		 * We need to clean up the JPEG object, close the input file, and return.
+		 */
 		jpeg_destroy_decompress(&cinfo);
-		free(image);
-		
+		return;
+	}
+	jpeg_create_decompress(&cinfo);
 	
+	jpeg_mem_src(&cinfo, buf,(int)size);
+
+	jpeg_read_header(&cinfo, TRUE);
+
+	jpeg_start_decompress(&cinfo);
+	 
+	/* allocate data and read the image as RGBRGBRGBRGB */
+	image = malloc(cinfo.output_width * cinfo.output_height * 3);
+	for(int i=0; i < cinfo.output_height; i++)
+	{
+	 ptr = image + i * 3 * cinfo.output_width;
+		jpeg_read_scanlines(&cinfo, &ptr, 1);
+	}
 	
+	//put our decoded frame in our current framebuffer a
+	for(j=0;j<cinfo.output_height;j++){
+		for(i=0;i<cinfo.output_width;i++){
+			int r,g,b;
+			r = image[j * 3 * cinfo.output_width+i*3];
+			g = image[j * 3 * cinfo.output_width+i*3+1];
+			b = image[j * 3 * cinfo.output_width+i*3+2];
+			buffer[currentBuffer][j* res.width + i] = r<<16 | g<<8 | b;
+		}
+	}
 	
-	
+	jpeg_finish_decompress(&cinfo);
+	jpeg_destroy_decompress(&cinfo);
+	free(image);
 }
 
 s32 main(s32 argc, const char* argv[])
@@ -284,8 +273,8 @@ s32 main(s32 argc, const char* argv[])
 				cameraInfo.info_ver=0x101;
 				cameraInfo.container=container;
 				cameraOpenEx(0, &cameraInfo);
-				printf("Video dimensions: %dx%d\n", cameraInfo.width, cameraInfo.height);
-				printf("Buffer at %08X\n", cameraInfo.buffer);
+				//printf("Video dimensions: %dx%d\n", cameraInfo.width, cameraInfo.height);
+				//printf("Buffer at %08X\n", cameraInfo.buffer);
 			}
 			else
 			{
@@ -314,48 +303,26 @@ s32 main(s32 argc, const char* argv[])
 		{
 			s32 readcount, frame;
 			ret = cameraRead(0, &frame, &readcount);
-			if(ret == CAMERA_ERRO_NO_DEVICE_FOUND) 
-			{
-			
+			if(ret == CAMERA_ERRO_NO_DEVICE_FOUND){
 				cameraSetup = 0;
-			}
-			else if(ret == CAMERA_ERRO_NEED_START) 
-			{      
+			}else if(ret == CAMERA_ERRO_NEED_START){      
 				cameraReset(0);
 				cameraStart(0);
-			
-				
-			}else if (ret == 0 && readcount!=0 )
-			{
-				//printf("Ok lets try to print this image.\n");
-				u8 * buf = (u8*)(u64)cameraInfo.buffer;
-				//printf("Buffer at %p\n", buf);
-				if(type == CAM_TYPE_PLAYSTATION_EYE)
-				{	for(i=0;i<cameraInfo.height; i++)
-					{
-						for(j=0;j<cameraInfo.width; j += 2)
-						{
+			}else if (ret == 0 && readcount!=0 ){
+				u8 * buf = (u8*)(u64)cameraInfo.buffer
+				if(type == CAM_TYPE_PLAYSTATION_EYE){
+					for(i=0;i<cameraInfo.height; i++){
+						for(j=0;j<cameraInfo.width; j += 2){
 							u32 pixel1, pixel2;
 							Convert422(buf, &pixel1, &pixel2);
 							buf += 4;
 							buffer[currentBuffer][i* res.width + j] = pixel1;
 							buffer[currentBuffer][(i)* res.width + j + 1] = pixel2;
-							//printf("Pixel x: %d, y: %d = 0x%08X\n", i,j,pixel1);
-							//printf("Pixel x: %d, y: %d = 0x%08X\n", i+1,j,pixel2);
 						}
 					}
-				}
-				else
-				{
-					if(type==CAM_TYPE_EYETOY)
-					{
+				}else if(type==CAM_TYPE_EYETOY){
 						//oopo's libjpg making the job
 						decode_jpg(buf,readcount);
-					
-						
-					}
-					
-					
 				}
 			}
 		}

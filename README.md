@@ -10,7 +10,7 @@ Credits
 -------
 
     AerialX     - Founder, Author
-    MattP       - Author
+    Parlane     - Author
     phiren      - Author, Awesome, yet humble guy
     Tempus      - PSL1GHT Logo
     lousyphreak - libaudio

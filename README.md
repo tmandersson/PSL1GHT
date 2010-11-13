@@ -87,6 +87,12 @@ information over UDP broadcast packets.
 See [Kammy](http://github.com/AerialX/Kammy) for more information and a
 precompiled ethdebug hook loader.
 
+### SPUs
+
+PSL1GHT provides access to running programs on the raw SPUs, and communication
+with it from the PPU. See sputest in the samples directory for a simple
+example.
+
 ### SPRX Linking
 
 Any dynamic libraries available to normal PS3 applications can be used with

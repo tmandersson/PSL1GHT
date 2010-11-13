@@ -20,7 +20,7 @@
 
 #include <psl1ght/lv2.h>
 
-#include "libjpg.h"
+#include <jpgdec/loadjpg.h>
 #include "psl1ght_jpg.bin.h" // jpg in memory
 
 gcmContextData *context; // Context to keep track of the RSX buffer.

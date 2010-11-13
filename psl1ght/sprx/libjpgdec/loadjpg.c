@@ -29,7 +29,7 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <malloc.h>
 #include <string.h>
 
-#include "libjpg.h"
+#include <jpgdec/loadjpg.h>
 
 
 static void *jpg_malloc(u32 size, void * a) {

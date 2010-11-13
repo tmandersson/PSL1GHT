@@ -226,6 +226,8 @@ static void eventHandle(u64 status, u64 param, void * userdata) {
 	if(status == EVENT_REQUEST_EXITAPP){
 		printf("Quit game requested\n");
 		exit(0);
+	}else{
+		printf("Unhandled event: %08llX\n", (unsigned long long int)status);
 	}
 }
 
@@ -276,40 +278,45 @@ s32 main(s32 argc, const char* argv[])
 		fillFrame(buffer[currentBuffer], 0x00FFFFFF); // Draw into the unused buffer
 		
 		if(!cameraSetup){
+			
 			cameraGetType(0, &type);
 			if (type == CAM_TYPE_PLAYSTATION_EYE){
 				cameraSetup = 1;
-				printf("Found me an eye, arrr!\n");
 				cameraInfo.format=CAM_FORM_YUV422;
 				cameraInfo.framerate=30;
 				cameraInfo.resolution=CAM_RESO_VGA;
 				cameraInfo.info_ver=0x101;
 				cameraInfo.container=container;
-				cameraOpenEx(0, &cameraInfo);
-				//printf("Video dimensions: %dx%d\n", cameraInfo.width, cameraInfo.height);
-				//printf("Buffer at %08X\n", cameraInfo.buffer);
-			}
-			else
-			{
-				if(type==CAM_TYPE_EYETOY)
-				{
-					
-					cameraSetup = 1;
-					printf("Found me an EyeToy :P, arrr!\n");
-					cameraInfo.format=CAM_FORM_JPG; //ONLY JPG FOR EYETOY
-					cameraInfo.framerate=30;
-					cameraInfo.resolution=CAM_RESO_VGA;
-					cameraInfo.info_ver=0x101;
-					cameraInfo.container=container;
-					cameraOpenEx(0, &cameraInfo);
-					//printf("Video dimensions: %dx%d\n", cameraInfo.width, cameraInfo.height);
-					//printf("Buffer at %08X\n", cameraInfo.buffer);
-					
-					
-					
+				ret = cameraOpenEx(0, &cameraInfo);
+				if (ret == CAMERA_ERRO_DOUBLE_OPEN){
+					cameraClose(0);
+					cameraSetup = 0;
+				}else if(ret == CAMERA_ERRO_NO_DEVICE_FOUND){
+				}else{
+					printf("Found me an eye, arrr!\n");
+					printf("cameraOpenEx returned %08X\n", ret);
+					printf("Video dimensions: %dx%d\n", cameraInfo.width, cameraInfo.height);
+					printf("Buffer at %08X\n", cameraInfo.buffer);
 				}
-				
-				
+			}else if(type==CAM_TYPE_EYETOY){
+					
+				cameraSetup = 1;
+				cameraInfo.format=CAM_FORM_JPG; //ONLY JPG FOR EYETOY
+				cameraInfo.framerate=30;
+				cameraInfo.resolution=CAM_RESO_VGA;
+				cameraInfo.info_ver=0x101;
+				cameraInfo.container=container;
+				ret = cameraOpenEx(0, &cameraInfo);
+				if (ret == CAMERA_ERRO_DOUBLE_OPEN){
+					cameraClose(0);
+					cameraSetup = 0;
+				}else if(ret == CAMERA_ERRO_NO_DEVICE_FOUND){
+				}else{
+					printf("Found me an EyeToy :P, arrr!\n");
+					printf("cameraOpenEx returned %08X\n", ret);
+					printf("Video dimensions: %dx%d\n", cameraInfo.width, cameraInfo.height);
+					printf("Buffer at %08X\n", cameraInfo.buffer);
+				}
 			}
 		}
 		else
@@ -321,6 +328,8 @@ s32 main(s32 argc, const char* argv[])
 			}else if(ret == CAMERA_ERRO_NEED_START){      
 				cameraReset(0);
 				cameraStart(0);
+			}else if(ret == CAMERA_ERRO_NEED_OPEN || ret == CAMERA_ERRO_NO_DEVICE_FOUND){      
+				cameraSetup = 0;
 			}else if (ret == 0 && readcount!=0 ){
 				u8 * buf = (u8*)(u64)cameraInfo.buffer;
 				if(type == CAM_TYPE_PLAYSTATION_EYE){
@@ -337,6 +346,8 @@ s32 main(s32 argc, const char* argv[])
 						//oopo's libjpg making the job
 						decode_jpg(buf,readcount);
 				}
+			}else if(ret!=0){
+				printf("Unhandled cameraRead return value: %08X\n", ret);
 			}
 		}
 		
@@ -351,6 +362,5 @@ s32 main(s32 argc, const char* argv[])
 	cameraEnd();
   
 	lv2MemContinerDestroy(container);
-	printf("Exiting.\n");
 	return 0;
 }

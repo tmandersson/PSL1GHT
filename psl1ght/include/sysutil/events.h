@@ -12,6 +12,7 @@ typedef enum sysEventSlot{
 	EVENT_SLOT1,
 	EVENT_SLOT2,
 	EVENT_SLOT3,
+	EVENT_SLOTMAX,
 } sysEventSlot;
 
 typedef void (*sysCallback)(u64 status,	u64 param, void * userdata);

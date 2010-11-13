@@ -10,11 +10,9 @@
 #ifdef __BIG_ENDIAN__
 #define BE16(num) (num)
 #define BE32(num) (num)
-#define BE64(num) (num)
 #else
 #define BE16(num) (((num << 8) | ((num >> 8) & 0xFF)) & 0xFFFF)
 #define BE32(num) ((BE16(num) << 16) | BE16(num >> 16))
-#define BE64(num) ((BE32(num) << 32) | BE32(num >> 32))
 #endif
 
 typedef struct
@@ -32,13 +30,6 @@ typedef struct
 	uint32_t zero5;
 	uint32_t zero6;
 } __attribute__((__packed__)) Stub;
-
-typedef struct
-{
-	uint64_t func_addr;
-	uint64_t toc_base;
-	uint64_t data;
-} __attribute__((__packed__)) Opd;
 
 unsigned char prx_magic[] = {
 	0x00, 0x00, 0x00, 0x28, // Size
@@ -116,28 +107,6 @@ int main(int argc, const char* argv[])
 				printf("Error occured during write in linker.c\n");
 			}
 		}
-	}
-
-	// convert .opd entries
-
-	Elf_Scn* opdsection = GetSection(elf, ".opd");
-	Elf_Data* opddata = elf_getdata(opdsection, NULL);
-	Elf64_Shdr* opdshdr = elf64_getshdr(opdsection);
-	
-	Opd* opdbase = (Opd*) opddata->d_buf;
-	size_t opdcount = opddata->d_size / sizeof(Stub);
-	
-
-	for (Opd* opd = opdbase; opd < opdbase + opdcount; opd++) {
-		uint64_t data = (BE64(opd->func_addr)<<32ULL) | BE64(opd->toc_base);
-		opd->data= BE64(data);
-		
-			lseek(fd, opdshdr->sh_offset + (opd - opdbase) * sizeof(Opd), SEEK_SET);
-			
-			if(write(fd, opd, sizeof(Opd)) == -1)
-			{
-				printf("Error occured during write in linker.c\n");
-			}
 	}
 
 	elf_end(elf);

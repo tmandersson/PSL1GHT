@@ -14,7 +14,7 @@ Credits
     phiren      - Author, Awesome, yet humble guy
     Tempus      - PSL1GHT Logo
     lousyphreak - libaudio
-    Hermes	    - Some modifications, sysmodule, libpngdec
+    Hermes	    - Some modifications, sysmodule, libpngdec, libjpgdec
 	BigBoss     - EyeToy support added to libcamera sample.
 	ooPo        - ps3libraries
 

@@ -168,6 +168,8 @@ int decode_jpg(u8 *buf, s32 size)
 	JpgDecThreadInParam InThdParam;
 	JpgDecThreadOutParam OutThdParam;
 
+	uint64_t build_malloc, build_free; // used to create the fake 32 bits addrs .opd for functions png_malloc() and png_free()
+
 	JpgDecInParam inParam;
 	JpgDecOutParam outParam;
 	
@@ -182,9 +184,9 @@ int decode_jpg(u8 *buf, s32 size)
 	InThdParam.enable   = 0;
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
-	InThdParam.addr_malloc_func  = get32_func_addr(jpg_malloc); // (see sysmodule.h) : note it needs my own sprxlinker modification
+	InThdParam.addr_malloc_func  = build32_func_addr(jpg_malloc, &build_malloc); // (see sysmodule.h)
 	InThdParam.addr_malloc_arg   = 0; // no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
-	InThdParam.addr_free_func    = get32_func_addr(jpg_free);     // (see sysmodule.h) : note it needs my own sprxlinker modification
+	InThdParam.addr_free_func    = build32_func_addr(jpg_free, &build_free);  // (see sysmodule.h)
 	InThdParam.addr_free_arg    =  0; // no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
 
 

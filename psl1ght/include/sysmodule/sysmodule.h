@@ -31,7 +31,6 @@ typedef enum
 // create .opd 32 bits struct from 64 bits .opd addr
 // the actual compilers uses 64 bits pointers but you need 32 bits pointers when one lib call to a remote function
 // note it uses build_opd to alloc the fake .opd entry and return 32 bits addr from build_opd
-// NOTE: this is OLD usage: you can use now get32_func_addr instead build32_fun_addr using the new sprxlinker
 
 inline uint32_t build32_func_addr(void *addr, uint64_t *build_opd) {
 	
@@ -40,13 +39,6 @@ inline uint32_t build32_func_addr(void *addr, uint64_t *build_opd) {
 	*build_opd= (addr_in[0]<<32ULL) | addr_in[1];
 
 	return (uint32_t) ((uint64_t) build_opd);
-}
-
-// NEW style: it needs the new sprxlinker for .opd datas conversion
-
-inline uint32_t get32_func_addr(void *addr) {
-	
-	return ((uint32_t) ((uint64_t) addr) +16);
 }
 
 inline uint32_t get32_addr(void *addr) {

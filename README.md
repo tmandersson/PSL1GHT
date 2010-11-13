@@ -70,9 +70,9 @@ But you can't currently quit from the xmb without your ps3 giving up and rebooti
 ### Filesystem Access
 
 Full filesystem support is available, with access to the internal PS3 hard
-drive, game disc contents, and external devices like USB drives. Only stat,
-fstat, and directory iteration is missing, though it can be done using the lv2
-filesystem interface directly (see include/psl1ght/lv2/filesystem.h)
+drive, game disc contents, and external devices like USB drives. Only directory
+iteration is missing, though it can be done using the lv2 filesystem interface
+directly (see include/psl1ght/lv2/filesystem.h)
 
 ### Networking
 

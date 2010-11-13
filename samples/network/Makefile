@@ -13,7 +13,7 @@ DATA		:=	data
 LIBS		:=	
 
 TITLE		:=	Network Test - PSL1GHT
-APPID		:=	TEST00001
+APPID		:=	TEST0NET1
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99

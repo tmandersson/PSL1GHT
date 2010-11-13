@@ -12,8 +12,8 @@ INCLUDE		:=	include
 DATA		:=	data
 LIBS		:=	-lio
 
-TITLE		:=	Thread Test - PSL1GHT
-APPID		:=	TEST0THRD
+TITLE		:=	Keyboard Test - PSL1GHT
+APPID		:=	TEST0KB01
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 CFLAGS		+= -g -O2 -Wall --std=gnu99
@@ -59,7 +59,7 @@ pkg: $(BUILD)
 	@$(FSELF) -n $(BUILD)/$(TARGET).elf $(BUILD)/pkg/USRDIR/EBOOT.BIN
 	@$(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILD)/pkg/PARAM.SFO
 	@$(PKG) --contentid $(CONTENTID) $(BUILD)/pkg/ $(OUTPUT).pkg
-
+	
 run: $(BUILD)
 	@$(PS3LOADAPP) $(OUTPUT).self
 

@@ -20,7 +20,7 @@
 
 #include <psl1ght/lv2.h>
 
-#include "libpng.h"
+#include <pngdec/loadpng.h>
 #include "psl1ght_png.bin.h" // png in memory
 
 gcmContextData *context; // Context to keep track of the RSX buffer.

@@ -11,12 +11,12 @@ Credits
 
     AerialX     - Founder, Author
     Parlane     - Author
-    phiren      - Author, Awesome, yet humble guy
+    phiren      - Author
     Tempus      - PSL1GHT Logo
     lousyphreak - libaudio
-    Hermes	    - Some modifications, sysmodule, libpngdec
-	BigBoss     - EyeToy support added to libcamera sample.
-	ooPo        - ps3libraries
+    Hermes      - sysmodule, libpngdec, libjpgdec
+    BigBoss     - EyeToy support added to libcamera sample.
+    ooPo        - ps3libraries
 
 
 Environment
@@ -103,3 +103,4 @@ The following libraries are currently supported:
 * libgcm_sys
 * libsysmodule
 * libpngdec
+* libjpgdec

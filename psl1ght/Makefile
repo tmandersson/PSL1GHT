@@ -21,6 +21,7 @@ all: $(STUBS)
 	@make -C sprx/libsysmodule --no-print-directory
 	@make -C sprx/libaudio --no-print-directory
 	@make -C sprx/libpngdec --no-print-directory
+	@make -C sprx/libjpgdec --no-print-directory
 	@make -C lib/libreality --no-print-directory
 
 clean:
@@ -38,6 +39,7 @@ clean:
 	@make -C sprx/libsysmodule clean --no-print-directory
 	@make -C sprx/libaudio clean --no-print-directory
 	@make -C sprx/libpngdec clean --no-print-directory
+	@make -C sprx/libjpgdec clean --no-print-directory
 	@make -C lib/libreality clean --no-print-directory
 
 install: all

@@ -28,6 +28,7 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <malloc.h>
 #include <string.h>
+#include <psl1ght/types.h>
 
 #include <jpgdec/loadjpg.h>
 
@@ -55,8 +56,6 @@ int LoadJPG(JpgDatas *jpg, char *filename)
 	JpgDecThreadInParam InThdParam;
 	JpgDecThreadOutParam OutThdParam;
 
-	uint64_t build_malloc, build_free; // used to create the fake 32 bits addrs .opd for functions png_malloc() and png_free()
-
 	JpgDecInParam inParam;
 	JpgDecOutParam outParam;
 	
@@ -71,10 +70,10 @@ int LoadJPG(JpgDatas *jpg, char *filename)
 	InThdParam.enable   = 0;
 	InThdParam.ppu_prio = 512;
 	InThdParam.spu_prio = 200;
-	InThdParam.addr_malloc_func  = build32_func_addr(jpg_malloc, &build_malloc); // (see sysmodule.h)
-	InThdParam.addr_malloc_arg   = 0; // no args: if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
-	InThdParam.addr_free_func    = build32_func_addr(jpg_free, &build_free);     // (see sysmodule.h)
-	InThdParam.addr_free_arg    =  0; // no args  if you want one uses get32_addr() to get the 32 bit address (see sysmodule.h)
+	InThdParam.addr_malloc_func  = (u32)(u64) OPD32(jpg_malloc);
+	InThdParam.addr_malloc_arg   = 0; // no args
+	InThdParam.addr_free_func    = (u32)(u64) OPD32(jpg_free);
+	InThdParam.addr_free_arg    =  0; // no args
 
 
 	ret= JpgDecCreate(&mHandle, &InThdParam, &OutThdParam);
@@ -87,10 +86,10 @@ int LoadJPG(JpgDatas *jpg, char *filename)
 			
 		if(filename) {
 			src.stream_select = JPGDEC_FILE;
-			src.addr_file_name  = get32_addr(filename);
+			src.addr_file_name  = (u32)(u64) filename;
 		} else {
 			src.stream_select = JPGDEC_BUFFER;
-			src.addr_stream_ptr  = get32_addr((void *) jpg->jpg_in);
+			src.addr_stream_ptr  = (u32)(u64) jpg->jpg_in;
 			src.stream_size    = jpg->jpg_size;
 		}
 

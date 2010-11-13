@@ -27,7 +27,7 @@ oopo's ps3libraries are needed for libjpg Eyetoy in Playstation 3 only support J
 #include <stdarg.h>
 
 #include <arpa/inet.h>
-
+#include "sysutil/events.h"
 
 //Ugly error control for libjpg sample
 struct my_error_mgr {
@@ -127,8 +127,10 @@ void fillFrame(u32 *buffer, u32 color) {
 	}
 
 }
-void unload_modules(){
+void appCleanup(){
 	SysUnloadModule(SYSMODULE_CAM);
+	sysUnregisterCallback(EVENT_SLOT0);
+	printf("Exiting for real.\n");
 }
 
 u32 YUV_to_RGB(int y,int u,int v)
@@ -218,13 +220,24 @@ void decode_jpg(u8 *buf, s32 size)
 	free(image);
 }
 
+static void eventHandle(u64 status, u64 param, void * userdata) {
+    (void)param;
+    (void)userdata;
+	if(status == EVENT_REQUEST_EXITAPP){
+		printf("Quit game requested\n");
+		exit(0);
+	}
+}
+
 s32 main(s32 argc, const char* argv[])
 {
 	PadInfo padinfo;
 	PadData paddata;
 
 	
-	atexit(unload_modules);
+	atexit(appCleanup);
+	
+	sysRegisterCallback(EVENT_SLOT0, eventHandle, NULL);
 	
 	int i, j, ret;
 	int running = 1, cameraSetup = 0;
@@ -329,6 +342,7 @@ s32 main(s32 argc, const char* argv[])
 		
 		flip(currentBuffer); // Flip buffer onto screen
 		currentBuffer = !currentBuffer;
+		sysCheckCallback();
 	}
 	
 	cameraStop(0);

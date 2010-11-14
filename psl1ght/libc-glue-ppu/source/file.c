@@ -12,7 +12,16 @@
 
 #include <sys/socket.h>
 
-#define DEFAULT_FILE_MODE (S_IRWXU | S_IRWXG | S_IRWXO)
+#define UMASK(mode) ((mode) & ~glue_umask)
+static mode_t glue_umask = 0;
+mode_t umask(mode_t cmask)
+{
+	mode_t mode = glue_umask;
+	glue_umask = cmask;
+	return mode;
+}
+
+#define DEFAULT_FILE_MODE UMASK(S_IRWXU | S_IRWXG | S_IRWXO)
 int open(const char* path, int oflag, ...)
 {
 	Lv2FsFile fd;
@@ -140,7 +149,7 @@ int stat(const char* path, struct stat* buf)
 
 int mkdir(const char* path, mode_t mode)
 {
-	return lv2Errno(lv2FsMkdir(path, mode));
+	return lv2Errno(lv2FsMkdir(path, UMASK(mode)));
 }
 
 int rmdir(const char* path)
@@ -148,9 +157,17 @@ int rmdir(const char* path)
 	return lv2Errno(lv2FsRmdir(path));
 }
 
+/* Newlib already implements this? How?
 int rename(const char* old, const char* new)
 {
 	return lv2Errno(lv2FsRename(old, new));
+}
+*/
+
+int link(const char* old, const char* new)
+{
+	errno = ENOSYS;
+	return -1;
 }
 
 off_t lseek(int fd, off_t offset, int whence)
@@ -179,4 +196,3 @@ int chmod(const char* path, mode_t mode)
 {
 	return lv2Errno(lv2FsChmod(path, mode));
 }
-

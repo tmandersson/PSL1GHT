@@ -31,8 +31,12 @@ a full newlib environment; at the moment only two toolchains do so:
 
 The SDK also includes a few standalone tools to help compilation. A host gcc
 is required to build raw2h, ps3load, and sprxlinker requires libelf. ps3load
-required zlib installed. Python 2.x is required to run fself.py, sfo.py, and
+requires zlib installed. Python 2.x is required to run fself.py, sfo.py, and
 pkg.py.
+
+Most of the PSL1GHT samples included in the samples/ directory require various
+libraries from [ps3libraries](http://github.com/ooPo/ps3libraries) to be
+installed.
 
 
 Building

@@ -63,6 +63,8 @@ void realitySelectRenderTarget(gcmContextData *context, uint8_t target, uint32_t
 				uint16_t width, uint16_t height, uint16_t x, uint16_t y);
 
 void realityViewport(gcmContextData *context, uint16_t width, uint16_t height);
+void realityViewportTranslate(gcmContextData *context, float x, float y, float z, float w);
+void realityViewportScale(gcmContextData *context, float x, float y, float z, float w);
 
 
 // Vertex begin, end and 4f, excatly like glbegin, glend and glvertex.

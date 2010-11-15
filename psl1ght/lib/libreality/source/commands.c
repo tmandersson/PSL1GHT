@@ -132,3 +132,21 @@ void realitySetTexture(gcmContextData *context, uint32_t unit, realityTexture *t
 	commandBufferPutCmd1(context, NV40_3D_TEX_SIZE1(unit), tex->stride | 
 		(1 << NV40_3D_TEX_SIZE1_DEPTH__SHIFT));
 }
+
+void realityViewportTranslate(gcmContextData *context, float x, float y, float z, float w) {
+	COMMAND_LENGTH(context, 5);
+	commandBufferPutCmd4(context, NV30_3D_VIEWPORT_TRANSLATE, 
+				 ((ieee32) x).u, 
+				 ((ieee32) y).u,
+				 ((ieee32) z).u, 
+				 ((ieee32) w).u);
+}
+
+void realityViewportScale(gcmContextData *context, float x, float y, float z, float w) {
+	COMMAND_LENGTH(context, 5);
+	commandBufferPutCmd4(context, NV30_3D_VIEWPORT_SCALE, 
+				 ((ieee32) x).u, 
+				 ((ieee32) y).u,
+				 ((ieee32) z).u, 
+				 ((ieee32) w).u);
+};

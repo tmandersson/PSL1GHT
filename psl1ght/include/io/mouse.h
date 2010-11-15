@@ -3,12 +3,10 @@
 #include <psl1ght/types.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_BEGIN
 
-#define MAX_MICE (127)
-#define MOUSE_MAX_CODES (64)
+#define MAX_MICE		127
+#define MOUSE_MAX_CODES	64
 
 typedef struct MouseInfo
 {
@@ -71,6 +69,4 @@ s32 ioMouseGetTabletDataList(u32 port, MouseTabletDataList*);
 s32 ioMouseInfoTabletMode(u32 port, MouseInfoTablet*);
 s32 ioMouseSetTabletMode(u32 port, u32 mode);
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_END

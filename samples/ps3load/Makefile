@@ -8,10 +8,9 @@ include $(PSL1GHT)/Makefile.base
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCE		:=	source
-INCLUDE		:=	include zlib
+INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lz
-LIBDIRS		:=	zlib
+LIBS		:=	-lzip -lz
 
 APPID		:=	PSL145310
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
@@ -47,12 +46,10 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir))
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
-	@make --no-print-directory -C zlib
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 clean:
 	@echo Clean...
-	@make --no-print-directory -C zlib clean
 	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a $(OUTPUT).pkg
 
 pkg: $(BUILD)

@@ -3,11 +3,10 @@
 #include <psl1ght/types.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#define MAX_PADS (127)
-#define MAX_PORT_NUM (7)
+EXTERN_BEGIN
+
+#define MAX_PADS		127
+#define MAX_PORT_NUM	7
 typedef struct PadInfo
 {
 	u32 max;					/* max pads allowed to connect */
@@ -90,11 +89,10 @@ typedef struct PadData
 			unsigned int SENSOR_Y		: 16;
 			unsigned int SENSOR_Z		: 16;
 			unsigned int SENSOR_G		: 16;
-			u8 			 		reserved[80];		/* reserved */
+			u8 reserved[80];		/* reserved */
 		};
 	};
 } PadData;
-
 
 #define PAD_CAPABILITY_INFO_MAX 32
 typedef struct PadCapabilityInfo
@@ -102,12 +100,12 @@ typedef struct PadCapabilityInfo
 	union {
 		u32 info[PAD_CAPABILITY_INFO_MAX];
 		struct {
-			unsigned int ps3spec		:  1;		/* controller meets ps3 specifications */
-			unsigned int has_pressure	:  1;		/* controller has pressure-sensitive buttons */
-			unsigned int has_sensors	:  1;		/* controller has sensors, e.g. sixaxis, X,Y,Z,G */
-			unsigned int has_hps		:  1;		/* controller has high precision stick */
-			unsigned int has_vibrate	:  1;		/* controller has inbuilt vibration motor */
 			unsigned int 				: 27;		/* reserved */
+			unsigned int has_vibrate	:  1;		/* controller has inbuilt vibration motor */
+			unsigned int has_hps		:  1;		/* controller has high precision stick */
+			unsigned int has_sensors	:  1;		/* controller has sensors, e.g. sixaxis, X,Y,Z,G */
+			unsigned int has_pressure	:  1;		/* controller has pressure-sensitive buttons */
+			unsigned int ps3spec		:  1;		/* controller meets ps3 specifications */
 			u32 reserved[PAD_CAPABILITY_INFO_MAX-1];
 		};
 	};
@@ -151,28 +149,163 @@ typedef struct PadPeriphData
   u16 button[PAD_MAX_CODES];
 } PadPeriphData;
 
+/**
+ * \brief Initialize Pad library
+ *
+ * \param[in] max : maximum pads allowed to connect
+ * \return 0 if OK or else error code
+ */
+s32 ioPadInit(const u32 max);
 
-s32 ioPadInit(u32 max);
-s32 ioPadEnd();
-s32 ioPadGetInfo(PadInfo*);
-s32 ioPadClearBuf(u32 port);
-s32 ioPadGetCapabilityInfo(u32 port, PadCapabilityInfo*);
-s32 ioPadGetData(u32 port, PadData*);
-s32 ioPadInfoPressMode(u32 port);
-s32 ioPadSetPressMode(u32 port, u32 mode);
-s32 ioPadInfoSensorMode(u32 port);
-s32 ioPadSetSensorMode(u32 port, u32 mode);
-u32 ioPadSetActDirect(u32 port,	PadActParam*);
-u32 ioPadLddDataInsert(s32 handle, PadData*);
-s32 ioPadLddGetPortNo(s32 handle);
-s32 ioPadLddRegisterController();
-s32 ioPadLddUnregisterController(s32 handle);
+/**
+ * \brief Close/End Pad library
+ *
+ * \return 0 if OK or else error code
+ */
+s32 ioPadEnd(void);
+
+ /**
+ * \brief Get Pad connection information
+ *
+ * \param[out] pad_info : pad information
+ * \return 0 if OK or else error code
+ */
+s32 ioPadGetInfo(PadInfo* pad_info);
+
+ /**
+ * \brief Clear Pad Buffer Data
+ *
+ * \param[in] port : pad port number
+ * \return 0 if OK or else error code
+ */
+s32 ioPadClearBuf(const u32 port);
+
+ /**
+ * \brief Get Pad Capability Info
+ *
+ * \param[in] port : pad port number
+ * \param[out] pad_capinfo : pad capability info
+ * \return 0 if OK or else error code
+ */
+s32 ioPadGetCapabilityInfo(const u32 port, PadCapabilityInfo* pad_capinfo);
+
+ /**
+ * \brief Get Pad Data Info
+ *
+ * \param[in] port : pad port number
+ * \param[out] pad_data : pad data info
+ * \return 0 if OK or else error code
+ */
+s32 ioPadGetData(const u32 port, PadData* pad_data);
+
+ /**
+ * \brief Pad Info Press Mode
+ *
+ * \param[in] port : pad port number
+ * \return TBD
+ */
+s32 ioPadInfoPressMode(const u32 port);
+
+ /**
+ * \brief Set Pad Press Mode
+ *
+ * \param[in] port : pad port number
+ * \param[in] mode : pad mode
+ * \return TBD
+ */
+s32 ioPadSetPressMode(const u32 port, const u32 mode);
+
+ /**
+ * \brief Get Pad Info Sensor Mode
+ *
+ * \param[in] port : pad port number
+ * \return TBD
+ */
+s32 ioPadInfoSensorMode(const u32 port);
+
+ /**
+ * \brief Set Pad Sensor Mode
+ *
+ * \param[in] port : pad port number
+ * \param[in] mode : pad mode
+ * \return TBD
+ */
+s32 ioPadSetSensorMode(const u32 port, const u32 mode);
+
+ /**
+ * \brief Set Pad Actuator Data to vibrate Pad
+ *
+ * \param[in] port : pad port number
+ * \param[in] pad_actparam : pad actuator data
+ * \return 0 if OK or else error code
+ */
+u32 ioPadSetActDirect(const u32 port, const PadActParam* pad_actparam);
+
+ /**
+ * \brief Set/Notify Custom Pad Button
+ *
+ * \param[in] handle : pad device handle returned by cellPadLddRegisterController()
+ * \param[in] pad_data : pad data button to notify
+ * \return 0 if OK or else error code
+ */
+u32 ioPadLddDataInsert(const s32 handle, const PadData* pad_data);
+
+ /**
+ * \brief Get Custom Pad port number
+ *
+ * \param[in] handle : pad device handle returned by cellPadLddRegisterController()
+ * \return pad port number or error if >= 0x80121101
+ */
+s32 ioPadLddGetPortNo(const s32 handle);
+
+ /**
+ * \brief Register Custom Pad
+ *
+ * \return pad device handle
+ */
+s32 ioPadLddRegisterController(void);
+
+ /**
+ * \brief Unregister Custom Pad
+ *
+ * \param[in] handle : pad device handle returned by cellPadLddRegisterController()
+ * \return 0 if OK or else error code
+ */
+s32 ioPadLddUnregisterController(const s32 handle);
 
 /* new in 3.41 */
-s32 ioPadGetInfo2(PadInfo2*);
-s32 ioPadPeriphGetInfo(PadPeriphInfo*);
-s32 ioPadPeriphGetData(u32 port, PadPeriphData*);
-s32 ioPadSetPortSetting(u32 port, u32 setting);
-#ifdef __cplusplus
-}
-#endif
+ /**
+ * \brief Get Pad Information
+ *
+ * \param[out] pad_info2 : pad informations
+ * \return 0 if OK or else error code
+ */
+s32 ioPadGetInfo2(PadInfo2* pad_info2);
+
+ /**
+ * \brief Get Pad Peripheral Information
+ *
+ * \param[out] pad_periphinfo : pad peripheral informations
+ * \return 0 if OK or else error code
+ */
+s32 ioPadPeriphGetInfo(PadPeriphInfo* pad_periphinfo);
+
+ /**
+ * \brief Get Pad Peripheral Data
+ *
+ * \param[in] port : pad port number 
+ * \param[out] pad_periphdata : pad peripheral data
+ * \return 0 if OK or else error code
+ */
+s32 ioPadPeriphGetData(const u32 port, PadPeriphData* pad_periphdata);
+
+ /**
+ * \brief Set Pad port mode
+ *
+ * \param[in] port : pad port number 
+ * \param[in] setting : pad mode setting (bit1 Pressure-sensitivity mode on, bit2 Six-acis sensor more on)
+ * \return 0 if OK or else error code
+ */
+s32 ioPadSetPortSetting(const u32 port, const u32 setting);
+
+EXTERN_END

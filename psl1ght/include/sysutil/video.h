@@ -3,9 +3,7 @@
 #include <psl1ght/types.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_BEGIN
 
 #define VIDEO_RESOLUTION_1080	1
 #define VIDEO_RESOLUTION_720	2
@@ -59,6 +57,4 @@ int videoConfigure(int videoOut, VideoConfiguration *config, void *option, int b
 int videoGetState(int videoOut, int deviceIndex, VideoState *state);
 
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_END

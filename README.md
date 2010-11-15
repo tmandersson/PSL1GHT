@@ -9,10 +9,14 @@ XMB menu (GameOS homebrew).
 Credits
 -------
 
-    AerialX  - Founder, Author
-    MattP    - Author
-    phiren   - Author, Awesome Guy
-    Tempus   - PSL1GHT Logo
+    AerialX     - Founder, Author
+    Parlane     - Author
+    phiren      - Author
+    Tempus      - PSL1GHT Logo
+    lousyphreak - libaudio
+    Hermes      - sysmodule, libpngdec, libjpgdec
+    BigBoss     - EyeToy support added to libcamera sample.
+    ooPo        - ps3libraries
 
 
 Environment
@@ -26,8 +30,13 @@ a full newlib environment; at the moment only two toolchains do so:
 * [ps3toolchain](http://github.com/ooPo/ps3toolchain)
 
 The SDK also includes a few standalone tools to help compilation. A host gcc
-is required to build raw2h, ps3load, and sprxlinker requires libelf. Python 2.x
-is required to run fself.py, sfo.py, and pkg.py.
+is required to build raw2h, ps3load, and sprxlinker requires libelf. ps3load
+requires zlib installed. Python 2.x is required to run fself.py, sfo.py, and
+pkg.py.
+
+Most of the PSL1GHT samples included in the samples/ directory require various
+libraries from [ps3libraries](http://github.com/ooPo/ps3libraries) to be
+installed.
 
 
 Building
@@ -37,8 +46,8 @@ Run make install in the psl1ght directory to build it all, and make sure to
 set the environment variable $PSL1GHT to the folder where you wish to
 install it to, for example...
 
-    cd /path/to/psl1ght.git
-    export PSL1GHT=/path/to/psl1ght.git/build
+    cd /path/to/psl1ght.git/psl1ght/
+    export PSL1GHT=/path/to/psl1ght.git/psl1ght/build
     make
     make install
 
@@ -65,9 +74,9 @@ But you can't currently quit from the xmb without your ps3 giving up and rebooti
 ### Filesystem Access
 
 Full filesystem support is available, with access to the internal PS3 hard
-drive, game disc contents, and external devices like USB drives. Only stat,
-fstat, and directory iteration is missing, though it can be done using the lv2
-filesystem interface directly (see include/psl1ght/lv2/filesystem.h)
+drive, game disc contents, and external devices like USB drives. Only directory
+iteration is missing, though it can be done using the lv2 filesystem interface
+directly (see include/psl1ght/lv2/filesystem.h)
 
 ### Networking
 
@@ -81,6 +90,12 @@ interface. Kammy's ethdebug module can be used to retrieve this live debugging
 information over UDP broadcast packets.
 See [Kammy](http://github.com/AerialX/Kammy) for more information and a
 precompiled ethdebug hook loader.
+
+### SPUs
+
+PSL1GHT provides access to running programs on the raw SPUs, and communication
+with it from the PPU. See sputest in the samples directory for a simple
+example.
 
 ### SPRX Linking
 
@@ -97,4 +112,6 @@ The following libraries are currently supported:
 * liblv2
 * libsysutil
 * libgcm_sys
-
+* libsysmodule
+* libpngdec
+* libjpgdec

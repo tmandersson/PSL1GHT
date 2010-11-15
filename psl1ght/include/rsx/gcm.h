@@ -10,9 +10,7 @@
 #include <psl1ght/types.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+EXTERN_BEGIN
 
 // Theres are all ment to be pointers.
 typedef struct{
@@ -57,6 +55,4 @@ typedef struct {
 gcmControlRegister *gcmGetControlRegister();
 void gcmFlushBuffer(gcmContextData *context);
 
-#ifdef __cplusplus
-}
-#endif
+EXTERN_END

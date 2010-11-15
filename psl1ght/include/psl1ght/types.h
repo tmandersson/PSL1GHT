@@ -23,3 +23,27 @@ typedef volatile uint32_t	vu32;
 typedef volatile int64_t	vs64;
 typedef volatile uint64_t	vu64;
 
+typedef struct opd64 {
+	void* 	func;
+	void* 	rtoc;
+	u64 	zero;
+} opd64;
+
+typedef struct opd32 {
+	u32 func;
+	u32 rtoc;
+} opd32;
+
+extern opd64 opd64_start[];
+extern opd32 opd32_start[];
+#define OPD32(ptr) (opd32_start + ((opd64*)ptr - opd64_start))
+
+typedef u32 mem_container_t;
+
+#ifdef __cplusplus
+#define EXTERN_BEGIN	extern "C" {
+#define EXTERN_END		}
+#else
+#define EXTERN_BEGIN
+#define EXTERN_END
+#endif

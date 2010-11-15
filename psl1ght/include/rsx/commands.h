@@ -128,7 +128,13 @@ void realitySetTexture(gcmContextData *context, uint32_t unit, realityTexture *t
 
 void realityCullFace(gcmContextData *context, uint32_t face);
 void realityFrontFace(gcmContextData *context, uint32_t face);
-void realityCull(gcmContextData *context, uint32_t enable);
+void realityCullEnable(gcmContextData *context, uint32_t enable);
+
+void realityBlendFunc(gcmContextData *context, uint32_t src, uint32_t dest);
+void realityBlendEquation(gcmContextData *context, uint32_t equation);
+void realityBlendEnable(gcmContextData *context, uint32_t enable);
+
+void realityZControl(gcmContextData *context, uint8_t cullNearFar, uint8_t zClampEnable, uint8_t cullIngnoreW);
 
 #ifdef __cplusplus
 }

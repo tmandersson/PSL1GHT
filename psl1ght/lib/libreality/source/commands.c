@@ -161,8 +161,29 @@ void realityFrontFace(gcmContextData *context, uint32_t face) {
 	commandBufferPutCmd1(context, NV30_3D_FRONT_FACE, face);
 }
 
-void realityCull(gcmContextData *context, uint32_t enable) {
+void realityCullEnable(gcmContextData *context, uint32_t enable) {
 	COMMAND_LENGTH(context, 2);
 	commandBufferPutCmd1(context, NV30_3D_CULL_FACE_ENABLE, enable);
+}
 
+void realityBlendEnable(gcmContextData *context, uint32_t enable) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_BLEND_FUNC_ENABLE, enable);
+}
+
+void realityBlendEquation(gcmContextData *context, uint32_t equation) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV40_3D_BLEND_EQUATION, equation);
+}
+
+void realityBlendFunc(gcmContextData *context, uint32_t src, uint32_t dest) {
+	COMMAND_LENGTH(context, 3);
+	commandBufferPutCmd2(context, NV30_3D_BLEND_FUNC_SRC, src, dest);
+}
+
+void realityZControl(gcmContextData *context, uint8_t cullNearFar, uint8_t zClampEnable, uint8_t cullIngnoreW) { // todo: documenent in nouveau
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_DEPTH_CONTROL, cullNearFar | 
+				zClampEnable << 4 |
+				cullIngnoreW << 8);
 }

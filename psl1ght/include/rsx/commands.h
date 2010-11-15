@@ -102,6 +102,22 @@ void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *pro
 void realityInstallFragmentProgram(gcmContextData *context, realityFragmentProgram *prog, uint32_t *addr);
 void realityLoadFragmentProgram(gcmContextData *context, realityFragmentProgram *prog);
 
+typedef struct {
+	uint32_t offset;
+	uint32_t format;
+	uint32_t wrap;
+	uint32_t enable;
+	uint32_t swizzle;
+	uint32_t filter;
+	uint16_t width;
+	uint16_t height;
+	uint32_t borderColor;
+	uint32_t stride;
+} realityTexture;
+
+void realitySetTexture(gcmContextData *context, uint32_t unit, realityTexture *tex);
+
+
 #ifdef __cplusplus
 }
 #endif

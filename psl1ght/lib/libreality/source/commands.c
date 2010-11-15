@@ -123,3 +123,12 @@ void realityLoadFragmentProgram(gcmContextData *context, realityFragmentProgram 
  				prog->num_regs << NV40_3D_FP_CONTROL_TEMP_COUNT__SHIFT);
 }
 
+
+void realitySetTexture(gcmContextData *context, uint32_t unit, realityTexture *tex) {
+	COMMAND_LENGTH(context, 11);
+	commandBufferPutCmd8(context, NV30_3D_TEX_OFFSET(unit), tex->offset, tex->format,
+		tex->wrap, tex->enable, tex->swizzle, tex->filter,
+		tex->width << 16 | tex->height, tex->borderColor);
+	commandBufferPutCmd1(context, NV40_3D_TEX_SIZE1(unit), tex->stride | 
+		(1 << NV40_3D_TEX_SIZE1_DEPTH__SHIFT));
+}

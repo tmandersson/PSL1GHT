@@ -78,6 +78,15 @@ void realityVertexBegin(gcmContextData *context, uint32_t type);
 void realityVertexEnd(gcmContextData *context);
 void realityVertex4f(gcmContextData *context, float x, float y, float z, float w);
 
+typedef struct {
+	uint32_t size;
+	uint32_t *data;
+	uint32_t in_reg;
+	uint32_t out_reg;
+} realityVertexProgram; 
+
+void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *prog);
+
 #ifdef __cplusplus
 }
 #endif

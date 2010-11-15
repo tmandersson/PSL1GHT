@@ -8,6 +8,7 @@ extern "C" {
 
 // Set the colour for clearing buffers, should be in ARGB format.
 void realitySetClearColor(gcmContextData *context, uint32_t color);
+void realitySetClearDepthValue(gcmContextData *context, uint32_t value);
 
 // For actually clearing the bufders
 #define REALITY_CLEAR_BUFFERS_DEPTH				0x00000001
@@ -21,7 +22,7 @@ void realityClearBuffers(gcmContextData *context, uint32_t buffers);
 // For when you need to do nothing
 void realityNop(gcmContextData *context);
 
-#define REALITY_LOCATION_RSX_MEMORY	0
+#define REALITY_RSX_MEMORY	0
 #define REALITY_LOCATION_CELL_MEMORY	1
 
 enum surfaces {REALITY_SURFACE_COLOR0, REALITY_SURFACE_COLOR1, REALITY_SURFACE_COLOR2, 

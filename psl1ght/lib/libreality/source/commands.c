@@ -7,6 +7,11 @@ void realitySetClearColor(gcmContextData *context, uint32_t color) {
 	commandBufferPutCmd1(context, NV30_3D_CLEAR_COLOR_VALUE, color);
 }
 
+void realitySetClearDepthValue(gcmContextData *context, uint32_t value) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_CLEAR_DEPTH_VALUE, value);
+}
+
 void realityNop(gcmContextData *context) {
 	COMMAND_LENGTH(context, 2);
 	commandBufferPutCmd1(context, 0x100, 0);

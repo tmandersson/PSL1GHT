@@ -145,8 +145,24 @@ void realityViewportTranslate(gcmContextData *context, float x, float y, float z
 void realityViewportScale(gcmContextData *context, float x, float y, float z, float w) {
 	COMMAND_LENGTH(context, 5);
 	commandBufferPutCmd4(context, NV30_3D_VIEWPORT_SCALE, 
-				 ((ieee32) x).u, 
+				 ((ieee32) x).u,
 				 ((ieee32) y).u,
 				 ((ieee32) z).u, 
 				 ((ieee32) w).u);
 };
+
+void realityCullFace(gcmContextData *context, uint32_t face) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_CULL_FACE, face);
+}
+
+void realityFrontFace(gcmContextData *context, uint32_t face) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_FRONT_FACE, face);
+}
+
+void realityCull(gcmContextData *context, uint32_t enable) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_CULL_FACE_ENABLE, enable);
+
+}

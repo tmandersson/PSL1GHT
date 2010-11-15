@@ -119,6 +119,16 @@ typedef struct {
 
 void realitySetTexture(gcmContextData *context, uint32_t unit, realityTexture *tex);
 
+#define REALITY_FRONT_FACE_CW 			0x00000900
+#define REALITY_FRONT_FACE_CCW			0x00000901
+
+#define REALITY_CULL_FACE_FRONT			0x00000404
+#define REALITY_CULL_FACE_BACK			0x00000405
+#define REALITY_CULL_FACE_FRONT_AND_BACK	0x00000408
+
+void realityCullFace(gcmContextData *context, uint32_t face);
+void realityFrontFace(gcmContextData *context, uint32_t face);
+void realityCull(gcmContextData *context, uint32_t enable);
 
 #ifdef __cplusplus
 }

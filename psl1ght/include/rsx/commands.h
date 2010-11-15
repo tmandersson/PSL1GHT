@@ -62,6 +62,8 @@ void realitySetRenderSurface(gcmContextData *context, uint8_t sufrace, uint8_t l
 void realitySelectRenderTarget(gcmContextData *context, uint8_t target, uint32_t format, 
 				uint16_t width, uint16_t height, uint16_t x, uint16_t y);
 
+void realityViewport(gcmContextData *context, uint16_t width, uint16_t height);
+
 
 // Vertex begin, end and 4f, excatly like glbegin, glend and glvertex.
 // You really should be using vertex buffers instead.
@@ -78,6 +80,9 @@ void realitySelectRenderTarget(gcmContextData *context, uint8_t target, uint32_t
 void realityVertexBegin(gcmContextData *context, uint32_t type);
 void realityVertexEnd(gcmContextData *context);
 void realityVertex4f(gcmContextData *context, float x, float y, float z, float w);
+
+void realityTexCoord2f(gcmContextData *context, float s, float t);
+
 
 typedef struct {
 	uint32_t size;

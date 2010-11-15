@@ -53,9 +53,9 @@ void realitySelectRenderTarget(gcmContextData *context, uint8_t target, uint32_t
 	commandBufferPutCmd2(context, NV30_3D_RT_HORIZ, x | width << 16, y | height << 16);
 }
 
-void realitySetViewportOffset(gcmContextData *context, uint16_t width, uint16_t height, uint16_t x, uint16_t y) {
-	COMMAND_LENGTH(context, 2);
-	commandBufferPutCmd1(context, NV30_3D_VIEWPORT_TX_ORIGIN, x | y << 16);
+void realityViewport(gcmContextData *context, uint16_t width, uint16_t height) {
+	COMMAND_LENGTH(context, 3);
+	commandBufferPutCmd2(context, NV30_3D_VIEWPORT_HORIZ, width << 16, height << 16);
 }
 
 void realityVertexBegin(gcmContextData *context, uint32_t type) {
@@ -76,6 +76,14 @@ void realityVertex4f(gcmContextData *context, float x, float y, float z, float w
 				 ((ieee32) z).u, 
 				 ((ieee32) w).u);
 }
+
+void realityTexCoord2f(gcmContextData *context, float s, float t) {
+	COMMAND_LENGTH(context, 3);
+	commandBufferPutCmd2(context, NV30_3D_VTX_ATTR_2F(8),
+				 ((ieee32) s).u, 
+				 ((ieee32) t).u);
+}
+
 
 void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *prog) {
 	int inst, command_size = prog->size * 2 + 7;

@@ -1,6 +1,7 @@
 #include <rsx/commands.h>
 #include <rsx/nv40.h>
 #include <rsx/buffer.h>
+#include <rsx/reality.h>
 
 void realitySetClearColor(gcmContextData *context, uint32_t color) {
 	COMMAND_LENGTH(context, 2);
@@ -101,6 +102,24 @@ void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *pro
 
 	commandBufferPutCmd1(context, NV30_3D_VP_START_FROM_ID, 0);
 	commandBufferPutCmd2(context, NV40_3D_VP_ATTRIB_EN, prog->in_reg, prog->out_reg);
+}
 
+void realityInstallFragmentProgram(gcmContextData *context, realityFragmentProgram *prog, uint32_t *addr) {
+	// We don't actually need context, but if we leave it out people will forget.
+	int i;
+	for( i = 0; i < prog->size; ++i ) {
+		addr[i] = (((prog->data[i] >> 16 ) & 0xffff) << 0) |
+			    (((prog->data[i] >> 0 ) & 0xffff) << 16);
+	}
+	assert(realityAddressToOffset(addr, &prog->offset) == 0);
+}
+
+void realityLoadFragmentProgram(gcmContextData *context, realityFragmentProgram *prog) {
+	COMMAND_LENGTH(context, 4);
+	assert(prog->offset != 0);
+	commandBufferPutCmd1(context, NV30_3D_FP_ACTIVE_PROGRAM,
+				prog->offset | NV30_3D_FP_ACTIVE_PROGRAM_DMA0);
+	commandBufferPutCmd1(context, NV30_3D_FP_CONTROL, 
+ 				prog->num_regs << NV40_3D_FP_CONTROL_TEMP_COUNT__SHIFT);
 }
 

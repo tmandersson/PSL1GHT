@@ -91,7 +91,16 @@ typedef struct {
 	uint32_t data[];
 } realityVertexProgram; 
 
+typedef struct {
+	uint32_t offset;
+	uint32_t size;
+	uint32_t num_regs;
+	uint32_t data[];
+} realityFragmentProgram; 
+
 void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *prog);
+void realityInstallFragmentProgram(gcmContextData *context, realityFragmentProgram *prog, uint32_t *addr);
+void realityLoadFragmentProgram(gcmContextData *context, realityFragmentProgram *prog);
 
 #ifdef __cplusplus
 }

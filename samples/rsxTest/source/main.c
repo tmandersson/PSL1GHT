@@ -91,7 +91,7 @@ void init_screen() {
 
 void drawFrame(int *buffer, long frame) {
 	// Set the color0 target to point at the offset of our current surface
-	realitySetRenderSurface(context, REALITY_SURFACE_COLOR0, REALITY_LOCATION_RSX_MEMORY, 
+	realitySetRenderSurface(context, REALITY_SURFACE_COLOR0, REALITY_RSX_MEMORY, 
 					offset[currentBuffer], pitch);
 	// Choose color0 as the render target and tell the rsx about the surface format.
 	realitySelectRenderTarget(context, REALITY_TARGET_0, 

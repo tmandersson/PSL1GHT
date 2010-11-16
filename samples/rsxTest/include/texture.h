@@ -1,4 +1,6 @@
 #pragma once
 
-// Simple Texure loading function, to hide uglyness
-realityTexture *loadTexture(const uint8_t *pngData);
+void load_tex(uint32_t unit, uint32_t offset, uint32_t width, uint32_t height, uint32_t stride, uint32_t fmt, int smooth );
+
+void load_acid_texture(uint8_t *fbmem, uint32_t offset);
+

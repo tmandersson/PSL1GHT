@@ -8,22 +8,24 @@
 
 #include <rsx/commands.h>
 #include <rsx/nv40.h>
+#include <rsx/reality.h>
 
 #include <io/pad.h>
 
 #include <sysmodule/sysmodule.h>
 
-#include "ball.bin.h"
+//#include "ball.bin.h"
 #include "texture.h"
 #include "rsxutil.h"
 #include "nv_shaders.h"
 
 int currentBuffer = 0;
-realityTexture *ball; // Texture.
+//realityTexture *ball; // Texture.
+
+u32 *tx_mem;
+u32 tx_offset;
 
 void drawFrame(int buffer, long frame) {
-
-	setupRenderTarget(buffer);
 
 	realityViewportTranslate(context, 0.0, 0.0, 0.0, 0.0);
 	realityViewportScale(context, 1.0, 1.0, 1.0, 0.0); 
@@ -46,23 +48,27 @@ void drawFrame(int buffer, long frame) {
 	double cycle = (frame % 200)/100.0;
 	uint8_t color = (sin(cycle*M_PI) + 1.0) * 127 ;
 
+	setupRenderTarget(buffer);
+
 	// set the clear color
-	realitySetClearColor(context, color << 8 | color << 16); 
+	realitySetClearColor(context, color | color << 8 | color << 16); 
 	// and the depth clear value
 	realitySetClearDepthValue(context, 0xffff);
 	// Clear the buffers
 	realityClearBuffers(context, REALITY_CLEAR_BUFFERS_COLOR_R |
 				     REALITY_CLEAR_BUFFERS_COLOR_G |
 				     REALITY_CLEAR_BUFFERS_COLOR_B |
+				     NV30_3D_CLEAR_BUFFERS_COLOR_A |
+				     NV30_3D_CLEAR_BUFFERS_STENCIL |
 				     REALITY_CLEAR_BUFFERS_DEPTH);
 
 	// Load shaders, because the rsx won't do anything without them.
 	realityLoadVertexProgram(context, &nv40_vp);
-	realityLoadFragmentProgram(context, &nv30_fp);
+	realityLoadFragmentProgram(context, &nv30_fp); 
 
 	// Load texture
-	realitySetTexture(context, 0, ball);
-
+	load_tex(0, tx_offset, 128, 128, 128*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
+	
 	// Generate quad
 	realityVertexBegin(context, REALITY_QUADS);
 	{
@@ -81,11 +87,6 @@ void drawFrame(int buffer, long frame) {
 	realityVertexEnd(context);
 }
 
-void unload_modules() {
-	SysUnloadModule(SYSMODULE_PNGDEC);
-	SysUnloadModule(SYSMODULE_FS);
-}
-
 s32 main(s32 argc, const char* argv[])
 {
 	PadInfo padinfo;
@@ -95,14 +96,16 @@ s32 main(s32 argc, const char* argv[])
 	init_screen();
 	ioPadInit(7);
 
-	atexit(unload_modules);
-
-	// Load png decoder
-	assert(SysLoadModule(SYSMODULE_FS) != 0);
-	assert(SysLoadModule(SYSMODULE_PNGDEC) != 0);
-
 	// Load texture
-	ball = loadTexture(ball_bin);
+	tx_mem = rsxMemAlign(16, 2*1024*1024);
+	assert(realityAddressToOffset(tx_mem, &tx_offset) == 0);
+
+	load_acid_texture((uint8_t *)tx_mem, 0);
+
+	// install fragment shader in rsx memory
+	u32 *frag_mem = rsxMemAlign(256, 256);
+	printf("frag_mem = 0x%08lx\n", (u64) frag_mem);
+	realityInstallFragmentProgram(context, &nv30_fp, frag_mem);
 
 	long frame = 0; // To keep track of how many frames we have rendered.
 	
@@ -125,6 +128,7 @@ s32 main(s32 argc, const char* argv[])
 		drawFrame(currentBuffer, frame++); // Draw into the unused buffer
 		flip(currentBuffer); // Flip buffer onto screen
 		currentBuffer = !currentBuffer;
+
 	}
 	
 	return 0;

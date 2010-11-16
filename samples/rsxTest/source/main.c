@@ -56,8 +56,29 @@ void drawFrame(int buffer, long frame) {
 				     REALITY_CLEAR_BUFFERS_COLOR_B |
 				     REALITY_CLEAR_BUFFERS_DEPTH);
 
+	// Load shaders, because the rsx won't do anything without them.
 	realityLoadVertexProgram(context, &nv40_vp);
 	realityLoadFragmentProgram(context, &nv30_fp);
+
+	// Load texture
+	realitySetTexture(context, 0, ball);
+
+	// Generate quad
+	realityVertexBegin(context, REALITY_QUADS);
+	{
+		realityTexCoord2f(context, 0.0, 0.0);
+		realityVertex4f(context, 600.0, 300.0, 0.0, 1.0); 
+
+		realityTexCoord2f(context, 1.0, 0.0);
+		realityVertex4f(context, 1112.0, 300.0, 0.0, 1.0); 
+
+		realityTexCoord2f(context, 1.0, 1.0);
+		realityVertex4f(context, 1112.0, 812.0, 0.0, 1.0); 
+
+		realityTexCoord2f(context, 0.0, 1.0);
+		realityVertex4f(context, 600.0, 812.0, 0.0, 1.0); 
+	}
+	realityVertexEnd(context);
 }
 
 void unload_modules() {

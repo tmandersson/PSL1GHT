@@ -7,7 +7,7 @@
  * NV40/G70 vertex shaders
  */
 
-realityVertexProgram nv40_vp = {
+static realityVertexProgram nv40_vp = {
 
   .in_reg  = 0x00000309,
   .out_reg = 0x0000c001,

@@ -10,7 +10,7 @@
 #include <rsx/commands.h>
 
 #include "rsxutil.h"
-#include "nvshader.h"
+#include "nv_shaders.h"
 
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
@@ -75,8 +75,9 @@ void init_screen() {
 
 	assert(realityAddressToOffset(depth_buffer, &depth_offset) == 0);
 
-	// load fragment shader
-	
+	// install fragment shader in rsx memory
+	u32 *frag_mem = rsxMemAlign(256, 256);
+	realityInstallFragmentProgram(context, &nv30_fp, frag_mem);
 
 	gcmResetFlipStatus();
 	flip(1);

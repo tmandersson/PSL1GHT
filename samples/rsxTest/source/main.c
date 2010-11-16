@@ -16,7 +16,7 @@
 #include "ball.bin.h"
 #include "texture.h"
 #include "rsxutil.h"
-#include "nvshader.h"
+#include "nv_shaders.h"
 
 int currentBuffer = 0;
 realityTexture *ball; // Texture.
@@ -56,7 +56,8 @@ void drawFrame(int buffer, long frame) {
 				     REALITY_CLEAR_BUFFERS_COLOR_B |
 				     REALITY_CLEAR_BUFFERS_DEPTH);
 
-	
+	realityLoadVertexProgram(context, &nv40_vp);
+	realityLoadFragmentProgram(context, &nv30_fp);
 }
 
 void unload_modules() {

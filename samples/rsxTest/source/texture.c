@@ -8,10 +8,10 @@
 #include <rsx/commands.h>
 #include <rsx/nv40.h>
 
-realityTexture *loadTexture() {
+realityTexture *loadTexture(uint8_t *pngData) {
 	PngDatas png;
-	png.png_in= (void *) ball_bin;
-	png.png_size= sizeof(ball_bin);
+	png.png_in= (void *) pngData;
+	png.png_size= sizeof(pngData);
 
 	LoadPNG(&png, NULL);
 

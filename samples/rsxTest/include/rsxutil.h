@@ -1,5 +1,8 @@
 #pragma once
 
+#include <sysutil/video.h>
+#include <rsx/gcm.h>
+
 extern u32 *buffer[2];
 extern gcmContextData *context; 
 extern VideoResolution res;

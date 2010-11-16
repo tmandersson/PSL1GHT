@@ -10,6 +10,7 @@
 #include <rsx/commands.h>
 
 #include "rsxutil.h"
+#include "nvshader.h"
 
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
@@ -73,6 +74,9 @@ void init_screen() {
 	assert(gcmSetDisplayBuffer(1, offset[1], pitch, res.width, res.height) == 0);
 
 	assert(realityAddressToOffset(depth_buffer, &depth_offset) == 0);
+
+	// load fragment shader
+	
 
 	gcmResetFlipStatus();
 	flip(1);

@@ -2,13 +2,14 @@
 #include <string.h>
 
 #include <pngdec/loadpng.h>
-#include "ball.bin.h"
 
 #include <rsx/reality.h>
 #include <rsx/commands.h>
 #include <rsx/nv40.h>
 
-realityTexture *loadTexture(uint8_t *pngData) {
+#include "texture.h"
+
+realityTexture *loadTexture(const uint8_t *pngData) {
 	PngDatas png;
 	png.png_in= (void *) pngData;
 	png.png_size= sizeof(pngData);
@@ -45,6 +46,8 @@ realityTexture *loadTexture(uint8_t *pngData) {
 	tex->width = png.width;
 	tex->height = png.height;
 	tex->stride = png.width * 4;
+
+	free(png.bmp_out);
 
 	return tex;
 }

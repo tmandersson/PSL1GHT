@@ -1,7 +1,3 @@
-/* Now double buffered with animation.
- */ 
-
-#include <psl1ght/lv2.h>
 
 #include <stdio.h>
 #include <malloc.h>
@@ -17,15 +13,22 @@
 
 #include <io/pad.h>
 
-#include <psl1ght/lv2.h>
+#include <sysmodule/sysmodule.h>
+
+#include "ball.bin.h"
+#include "texture.h"
 
 gcmContextData *context; // Context to keep track of the RSX buffer.
 
 VideoResolution res; // Screen Resolution
 
 int currentBuffer = 0;
-s32 *buffer[2]; // The buffer we will be drawing into
+u32 *buffer[2]; // The buffer we will be drawing into
 u32 offset[2]; // The offset of the buffers in RSX memory
+u32 *depth_buffer; // Depth buffer. We aren't using it but the ps3 crashes if we don't have it
+realityTexture *ball; // Texture.
+
+
 int pitch;
 
 void waitFlip() { // Block the PPU thread untill the previous flip operation has finished.
@@ -58,6 +61,7 @@ void init_screen() {
 	assert(videoGetResolution(state.displayMode.resolution, &res) == 0);
 	
 	pitch = 4 * res.width; // each pixel is 4 bytes
+	int depth_pitch = 2 * res.width; // And each value in the depth buffer is a 16 bit float
 
 	// Configure the buffer format to xRGB
 	VideoConfiguration vconfig;
@@ -70,6 +74,7 @@ void init_screen() {
 	assert(videoGetState(0, 0, &state) == 0); 
 
 	s32 buffer_size = pitch * res.height; 
+	s32 depth_buffer_size = depth_pitch * res.height;
 	printf("buffers will be 0x%x bytes\n", buffer_size);
 	
 	gcmSetFlipMode(GCM_FLIP_VSYNC); // Wait for VSYNC to flip
@@ -79,23 +84,31 @@ void init_screen() {
 	buffer[1] = rsxMemAlign(16, buffer_size);
 	assert(buffer[0] != NULL && buffer[1] != NULL);
 
+	depth_buffer = rsxMemAlign(16, depth_buffer_size);
+
 	assert(realityAddressToOffset(buffer[0], &offset[0]) == 0);
 	assert(realityAddressToOffset(buffer[1], &offset[1]) == 0);
 	// Setup the display buffers
 	assert(gcmSetDisplayBuffer(0, offset[0], pitch, res.width, res.height) == 0);
 	assert(gcmSetDisplayBuffer(1, offset[1], pitch, res.width, res.height) == 0);
 
+	// Setup depth buffer
+	realitySetRenderSurface(context, REALITY_SURFACE_ZETA, REALITY_RSX_MEMORY, 
+					offset[currentBuffer], depth_pitch);
+
 	gcmResetFlipStatus();
 	flip(1);
 }
 
-void drawFrame(int *buffer, long frame) {
+void drawFrame(u32 *buffer, long frame) {
 	// Set the color0 target to point at the offset of our current surface
 	realitySetRenderSurface(context, REALITY_SURFACE_COLOR0, REALITY_RSX_MEMORY, 
 					offset[currentBuffer], pitch);
 	// Choose color0 as the render target and tell the rsx about the surface format.
 	realitySelectRenderTarget(context, REALITY_TARGET_0, 
-		REALITY_TARGET_FORMAT_COLOR_X8R8G8B8 | REALITY_TARGET_FORMAT_ZETA_Z24S8 | REALITY_TARGET_FORMAT_TYPE_LINEAR,
+		REALITY_TARGET_FORMAT_COLOR_X8R8G8B8 | 
+		REALITY_TARGET_FORMAT_ZETA_Z16 | 
+		REALITY_TARGET_FORMAT_TYPE_LINEAR,
 		res.width, res.height, 0, 0);
 
 	// Just because we can only set the clear color, dosen't mean it has to be boring
@@ -107,7 +120,13 @@ void drawFrame(int *buffer, long frame) {
 	// Clear the buffers
 	realityClearBuffers(context, REALITY_CLEAR_BUFFERS_COLOR_R |
 				     REALITY_CLEAR_BUFFERS_COLOR_G |
-				     REALITY_CLEAR_BUFFERS_COLOR_B);
+				     REALITY_CLEAR_BUFFERS_COLOR_B |
+				     REALITY_CLEAR_BUFFERS_DEPTH);
+}
+
+void unload_modules() {
+	SysUnloadModule(SYSMODULE_PNGDEC);
+	SysUnloadModule(SYSMODULE_FS);
 }
 
 s32 main(s32 argc, const char* argv[])
@@ -118,6 +137,15 @@ s32 main(s32 argc, const char* argv[])
 	
 	init_screen();
 	ioPadInit(7);
+
+	atexit(unload_modules);
+
+	// Load png decoder
+	assert(SysLoadModule(SYSMODULE_FS) != 0);
+	assert(SysLoadModule(SYSMODULE_PNGDEC) != 0);
+
+	// Load texture
+	ball = loadTexture(ball_bin);
 
 	long frame = 0; // To keep track of how many frames we have rendered.
 	

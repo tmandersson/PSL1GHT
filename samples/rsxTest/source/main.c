@@ -14,7 +14,7 @@
 
 #include <sysmodule/sysmodule.h>
 
-//#include "ball.bin.h"
+#include "ball.bin.h"
 #include "texture.h"
 #include "rsxutil.h"
 #include "nv_shaders.h"
@@ -24,6 +24,7 @@ int currentBuffer = 0;
 
 u32 *tx_mem;
 u32 tx_offset;
+Image ball;
 
 void drawFrame(int buffer, long frame) {
 
@@ -67,7 +68,7 @@ void drawFrame(int buffer, long frame) {
 	realityLoadFragmentProgram(context, &nv30_fp); 
 
 	// Load texture
-	load_tex(0, tx_offset, 128, 128, 128*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
+	load_tex(0, tx_offset, ball.width, ball.height, ball.width*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
 	
 	// Generate quad
 	realityVertexBegin(context, REALITY_QUADS);
@@ -97,10 +98,10 @@ s32 main(s32 argc, const char* argv[])
 	ioPadInit(7);
 
 	// Load texture
-	tx_mem = rsxMemAlign(16, 2*1024*1024);
-	assert(realityAddressToOffset(tx_mem, &tx_offset) == 0);
+	ball = loadPng(ball_bin);
+	assert(realityAddressToOffset(ball.data, &tx_offset) == 0);
 
-	load_acid_texture((uint8_t *)tx_mem, 0);
+	//load_acid_texture((uint8_t *)tx_mem, 0);
 
 	// install fragment shader in rsx memory
 	u32 *frag_mem = rsxMemAlign(256, 256);

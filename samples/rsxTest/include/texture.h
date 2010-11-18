@@ -4,3 +4,10 @@ void load_tex(uint32_t unit, uint32_t offset, uint32_t width, uint32_t height, u
 
 void load_acid_texture(uint8_t *fbmem, uint32_t offset);
 
+typedef struct {
+	uint32_t *data;
+	uint32_t width;
+	uint32_t height;
+} Image;
+
+Image loadPng(const uint8_t *png);

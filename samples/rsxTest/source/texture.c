@@ -106,7 +106,7 @@ void parseRGBA(uint32_t *dest, uint32_t width, uint32_t height,
 	free(rowData);
 }
 
-// Load a png from ram14:11 
+// Load a png from ram 
 // I can't be bothered handling errors correctly, lets just abort
 Image loadPng(const uint8_t *png) {
 	// Make sure we have a valid png here.

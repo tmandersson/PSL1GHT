@@ -14,7 +14,7 @@
 
 #include <sysmodule/sysmodule.h>
 
-#include "ball.bin.h"
+#include "dice.bin.h"
 #include "texture.h"
 #include "rsxutil.h"
 #include "nv_shaders.h"
@@ -24,7 +24,7 @@ int currentBuffer = 0;
 
 u32 *tx_mem;
 u32 tx_offset;
-Image ball;
+Image dice;
 
 void drawFrame(int buffer, long frame) {
 
@@ -68,7 +68,7 @@ void drawFrame(int buffer, long frame) {
 	realityLoadFragmentProgram(context, &nv30_fp); 
 
 	// Load texture
-	load_tex(0, tx_offset, ball.width, ball.height, ball.width*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
+	load_tex(0, tx_offset, dice.width, dice.height, dice.width*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
 	
 	// Generate quad
 	realityVertexBegin(context, REALITY_QUADS);
@@ -77,13 +77,13 @@ void drawFrame(int buffer, long frame) {
 		realityVertex4f(context, 600.0, 300.0, 0.0, 1.0); 
 
 		realityTexCoord2f(context, 1.0, 0.0);
-		realityVertex4f(context, 1112.0, 300.0, 0.0, 1.0); 
+		realityVertex4f(context, 1400.0, 300.0, 0.0, 1.0); 
 
 		realityTexCoord2f(context, 1.0, 1.0);
-		realityVertex4f(context, 1112.0, 812.0, 0.0, 1.0); 
+		realityVertex4f(context, 1400.0, 900.0, 0.0, 1.0); 
 
 		realityTexCoord2f(context, 0.0, 1.0);
-		realityVertex4f(context, 600.0, 812.0, 0.0, 1.0); 
+		realityVertex4f(context, 600.0, 900.0, 0.0, 1.0); 
 	}
 	realityVertexEnd(context);
 }
@@ -98,8 +98,8 @@ s32 main(s32 argc, const char* argv[])
 	ioPadInit(7);
 
 	// Load texture
-	ball = loadPng(ball_bin);
-	assert(realityAddressToOffset(ball.data, &tx_offset) == 0);
+	dice = loadPng(dice_bin);
+	assert(realityAddressToOffset(dice.data, &tx_offset) == 0);
 
 	//load_acid_texture((uint8_t *)tx_mem, 0);
 

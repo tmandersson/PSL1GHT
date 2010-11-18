@@ -48,7 +48,7 @@ void drawFrame(int buffer, long frame) {
 	setupRenderTarget(buffer);
 
 	// set the clear color
-	realitySetClearColor(context, 0x0000000000); // Black, because it looks cool
+	realitySetClearColor(context, 0x00000000); // Black, because it looks cool
 	// and the depth clear value
 	realitySetClearDepthValue(context, 0xffff);
 	// Clear the buffers

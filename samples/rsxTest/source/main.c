@@ -45,14 +45,10 @@ void drawFrame(int buffer, long frame) {
 
 	realityViewport(context, res.width, res.height);
 
-	// Just because we can only set the clear color, dosen't mean it has to be boring
-	double cycle = (frame % 200)/100.0;
-	uint8_t color = (sin(cycle*M_PI) + 1.0) * 127 ;
-
 	setupRenderTarget(buffer);
 
 	// set the clear color
-	realitySetClearColor(context, color | color << 8 | color << 16); 
+	realitySetClearColor(context, 0x0000000000); // Black, because it looks cool
 	// and the depth clear value
 	realitySetClearDepthValue(context, 0xffff);
 	// Clear the buffers

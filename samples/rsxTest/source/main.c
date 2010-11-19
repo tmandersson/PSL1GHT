@@ -14,7 +14,7 @@
 
 #include <sysmodule/sysmodule.h>
 
-//#include "ball.bin.h"
+#include "dice.bin.h"
 #include "texture.h"
 #include "rsxutil.h"
 #include "nv_shaders.h"
@@ -24,6 +24,7 @@ int currentBuffer = 0;
 
 u32 *tx_mem;
 u32 tx_offset;
+Image dice;
 
 void drawFrame(int buffer, long frame) {
 
@@ -44,14 +45,10 @@ void drawFrame(int buffer, long frame) {
 
 	realityViewport(context, res.width, res.height);
 
-	// Just because we can only set the clear color, dosen't mean it has to be boring
-	double cycle = (frame % 200)/100.0;
-	uint8_t color = (sin(cycle*M_PI) + 1.0) * 127 ;
-
 	setupRenderTarget(buffer);
 
 	// set the clear color
-	realitySetClearColor(context, color | color << 8 | color << 16); 
+	realitySetClearColor(context, 0x00000000); // Black, because it looks cool
 	// and the depth clear value
 	realitySetClearDepthValue(context, 0xffff);
 	// Clear the buffers
@@ -67,7 +64,7 @@ void drawFrame(int buffer, long frame) {
 	realityLoadFragmentProgram(context, &nv30_fp); 
 
 	// Load texture
-	load_tex(0, tx_offset, 128, 128, 128*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
+	load_tex(0, tx_offset, dice.width, dice.height, dice.width*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
 	
 	// Generate quad
 	realityVertexBegin(context, REALITY_QUADS);
@@ -76,13 +73,13 @@ void drawFrame(int buffer, long frame) {
 		realityVertex4f(context, 600.0, 300.0, 0.0, 1.0); 
 
 		realityTexCoord2f(context, 1.0, 0.0);
-		realityVertex4f(context, 1112.0, 300.0, 0.0, 1.0); 
+		realityVertex4f(context, 1400.0, 300.0, 0.0, 1.0); 
 
 		realityTexCoord2f(context, 1.0, 1.0);
-		realityVertex4f(context, 1112.0, 812.0, 0.0, 1.0); 
+		realityVertex4f(context, 1400.0, 900.0, 0.0, 1.0); 
 
 		realityTexCoord2f(context, 0.0, 1.0);
-		realityVertex4f(context, 600.0, 812.0, 0.0, 1.0); 
+		realityVertex4f(context, 600.0, 900.0, 0.0, 1.0); 
 	}
 	realityVertexEnd(context);
 }
@@ -97,10 +94,10 @@ s32 main(s32 argc, const char* argv[])
 	ioPadInit(7);
 
 	// Load texture
-	tx_mem = rsxMemAlign(16, 2*1024*1024);
-	assert(realityAddressToOffset(tx_mem, &tx_offset) == 0);
+	dice = loadPng(dice_bin);
+	assert(realityAddressToOffset(dice.data, &tx_offset) == 0);
 
-	load_acid_texture((uint8_t *)tx_mem, 0);
+	//load_acid_texture((uint8_t *)tx_mem, 0);
 
 	// install fragment shader in rsx memory
 	u32 *frag_mem = rsxMemAlign(256, 256);

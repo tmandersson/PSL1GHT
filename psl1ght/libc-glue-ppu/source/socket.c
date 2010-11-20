@@ -15,6 +15,8 @@ int h_errno = 0;
 
 #define FD(socket) (socket & ~SOCKET_FD_MASK)
 
+#ifndef USE_LIBNET_SPRX
+
 int accept(int socket, const struct sockaddr* address, socklen_t* address_len) {
 	s32 ret = lv2NetAccept(FD(socket), address, (lv2_socklen_t *)address_len);
 	if (ret < 0)
@@ -107,3 +109,5 @@ int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct
 	errno = ENOSYS;
 	return -1;
 }
+
+#endif

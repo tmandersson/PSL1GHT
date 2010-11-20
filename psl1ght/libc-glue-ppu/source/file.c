@@ -68,8 +68,10 @@ int ftruncate(int fd, off_t length)
 int net_close(int fd);
 int close(int fd)
 {
+#ifndef USE_LIBNET_SPRX
 	if (fd & SOCKET_FD_MASK)
 		return net_close(fd);
+#endif
 
 	return lv2Errno(lv2FsClose(fd));
 }
@@ -81,8 +83,10 @@ int unlink(const char* path)
 
 ssize_t write(int fd, const void* buffer, size_t size)
 {
+#ifndef USE_LIBNET_SPRX
 	if (fd & SOCKET_FD_MASK)
 		return send(fd, buffer, size, 0);
+#endif
 
 	u64 written;
 	int ret;
@@ -99,8 +103,10 @@ ssize_t write(int fd, const void* buffer, size_t size)
 
 ssize_t read(int fd, void* buffer, size_t size)
 {
+#ifndef USE_LIBNET_SPRX
 	if (fd & SOCKET_FD_MASK)
 		return recv(fd, buffer, size, 0);
+#endif
 
 	u64 bytes;
 	int ret;

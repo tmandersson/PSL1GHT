@@ -7,7 +7,7 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	../include
 DATA		:=	data
-LIBS		:=	-lsysutil
+LIBS		:=	-lsysutil -lnet 
 
 CFLAGS		:= -g -O2 -Wall
 

@@ -54,10 +54,8 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
     }
 
-#ifdef USE_LIBNET_SPRX
 	printf("SysLoadModule(NET)=%d\n", SysLoadModule(SYSMODULE_NET));
     printf("net_init()=%d\n", net_initialize_network());
-#endif
 
     /*  Create the listening socket  */
 
@@ -89,7 +87,6 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "ECHOSERV: Error calling listen()\n");
 		exit(EXIT_FAILURE);
     }
-
     char* message = "Welcome to ECHOServer test.\nType exit and hit enter to close app, otherwise type anything you want and hit enter and I will replay it back to you free of charge. :)";
     /*  Enter an infinite loop to respond
         to client requests and echo input  */
@@ -116,20 +113,13 @@ int main(int argc, char *argv[]) {
 
 		/*  Close the connected socket  */
 
-#ifdef USE_LIBNET_SPRX
-		if ( socketclose(conn_s) < 0 ) {
-			fprintf(stderr, "ECHOSERV: Error calling close()\n");
+		if ( closesocket(conn_s) < 0 ) {
+			fprintf(stderr, "ECHOSERV: Error calling closesocket()\n");
 			exit(EXIT_FAILURE);
 		}
 
-		net_finalize_network();
-		SysUnloadModule(SYSMODULE_NET);
-#else
-		if ( close(conn_s) < 0 ) {
-			fprintf(stderr, "ECHOSERV: Error calling close()\n");
-			exit(EXIT_FAILURE);
-		}
-#endif
     }
+	net_finalize_network();
+	SysUnloadModule(SYSMODULE_NET);
 }
 

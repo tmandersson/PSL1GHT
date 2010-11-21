@@ -2,6 +2,7 @@
 
 #include <psl1ght/types.h>
 #include <sys/types.h>
+#include <net/net_config.h>
 
 typedef u64	socklen_t;
 typedef u8	sa_family_t;
@@ -42,6 +43,10 @@ struct linger
 	int l_onoff;
 	int l_linger;
 };
+
+#ifdef USE_LIBNET_SPRX
+#include <net/net.h>
+#endif
 
 #define SOCK_STREAM		0x0001
 #define SOCK_DGRAM		0x0002

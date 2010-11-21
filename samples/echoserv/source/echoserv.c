@@ -14,12 +14,14 @@
 #include <sys/types.h>        /*  socket types              */
 #include <arpa/inet.h>        /*  inet (3) funtions         */
 #include <unistd.h>           /*  misc. UNIX functions      */
+#include <sysmodule/sysmodule.h>
 
 #include "helper.h"           /*  our own helper functions  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 /*  Global constants  */
 
@@ -52,11 +54,16 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
     }
 
-	
+#ifdef USE_LIBNET_SPRX
+	printf("SysLoadModule(NET)=%d\n", SysLoadModule(SYSMODULE_NET));
+    printf("net_init()=%d\n", net_initialize_network());
+#endif
+
     /*  Create the listening socket  */
 
     if ( (list_s = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
 		fprintf(stderr, "ECHOSERV: Error creating listening socket.\n");
+		printf("errno: %d\n", errno);
 		exit(EXIT_FAILURE);
     }
 
@@ -109,10 +116,20 @@ int main(int argc, char *argv[]) {
 
 		/*  Close the connected socket  */
 
+#ifdef USE_LIBNET_SPRX
+		if ( socketclose(conn_s) < 0 ) {
+			fprintf(stderr, "ECHOSERV: Error calling close()\n");
+			exit(EXIT_FAILURE);
+		}
+
+		net_finalize_network();
+		SysUnloadModule(SYSMODULE_NET);
+#else
 		if ( close(conn_s) < 0 ) {
 			fprintf(stderr, "ECHOSERV: Error calling close()\n");
 			exit(EXIT_FAILURE);
 		}
+#endif
     }
 }
 

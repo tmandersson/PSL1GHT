@@ -1,6 +1,12 @@
 #include "stdio.h"
+
+#ifdef _WIN32
 #include "malloc.h"
 #include "windows.h"
+#else
+#include "stdlib.h"
+#include <cg/cg.h>
+#endif
 
 #include "vpasm.h"
 #include "microcode.h"
@@ -27,6 +33,7 @@ struct _Options
 #define SWAP16(v) ((v)>>8)|((v)<<8)
 #define SWAP32(v) ((v)>>24)|((v)<<24)|(((v)&0xFF00)<<8)|(((v)&0xFF0000)>>8)
 
+#ifdef _WIN32
 typedef void*(*_cgCreateContext)();
 typedef void(*_cgDestroyContext)(void *context);
 typedef void*(*_cgCreateProgramFromFile)(void* context, int program_type, const char *program, int profile, const char *entry, const char **args);
@@ -51,6 +58,7 @@ void InitCompiler()
 	cgGetLastListing=(_cgGetLastListing)GetProcAddress(libcgc,"cgGetLastListing");
 
 }
+#endif
 
 void ShowUsage()
 {
@@ -106,6 +114,7 @@ int main(int argc,char **argv)
 	if(Options.Compile)
 	{
 		printf("Compiling...\n");
+#ifdef _WIN32		
 		InitCompiler();
 
 		if(cgCreateContext==NULL)
@@ -122,7 +131,17 @@ int main(int argc,char **argv)
 			fatal("Error compiling shader");
 		}
 		prg=(char*)cgGetProgramString(program,4106/*CG_COMPILED_PROGRAM*/);
-		
+#else
+		CGcontext context=cgCreateContext();
+		CGprogram program=cgCreateProgramFromFile(context,CG_SOURCE,Options.SourceFile,CG_PROFILE_VP40,Options.Entry,NULL);
+		if(program==NULL)
+		{
+			const char *error=cgGetLastListing(context);
+			printf("%s\n",error);
+			fatal("Error compiling shader");
+		}
+		prg=(char*)cgGetProgramString(program,CG_COMPILED_PROGRAM);
+#endif
 		if(Options.GenerateAssembler)
 		{
 			char aux[256];

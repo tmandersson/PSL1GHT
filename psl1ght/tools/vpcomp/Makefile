@@ -1,6 +1,16 @@
 CFLAGS += -Wall -Os -g -pipe -I../../include
 LDFLAGS += -lstdc++
 
+UNAME := $(shell uname -s)
+
+ifeq ($(UNAME),Darwin)
+LDFLAGS += /Library/Frameworks/Cg.framework/Cg
+endif
+
+ifeq ($(UNAME),Linux)
+LDFLATS += -lCg
+endif
+
 CC = $(PREFIX)gcc
 STRIP = $(PREFIX)strip
 

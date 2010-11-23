@@ -1,5 +1,5 @@
 #include "stdio.h"
-#include "malloc.h"
+#include "stdlib.h"
 
 typedef signed char int8_t;
 typedef unsigned char uint8_t;

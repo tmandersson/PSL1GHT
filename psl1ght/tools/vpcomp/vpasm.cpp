@@ -4,7 +4,6 @@
 
 #include "stdio.h"
 #include "string.h"
-#include "malloc.h"
 #include "stdlib.h"
 #include "ctype.h"
 
@@ -511,6 +510,7 @@ _Reg ProcessSrc(char *data)
 	int sz;
 	_Reg tmp;
 
+	memset(&tmp,0,sizeof(tmp));
 	tmp.neg=0;
 	tmp.abs=0;
 	tmp.swizzle[0]=0;

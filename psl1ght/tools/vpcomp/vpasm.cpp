@@ -1,6 +1,6 @@
 // Vertex program assembler parser
 // for the assembler grammar, check http://oss.sgi.com/projects/ogl-sample/registry/ARB/vertex_program.txt
-
+// for the microcode information, check http://nouveau.freedesktop.org/wiki/
 
 #include "stdio.h"
 #include "string.h"

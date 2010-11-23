@@ -1,6 +1,8 @@
 Vertex program compiler for libreality
 
-Preliminary version. It should compile most simple programs
+Preliminary version. It should compile most simple programs.
+Based on the information from Nouveau open source NVidia driver
+http://nouveau.freedesktop.org/wiki/
 
 Supported:
 All scalar and vector opcodes

@@ -18,6 +18,7 @@
 #include "texture.h"
 #include "rsxutil.h"
 #include "nv_shaders.h"
+#include "vprogram.vcg.h"
 
 int currentBuffer = 0;
 //realityTexture *ball; // Texture.
@@ -60,7 +61,7 @@ void drawFrame(int buffer, long frame) {
 				     REALITY_CLEAR_BUFFERS_DEPTH);
 
 	// Load shaders, because the rsx won't do anything without them.
-	realityLoadVertexProgram(context, &nv40_vp);
+	realityLoadVertexProgram(context, (realityVertexProgram*)&vprogram_bin);
 	realityLoadFragmentProgram(context, &nv30_fp); 
 
 	// Load texture

@@ -1,0 +1,26 @@
+struct InputVertex
+{
+    float4 vertex : POSITION;
+    float2 texcoord : TEXCOORD0;
+    float2 texcoord1 : TEXCOORD1;
+};
+
+struct OutputVertex
+{
+    float4 vertex : POSITION;
+    float2 texcoord  : TEXCOORD0;
+    float2 texcoord1 : TEXCOORD1;
+};
+
+
+OutputVertex main (InputVertex inputvertex)
+{
+    OutputVertex outputvertex;
+    
+    outputvertex.vertex = inputvertex.vertex;
+    outputvertex.texcoord  = inputvertex.texcoord;
+    outputvertex.texcoord1  = inputvertex.texcoord1;
+
+
+    return outputvertex;
+}

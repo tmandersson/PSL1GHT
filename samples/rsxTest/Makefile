@@ -31,12 +31,14 @@ CFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.c)))
 CXXFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.S)))
 BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
+VCGFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.vcg)))
 
 export OFILES	:=	$(CFILES:.c=.o) \
 					$(CXXFILES:.cpp=.o) \
 					$(SFILES:.S=.o)
 
 export BINFILES	:=	$(BINFILES:.bin=.bin.h)
+export VCGFILES	:=	$(VCGFILES:.vcg=.vcg.h)
 
 export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 					-I$(CURDIR)/$(BUILD)
@@ -69,7 +71,7 @@ DEPENDS	:= $(OFILES:.o=.d)
 
 $(OUTPUT).self: $(OUTPUT).elf
 $(OUTPUT).elf: $(OFILES)
-$(OFILES): $(BINFILES)
+$(OFILES): $(BINFILES) $(VCGFILES)
 
 -include $(DEPENDS)
 

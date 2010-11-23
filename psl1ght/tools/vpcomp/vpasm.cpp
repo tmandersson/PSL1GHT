@@ -1,3 +1,6 @@
+// Vertex program assembler parser
+// for the assembler grammar, check http://oss.sgi.com/projects/ogl-sample/registry/ARB/vertex_program.txt
+
 
 #include "stdio.h"
 #include "string.h"
@@ -93,6 +96,110 @@ _Opcode Opcodes[]=
 };
 const int nOpcodes=sizeof(Opcodes)/sizeof(_Opcode);
 
+struct _IOToken
+{
+	const char *Token;
+	unsigned int Index;
+};
+
+_IOToken InputTokens[]=
+{
+	{"vertex.position",0},
+	{"vertex.weight[0]",1},
+	{"vertex.weight",1},
+	{"vertex.normal",2},
+	{"vertex.color.primary",3},
+	{"vertex.color.secondary",4},
+	{"vertex.color",3},
+	{"vertex.fogcoord",5},
+	{"vertex.texcoord[0]",8},
+	{"vertex.texcoord[1]",9},
+	{"vertex.texcoord[2]",10},
+	{"vertex.texcoord[3]",11},
+	{"vertex.texcoord[4]",12},
+	{"vertex.texcoord[5]",13},
+	{"vertex.texcoord[6]",14},
+	{"vertex.texcoord[7]",15},
+	{"vertex.texcoord",8},
+	{"vertex.attrib[0]",0},
+	{"vertex.attrib[1]",1},
+	{"vertex.attrib[2]",2},
+	{"vertex.attrib[3]",3},
+	{"vertex.attrib[4]",4},
+	{"vertex.attrib[5]",5},
+	{"vertex.attrib[6]",6},
+	{"vertex.attrib[7]",7},
+	{"vertex.attrib[8]",8},
+	{"vertex.attrib[9]",9},
+	{"vertex.attrib[10]",10},
+	{"vertex.attrib[11]",11},
+	{"vertex.attrib[12]",12},
+	{"vertex.attrib[13]",13},
+	{"vertex.attrib[14]",14},
+	{"vertex.attrib[15]",15},
+	{"OPOS",0},
+	{"POSITION",0},
+	{"WHGT",1},
+	{"NRML",2},
+	{"COL0",3},
+	{"COL1",4},
+	{"FOGC",5},
+	{"TEX0",8},
+	{"TEX1",9},
+	{"TEX2",10},
+	{"TEX3",11},
+	{"TEX4",12},
+	{"TEX5",13},
+	{"TEX6",14},
+	{"TEX7",15},
+};
+const int nInputTokens=sizeof(InputTokens)/sizeof(_IOToken);
+
+_IOToken OutputTokens[]=
+{
+	{"result.position",0},
+	{"result.color.primary",1},
+	{"result.color.secondary",2},
+	{"result.color.front.primary",1},
+	{"result.color.front.secondary",2},
+	{"result.color.back.primary",3},
+	{"result.color.back.secondary",4},
+	{"result.color.front",1},
+	{"result.color.back",4},
+	{"result.color",1},
+	{"result.fogcoord",5},
+	{"result.pointsize",6},
+	{"result.texcoord[0]",7},
+	{"result.texcoord[1]",8},
+	{"result.texcoord[2]",9},
+	{"result.texcoord[3]",10},
+	{"result.texcoord[4]",11},
+	{"result.texcoord[5]",12},
+	{"result.texcoord[6]",13},
+	{"result.texcoord[7]",14},
+	{"result.texcoord",7},
+	{"HPOS",0},
+	{"POSITION",0},
+	{"COL0",1},
+	{"COL1",2},
+	{"BFC0",3},
+	{"BFC1",4},
+	{"FOGC",5},
+	{"PSIZ",6},
+	{"PSZ",6},
+	{"TEX0",7},
+	{"TEX1",8},
+	{"TEX2",9},
+	{"TEX3",10},
+	{"TEX4",11},
+	{"TEX5",12},
+	{"TEX6",13},
+	{"TEX7",14},
+	{"TEMP",15},
+};
+const int nOutputTokens=sizeof(OutputTokens)/sizeof(_IOToken);
+
+
 _Opcode *ScanOpcode(char *opcode)
 {
 	for(int i=0;i<nOpcodes;++i)
@@ -136,164 +243,31 @@ char tkncmp(char *str1,const char *str2,int *size)
 
 static unsigned char ConvertInputReg(char *input,int *size)
 {
-	if(strncasecmp(input,"OPOS",4)==0)
+	int i;
+	
+	for(i=0;i<nInputTokens;++i)
 	{
-		*size=4;
-		return 0;
+		if(tkncmp(input,InputTokens[i].Token,size)==0)
+		{
+			return InputTokens[i].Index;
+		}
 	}
-	if(tkncmp(input,"vertex.position",size)==0)
-		return 0;
-	if(strncasecmp(input,"WHGT",4)==0)
-	{
-		*size=4;
-		return 1;
-	}
-	if(tkncmp(input,"vertex.weight",size)==0)
-		return 1;
-	if(strncasecmp(input,"NRML",4)==0)
-	{
-		*size=4;
-		return 2;
-	}
-	if(tkncmp(input,"vertex.normal",size)==0)
-		return 2;
-	if(strncasecmp(input,"COL0",4)==0)
-	{
-		*size=4;
-		return 3;
-	}
-	if(tkncmp(input,"vertex.color.secondary",size)==0)
-		return 4;
-	if(tkncmp(input,"vertex.color",size)==0)
-		return 3;
-	if(strncasecmp(input,"COL1",4)==0)
-	{
-		*size=4;
-		return 4;
-	}
-	if(strncasecmp(input,"FOGC",4)==0)
-	{
-		*size=4;
-		return 5;
-	}
-	if(strncasecmp(input,"TEX0",4)==0)
-	{
-		*size=4;
-		return 8;
-	}
-	if(tkncmp(input,"vertex.texcoord[0]",size)==0)
-		return 8;
-	if(strncasecmp(input,"TEX1",4)==0)
-	{
-		*size=4;
-		return 9;
-	}
-	if(tkncmp(input,"vertex.texcoord[1]",size)==0)
-		return 9;
-	if(strncasecmp(input,"TEX2",4)==0)
-	{
-		*size=4;
-		return 10;
-	}
-	if(tkncmp(input,"vertex.texcoord[2]",size)==0)
-		return 10;
-	if(strncasecmp(input,"TEX3",4)==0)
-	{
-		*size=4;
-		return 11;
-	}
-	if(tkncmp(input,"vertex.texcoord[3]",size)==0)
-		return 11;
-	if(strncasecmp(input,"TEX4",4)==0)
-	{
-		*size=4;
-		return 12;
-	}
-	if(tkncmp(input,"vertex.texcoord[4]",size)==0)
-		return 12;
-	if(strncasecmp(input,"TEX5",4)==0)
-	{
-		*size=4;
-		return 13;
-	}
-	if(tkncmp(input,"vertex.texcoord[5]",size)==0)
-		return 13;
-	if(strncasecmp(input,"TEX6",4)==0)
-	{
-		*size=4;
-		return 14;
-	}
-	if(tkncmp(input,"vertex.texcoord[6]",size)==0)
-		return 14;
-	if(strncasecmp(input,"TEX7",4)==0)
-	{
-		*size=4;
-		return 15;
-	}
-	if(tkncmp(input,"vertex.texcoord[7]",size)==0)
-		return 15;
 	fatal("unknown input reg",input);
 	return 0;
 }
 
 static unsigned char ConvertOutputReg(char *input,int *size)
 {
-	if(strncasecmp(input,"HPOS",4)==0)
-		return 0;
-	if(tkncmp(input,"result.position",size)==0)
-		return 0;
-	if(strncasecmp(input,"COL0",4)==0)
-		return 1;
-	if(tkncmp(input,"result.color.secondary",size)==0)
-		return 2;
-	if(tkncmp(input,"result.color",size)==0)
-		return 1;
-	if(strncasecmp(input,"COL1",4)==0)
-		return 2;
-	if(strncasecmp(input,"BFC0",4)==0)
-		return 3;
-	if(strncasecmp(input,"BFC1",4)==0)
-		return 4;
-	if(strncasecmp(input,"FOGC",4)==0)
-		return 5;
-	if(strncasecmp(input,"PSZ",3)==0)
-		return 6;
-	if(strncasecmp(input,"TEX0",4)==0)
-		return 7;
-	if(tkncmp(input,"result.texcoord[0]",size)==0)
-		return 7;
-	if(strncasecmp(input,"TEX1",4)==0)
-		return 8;
-	if(tkncmp(input,"result.texcoord[1]",size)==0)
-		return 8;
-	if(strncasecmp(input,"TEX2",4)==0)
-		return 9;
-	if(tkncmp(input,"result.texcoord[2]",size)==0)
-		return 9;
-	if(strncasecmp(input,"TEX3",4)==0)
-		return 10;
-	if(tkncmp(input,"result.texcoord[3]",size)==0)
-		return 10;
-	if(strncasecmp(input,"TEX4",4)==0)
-		return 11;
-	if(tkncmp(input,"result.texcoord[4]",size)==0)
-		return 11;
-	if(strncasecmp(input,"TEX5",4)==0)
-		return 12;
-	if(tkncmp(input,"result.texcoord[5]",size)==0)
-		return 12;
-	if(strncasecmp(input,"TEX6",4)==0)
-		return 13;
-	if(tkncmp(input,"result.texcoord[6]",size)==0)
-		return 13;
-	if(strncasecmp(input,"TEX7",4)==0)
-		return 14;
-	if(tkncmp(input,"result.texcoord[7]",size)==0)
-		return 14;
-	if(strncasecmp(input,"TEMP",4)==0)
-		return 15;
-	if(tkncmp(input,"result.temp",size)==0)
-		return 15;
+	int i;
+	
+	for(i=0;i<nOutputTokens;++i)
+	{
+		if(tkncmp(input,OutputTokens[i].Token,size)==0)
+		{
+			return OutputTokens[i].Index;
+		}
+	}
+
 	fatal("unknown output reg",input);
 	return 0;
 }

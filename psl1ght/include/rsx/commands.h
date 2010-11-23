@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rsx/gcm.h>
+#include "rsx/realityVP.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,13 +86,14 @@ void realityVertex4f(gcmContextData *context, float x, float y, float z, float w
 
 void realityTexCoord2f(gcmContextData *context, float s, float t);
 
-
+/*
 typedef struct {
 	uint32_t size;
 	uint32_t in_reg;
 	uint32_t out_reg;
 	uint32_t data[];
 } realityVertexProgram; 
+*/
 
 typedef struct {
 	uint32_t offset;
@@ -101,6 +103,8 @@ typedef struct {
 } realityFragmentProgram; 
 
 void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *prog);
+void realitySetVertexProgramConstant4f(gcmContextData *context, int constant, float values[4]);
+void realitySetVertexProgramConstant4fBlock(gcmContextData *context, int constant, int num4fConstants, float *values);
 void realityInstallFragmentProgram(gcmContextData *context, realityFragmentProgram *prog, uint32_t *addr);
 void realityLoadFragmentProgram(gcmContextData *context, realityFragmentProgram *prog);
 

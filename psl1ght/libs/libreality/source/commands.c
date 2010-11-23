@@ -87,21 +87,56 @@ void realityTexCoord2f(gcmContextData *context, float s, float t) {
 
 
 void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *prog) {
-	int inst, command_size = prog->size * 2 + 7;
+	int inst, command_size = prog->NumInsts * 5 + 7;
+	unsigned int *ucode = (unsigned int*)realityVertexProgramGetUCode(prog);
+	realityVertexProgramConstant *constants;
 	COMMAND_LENGTH(context, command_size);
 	
 	commandBufferPutCmd1(context, NV30_3D_VP_UPLOAD_FROM_ID, 0);
 	
-	for(inst = 0; inst < prog->size; inst += 4) {
+	for(inst = 0; inst < prog->NumInsts*4; inst += 4) {
 		commandBufferPutCmd4(context, NV30_3D_VP_UPLOAD_INST(inst), 
-					prog->data[inst + 0],
-					prog->data[inst + 1],
-					prog->data[inst + 2],
-					prog->data[inst + 3]);
+					ucode[inst + 0],
+					ucode[inst + 1],
+					ucode[inst + 2],
+					ucode[inst + 3]);
 	}
 
 	commandBufferPutCmd1(context, NV30_3D_VP_START_FROM_ID, 0);
-	commandBufferPutCmd2(context, NV40_3D_VP_ATTRIB_EN, prog->in_reg, prog->out_reg);
+	commandBufferPutCmd2(context, NV40_3D_VP_ATTRIB_EN, prog->InputMask, prog->OutputMask);
+
+	constants = realityVertexProgramGetConstants(prog);
+
+	if(constants)
+	{
+		int c;
+		for(c=0;c<prog->NumConstants;++c)
+		{
+			realitySetVertexProgramConstant4f(context,constants[c].Index,(float*)constants[c].Values);
+		}
+	}
+}
+
+void realitySetVertexProgramConstant4f(gcmContextData *context, int num, float values[4]){
+
+	COMMAND_LENGTH(context, 6);
+
+	commandBufferPutCmd5(context, NV30_3D_VP_UPLOAD_CONST_ID, 
+							num,
+							((ieee32) (values[0])).u,
+							((ieee32) (values[1])).u,
+							((ieee32) (values[2])).u,
+							((ieee32) (values[3])).u
+							);
+}
+
+void realitySetVertexProgramConstant4fBlock(gcmContextData *context, int constant, int num4fConstants, float *values)
+{
+	int n;
+	for(n=0;n<num4fConstants;++n)
+	{
+		realitySetVertexProgramConstant4f(context,constant+n,values+4*n);
+	}
 }
 
 void realityInstallFragmentProgram(gcmContextData *context, realityFragmentProgram *prog, uint32_t *addr) {

@@ -3,6 +3,7 @@
 #include <psl1ght/types.h>
 
 #include "rsx/gcm.h"
+#include "rsx/realityVP.h"
 
 EXTERN_BEGIN
 

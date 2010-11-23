@@ -3,9 +3,13 @@
 #ifdef _WIN32
 #include "malloc.h"
 #include "windows.h"
-#else
+#elif defined(__APPLE__)
 #include "stdlib.h"
 #include <cg/cg.h>
+#else
+#include "stdlib.h"
+#include "string.h"
+#include <Cg/cg.h>
 #endif
 
 #include "vpasm.h"

@@ -1,4 +1,4 @@
-CFLAGS += -Wall -Os -g -pipe -I../../include
+CFLAGS += -Wall -Os -g -pipe -I../../include/rsx
 LDFLAGS += -lstdc++
 
 UNAME := $(shell uname -s)
@@ -8,7 +8,7 @@ LDFLAGS += /Library/Frameworks/Cg.framework/Cg
 endif
 
 ifeq ($(UNAME),Linux)
-LDFLATS += -lCg
+LDFLAGS += -lCg -lpthread
 endif
 
 CC = $(PREFIX)gcc
@@ -49,4 +49,3 @@ osx:
 	$(MAKE) clean
 	/opt/toolchains/i686-apple-darwin9-10.4/bin/i686-apple-darwin9-lipo -create $(BIN)_ppc $(BIN)_intel -output $(BIN)
 	rm $(BIN)_ppc $(BIN)_intel
-

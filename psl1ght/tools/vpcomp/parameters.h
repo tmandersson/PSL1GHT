@@ -7,7 +7,7 @@ using namespace std;
 
 extern "C"
 {
-#include "rsx/realityVP.h"
+#include "realityVP.h"
 }
 
 struct _Parameter

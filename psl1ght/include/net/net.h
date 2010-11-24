@@ -27,9 +27,9 @@ typedef struct net_sockinfo {
 	s32 proto;
 	s32 recv_queue_len;
 	s32 send_queue_len;
-	u32 local_adr;
+	struct in_addr local_adr;
 	s32 local_port;
-	u32 remote_adr;
+	struct in_addr remote_adr;
 	s32 remote_port;
 	s32 state;
 } net_sockinfo_t;

@@ -37,7 +37,7 @@ EXPORT(net_finalize_network,			0xb68d5625);
 EXPORT(net_free_thread_context,			0xfdb8f926);
 EXPORT(net_get_lib_name_server,			0x1d14d6e4);
 EXPORT(net_get_netemu_test_param,		0x368823c0);
-EXPORT(net_get_sockinfo,				0x3b27c780);
+EXPORT(net_get_sockinfo_sprx,			0x3b27c780);
 EXPORT(net_get_sockinfo_ex,				0xa765d029);
 EXPORT(net_get_test_param,				0xa5a86557);
 EXPORT(net_get_udpp2p_test_param,		0x05bd4438);

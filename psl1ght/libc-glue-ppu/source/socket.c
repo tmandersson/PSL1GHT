@@ -75,10 +75,13 @@ int closesocket(int socket)
 	return closesocket_sprx(FD(socket));
 }
 
+s32 net_get_sockinfo(s32 socket, net_sockinfo_t* p, s32 n)
+{
+	return net_get_sockinfo_sprx(FD(socket), p, n);
+}
+
 int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct timeval* timeout)
 {
 	errno = ENOSYS;
 	return -1;
 }
-
-

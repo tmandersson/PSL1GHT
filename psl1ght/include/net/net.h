@@ -40,7 +40,7 @@ s32* _net_errno_loc(void);
 
 
 s32 net_finalize_network();
-s32 net_get_sockinfo(s32 s, net_sockinfo_t* p, s32 n);
+s32 net_get_sockinfo(s32 socket, net_sockinfo_t* p, s32 n);
 s32 net_initialize_network_ex(net_init_param_t* param);
 s32 net_show_ifconfig();
 s32 net_show_nameserver();

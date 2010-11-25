@@ -28,7 +28,7 @@ DEPSOPTIONS	=	-MMD -MP -MF $(DEPSDIR)/$*.d
 
 %.o: %.cpp
 	@echo "[CXX] $(notdir $<)"
-	@$(CC) $(DEPSOPTIONS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	@$(CXX) $(DEPSOPTIONS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 %.o: %.S
 	@echo "[CC]  $(notdir $<)"

@@ -63,6 +63,10 @@ int main(int argc, const char* argv[], const char* envp[])
 {
 	printf("PS3Load " PS3LOAD_VERSION "\n");
 
+
+	printf("SysLoadModule(NET)=%d\n", SysLoadModule(SYSMODULE_NET));
+    printf("net_init()=%d\n", net_initialize_network());
+
 	mkdir(ZIP_PATH, 0777);
 	DeleteDirectory(ZIP_PATH);
 
@@ -243,8 +247,12 @@ reloop:
 			i++;
 		}
 
+		net_finalize_network();
+		SysUnloadModule(SYSMODULE_NET);
 		sysProcessExitSpawn2(bootpath, (const char**)launchargv, (const char**)launchenvp, NULL, 0, 1001, SYS_PROCESS_SPAWN_STACK_SIZE_1M);
 	}
 
+	net_finalize_network();
+	SysUnloadModule(SYSMODULE_NET);
 	return 0;
 }

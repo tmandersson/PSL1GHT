@@ -10,7 +10,7 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lzip -lz
+LIBS		:=	-lzip -lz -lnet -lsysmodule
 
 APPID		:=	PSL145310
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000

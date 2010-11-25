@@ -10,7 +10,6 @@ INPUT(-lc)
 INPUT(-lpsl1ght)
 INPUT(-lc-glue-ppu)
 INPUT(-llv2)
-INPUT(-lnet)
 
 PHDRS
 {

@@ -222,3 +222,74 @@ void realityZControl(gcmContextData *context, uint8_t cullNearFar, uint8_t zClam
 				zClampEnable << 4 |
 				cullIngnoreW << 8);
 }
+
+void realityBindVertexBufferAttribute(gcmContextData *context, uint8_t attribute, uint32_t offset, uint8_t stride, uint8_t elements, uint8_t dataType, uint8_t location)
+{
+	COMMAND_LENGTH(context, 2+2);
+	
+	commandBufferPutCmd1(context, NV30_3D_VTXBUF(attribute), offset|(location<<31));
+	commandBufferPutCmd1(context, NV30_3D_VTXFMT(attribute), (stride<<NV30_3D_VTXFMT_STRIDE__SHIFT)|(elements<<NV30_3D_VTXFMT_SIZE__SHIFT)|dataType);
+
+}
+
+void realityDrawVertexBuffer(gcmContextData *context, uint32_t type, uint32_t start, uint32_t count)
+{
+	COMMAND_LENGTH(context, 4);
+
+	commandBufferPutCmd1(context, NV40_3D_VTX_CACHE_INVALIDATE, 0);
+	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, type);
+
+	while(count)
+	{
+		int num=count; //number of elements this call
+		if(num>256)	//max 256 elements per call
+			num=256;
+		COMMAND_LENGTH(context, 2);
+		commandBufferPutCmd1(context, NV30_3D_VB_VERTEX_BATCH, ((num-1)<<24)|start);
+		count-=num;
+	}
+
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, NV30_3D_VERTEX_BEGIN_END_STOP);
+}
+
+void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32_t start, uint32_t count, uint8_t dataType, uint8_t location)
+{
+	COMMAND_LENGTH(context, 7);
+
+	commandBufferPutCmd1(context, NV40_3D_VTX_CACHE_INVALIDATE, 0);
+
+	commandBufferPutCmd2(context, NV30_3D_IDXBUF_OFFSET, start, (uint32_t)(dataType|location));
+
+	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, type);
+
+	while(count)
+	{
+		int num=count; //number of elements this call
+		if(num>256)	//max 256 elements per call
+			num=256;		COMMAND_LENGTH(context, 2);
+		commandBufferPutCmd1(context, NV30_3D_VB_INDEX_BATCH, ((num-1)<<24)|start);
+		count-=num;
+	}
+
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, NV30_3D_VERTEX_BEGIN_END_STOP);
+}
+
+void realityDepthTestEnable(gcmContextData *context, uint32_t enable)
+{
+	COMMAND_LENGTH(context,2);
+	commandBufferPutCmd1(context, NV30_3D_DEPTH_TEST_ENABLE, enable);
+}
+
+void realityDepthTestFunc(gcmContextData *context, uint32_t function)
+{
+	COMMAND_LENGTH(context,2);
+	commandBufferPutCmd1(context, NV30_3D_DEPTH_FUNC, function);
+}
+
+void realityDepthWriteEnable(gcmContextData *context, uint32_t enable)
+{
+	COMMAND_LENGTH(context,2);
+	commandBufferPutCmd1(context, NV30_3D_DEPTH_WRITE_ENABLE, enable);
+}

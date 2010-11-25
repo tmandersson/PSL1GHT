@@ -86,14 +86,21 @@ void realityVertex4f(gcmContextData *context, float x, float y, float z, float w
 
 void realityTexCoord2f(gcmContextData *context, float s, float t);
 
-/*
-typedef struct {
-	uint32_t size;
-	uint32_t in_reg;
-	uint32_t out_reg;
-	uint32_t data[];
-} realityVertexProgram; 
-*/
+//Vertex buffers
+//Bind an input attribute to a vertex buffer array
+
+#define REALITY_BUFFER_DATATYPE_FLOAT	2
+#define REALITY_BUFFER_DATATYPE_BYTE	4
+
+void realityBindVertexBufferAttribute(gcmContextData *context, uint8_t attribute, uint32_t offset, uint8_t stride, uint8_t elements, uint8_t dataType, uint8_t location);
+
+void realityDrawVertexBuffer(gcmContextData *context, uint32_t type, uint32_t start, uint32_t count);
+
+//Untested yet
+#define REALITY_INDEX_DATATYPE_U32	0x00
+#define REALITY_INDEX_DATATYPE_U16	0x10
+void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32_t start, uint32_t count, uint8_t dataType, uint8_t location);
+
 
 typedef struct {
 	uint32_t offset;
@@ -137,6 +144,19 @@ void realityCullEnable(gcmContextData *context, uint32_t enable);
 void realityBlendFunc(gcmContextData *context, uint32_t src, uint32_t dest);
 void realityBlendEquation(gcmContextData *context, uint32_t equation);
 void realityBlendEnable(gcmContextData *context, uint32_t enable);
+
+#define REALITY_ZFUNC_NEVER				0x00000200
+#define REALITY_ZFUNC_LESS					0x00000201
+#define REALITY_ZFUNC_EQUAL				0x00000202
+#define REALITY_ZFUNC_LESSOREQUAL				0x00000203
+#define REALITY_ZFUNC_GREATER				0x00000204
+#define REALITY_ZFUNC_NOTEQUAL				0x00000205
+#define REALITY_ZFUNC_GREATEROREQUAL				0x00000206
+#define REALITY_ZFUNC_ALWAYS				0x00000207
+
+void realityDepthTestEnable(gcmContextData *context, uint32_t enable);
+void realityDepthTestFunc(gcmContextData *context, uint32_t function);
+void realityDepthWriteEnable(gcmContextData *context, uint32_t enable);
 
 void realityZControl(gcmContextData *context, uint8_t cullNearFar, uint8_t zClampEnable, uint8_t cullIngnoreW);
 

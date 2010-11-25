@@ -148,12 +148,28 @@ u32 *tx_mem;
 u32 tx_offset;
 Image dice;
 
-void drawFrame(int buffer, long frame) {
+const struct _Vertex
+{
+	float x,y,z,w;
+	float u,v;
+} VertexBufferMain[]=
+{
+	{600.0,300.0,0.0,1.0,	 0.0,0.0},
+	{1400.0,300.0,0.0,1.0,   1.0,0.0},
+	{1400.0,900.0,0.0,1.0,   1.0,1.0},
+	{600.0,900.0,0.0,1.0,    0.0,1.0}
+};
+struct _Vertex *VertexBufferRSX;	//Vertex buffer in RSX memory
 
+void drawFrame(int buffer, long frame) 
+{
 	//Find the constant where the matrix is stored in the shader (shouldn't actually do this every frame :) )
 	int matrixParam=realityVertexProgramGetConstant((realityVertexProgram*)vshader_bin,"TransMatrix");
+	int positionAttr,textureAttr;
 	realityMatrix matrix,tmp;
 	float ang=((float)(frame%360))*(M_PI)/180.0;
+	unsigned int offset;
+
 
 	//Build a transform matrix to rotate the quad by its center
 	//translate to center the quad at 0,0
@@ -166,7 +182,6 @@ void drawFrame(int buffer, long frame) {
 	//move to original position
 	tmp=realityMatrixTranslation(600+400,300+300,0);
 	matrix=realityMatrixMul(&matrix,&tmp);
-
 
 	realityViewportTranslate(context, 0.0, 0.0, 0.0, 0.0);
 	realityViewportScale(context, 1.0, 1.0, 1.0, 0.0); 
@@ -208,23 +223,26 @@ void drawFrame(int buffer, long frame) {
 
 	// Load texture
 	load_tex(0, tx_offset, dice.width, dice.height, dice.width*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
-	
-	// Generate quad
-	realityVertexBegin(context, REALITY_QUADS);
-	{
-		realityTexCoord2f(context, 0.0, 0.0);
-		realityVertex4f(context, 600.0, 300.0, 0.0, 1.0); 
 
-		realityTexCoord2f(context, 1.0, 0.0);
-		realityVertex4f(context, 1400.0, 300.0, 0.0, 1.0); 
+	//Get the input attributes by name
+	//shouldn't do attribute scan every frame but it's just a sample :)
+	positionAttr = realityVertexProgramGetInputAttribute((realityVertexProgram*)vshader_bin,"inputvertex.vertex");
+	textureAttr = realityVertexProgramGetInputAttribute((realityVertexProgram*)vshader_bin,"inputvertex.texcoord");
 
-		realityTexCoord2f(context, 1.0, 1.0);
-		realityVertex4f(context, 1400.0, 900.0, 0.0, 1.0); 
+	//Bind the memory array to the input attributes
+	//rsx requires the offset in his memory area
+	realityAddressToOffset(&VertexBufferRSX[0].x,&offset);
 
-		realityTexCoord2f(context, 0.0, 1.0);
-		realityVertex4f(context, 600.0, 900.0, 0.0, 1.0); 
-	}
-	realityVertexEnd(context);
+	//stride is the distance (in bytes) from the attribute in a vertex to the same attribute in the next vertex (that is, the size of a single vertex struct)
+	//size is the number of components of this attribute that will be passed to this input parameter in the vertex program (max 4)
+	realityBindVertexBufferAttribute(context,positionAttr,offset,sizeof(struct _Vertex),4,REALITY_BUFFER_DATATYPE_FLOAT,REALITY_RSX_MEMORY);
+
+	//now the texture coords
+	realityAddressToOffset(&VertexBufferRSX[0].u,&offset);
+	realityBindVertexBufferAttribute(context,textureAttr,offset,sizeof(struct _Vertex),2,REALITY_BUFFER_DATATYPE_FLOAT,REALITY_RSX_MEMORY);
+
+	//Now request the draw of the bound buffer (or a part of it)
+	realityDrawVertexBuffer(context,REALITY_QUADS,0,4);
 }
 
 s32 main(s32 argc, const char* argv[])
@@ -240,12 +258,14 @@ s32 main(s32 argc, const char* argv[])
 	dice = loadPng(dice_bin);
 	assert(realityAddressToOffset(dice.data, &tx_offset) == 0);
 
-	//load_acid_texture((uint8_t *)tx_mem, 0);
-
 	// install fragment shader in rsx memory
 	u32 *frag_mem = rsxMemAlign(256, 256);
 	printf("frag_mem = 0x%08lx\n", (u64) frag_mem);
 	realityInstallFragmentProgram(context, &nv30_fp, frag_mem);
+
+	//Transfer the vertex buffer to RSX memory (main memory mapping is not supported yet)
+	VertexBufferRSX = rsxMemAlign(64,4*sizeof(struct _Vertex));
+	memcpy(VertexBufferRSX,VertexBufferMain,4*sizeof(struct _Vertex));
 
 	long frame = 0; // To keep track of how many frames we have rendered.
 	

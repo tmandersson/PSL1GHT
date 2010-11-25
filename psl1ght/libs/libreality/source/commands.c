@@ -247,6 +247,7 @@ void realityDrawVertexBuffer(gcmContextData *context, uint32_t type, uint32_t st
 		COMMAND_LENGTH(context, 2);
 		commandBufferPutCmd1(context, NV30_3D_VB_VERTEX_BATCH, ((num-1)<<24)|start);
 		count-=num;
+		start+=num;
 	}
 
 	COMMAND_LENGTH(context, 2);
@@ -267,9 +268,11 @@ void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32
 	{
 		int num=count; //number of elements this call
 		if(num>256)	//max 256 elements per call
-			num=256;		COMMAND_LENGTH(context, 2);
+			num=256;		
+		COMMAND_LENGTH(context, 2);
 		commandBufferPutCmd1(context, NV30_3D_VB_INDEX_BATCH, ((num-1)<<24)|start);
 		count-=num;
+		start+=num;
 	}
 
 	COMMAND_LENGTH(context, 2);

@@ -1,4 +1,5 @@
 PREFIX		:= ppu-
+OBJCOPY		:= $(PREFIX)objcopy
 AR			:= $(PREFIX)ar
 AS			:= $(PREFIX)gcc
 CC			:= $(PREFIX)gcc
@@ -49,5 +50,6 @@ DEPSOPTIONS	=	-MMD -MP -MF $(DEPSDIR)/$*.d
 
 %.bin.h: %.bin
 	@echo "[R2H] $(notdir $<)"
-	@$(RAW2H) $< $(BUILDDIR)/$(notdir $<).h $(notdir $(basename $<)_bin)
+	@$(RAW2H) $< $(BUILDDIR)/$(notdir $<).h $(BUILDDIR)/$(notdir $<).S $(notdir $(basename $<)_bin)
+	@$(AS) -x assembler-with-cpp $(ASFLAGS) -c $(BUILDDIR)/$(notdir $<).S -o $(BUILDDIR)/$(notdir $<).o
 

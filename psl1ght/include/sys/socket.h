@@ -117,6 +117,9 @@ int socket_sprx(int domain, int type, int protocol);
 int socketpair_sprx(int domain, int type, int protocol, int socket_vector[2]);
 s32 closesocket_sprx(int socket);
 
+/* sony sprx functions that involve sockets */
+s32 net_get_sockinfo_sprx(s32 socket, net_sockinfo_t* p, s32 n);
+
 /* normal func prototypes */
 int accept(int socket, const struct sockaddr* address, socklen_t* address_len);
 int bind(int socket, const struct sockaddr* address, socklen_t address_len);

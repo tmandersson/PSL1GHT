@@ -27,9 +27,9 @@ typedef struct net_sockinfo {
 	s32 proto;
 	s32 recv_queue_len;
 	s32 send_queue_len;
-	u32 local_adr;
+	struct in_addr local_adr;
 	s32 local_port;
-	u32 remote_adr;
+	struct in_addr remote_adr;
 	s32 remote_port;
 	s32 state;
 } net_sockinfo_t;
@@ -40,7 +40,7 @@ s32* _net_errno_loc(void);
 
 
 s32 net_finalize_network();
-s32 net_get_sockinfo(s32 s, net_sockinfo_t* p, s32 n);
+s32 net_get_sockinfo(s32 socket, net_sockinfo_t* p, s32 n);
 s32 net_initialize_network_ex(net_init_param_t* param);
 s32 net_show_ifconfig();
 s32 net_show_nameserver();

@@ -96,10 +96,10 @@ void realityBindVertexBufferAttribute(gcmContextData *context, uint8_t attribute
 
 void realityDrawVertexBuffer(gcmContextData *context, uint32_t type, uint32_t start, uint32_t count);
 
-//Untested yet
+
 #define REALITY_INDEX_DATATYPE_U32	0x00
 #define REALITY_INDEX_DATATYPE_U16	0x10
-void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32_t start, uint32_t count, uint8_t dataType, uint8_t location);
+void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32_t offset, uint32_t count, uint8_t dataType, uint8_t location);
 
 
 typedef struct {

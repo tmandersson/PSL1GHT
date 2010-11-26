@@ -254,13 +254,15 @@ void realityDrawVertexBuffer(gcmContextData *context, uint32_t type, uint32_t st
 	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, NV30_3D_VERTEX_BEGIN_END_STOP);
 }
 
-void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32_t start, uint32_t count, uint8_t dataType, uint8_t location)
+void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32_t offset, uint32_t count, uint8_t dataType, uint8_t location)
 {
+	unsigned int current=0;
+
 	COMMAND_LENGTH(context, 7);
 
 	commandBufferPutCmd1(context, NV40_3D_VTX_CACHE_INVALIDATE, 0);
 
-	commandBufferPutCmd2(context, NV30_3D_IDXBUF_OFFSET, start, (uint32_t)(dataType|location));
+	commandBufferPutCmd2(context, NV30_3D_IDXBUF_OFFSET, offset, (uint32_t)(dataType|location));
 
 	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, type);
 
@@ -270,9 +272,9 @@ void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32
 		if(num>256)	//max 256 elements per call
 			num=256;		
 		COMMAND_LENGTH(context, 2);
-		commandBufferPutCmd1(context, NV30_3D_VB_INDEX_BATCH, ((num-1)<<24)|start);
+		commandBufferPutCmd1(context, NV30_3D_VB_INDEX_BATCH, ((num-1)<<24)|current);
 		count-=num;
-		start+=num;
+		current+=num;
 	}
 
 	COMMAND_LENGTH(context, 2);

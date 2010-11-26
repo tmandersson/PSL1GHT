@@ -35,12 +35,10 @@ realityMatrix realityMatrixMul(realityMatrix *left,realityMatrix *right)
        {
                for(col=0;col<4;++col)
                {
-                       int i;
-                       result.data[row][col] = 0;
-                       for(i=0;i<4;++i)
-                       {
-                               result.data[row][col]+=left->data[row][i]*right->data[i][col];
-                       }
+                       result.data[row][col]=left->data[row][0]*right->data[0][col]+
+											 left->data[row][1]*right->data[1][col]+
+											 left->data[row][2]*right->data[2][col]+
+											 left->data[row][3]*right->data[3][col];
                }
        }
 
@@ -234,7 +232,7 @@ void drawFrame(int buffer, long frame)
 	realityAddressToOffset(&VertexBufferRSX[0].x,&offset);
 
 	//stride is the distance (in bytes) from the attribute in a vertex to the same attribute in the next vertex (that is, the size of a single vertex struct)
-	//size is the number of components of this attribute that will be passed to this input parameter in the vertex program (max 4)
+	//elements is the number of components of this attribute that will be passed to this input parameter in the vertex program (max 4)
 	realityBindVertexBufferAttribute(context,positionAttr,offset,sizeof(struct _Vertex),4,REALITY_BUFFER_DATATYPE_FLOAT,REALITY_RSX_MEMORY);
 
 	//now the texture coords

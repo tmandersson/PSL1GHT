@@ -48,7 +48,7 @@ typedef struct PngDatas {
 	
 } PngDatas;
 
-int LoadPNG(PngDatas *png, char *filename);
+int LoadPNG(PngDatas *png, const char *filename);
 
 #ifdef __cplusplus
   }

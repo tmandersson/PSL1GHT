@@ -45,7 +45,7 @@ static int png_free(void *ptr, void * a) {
 	return 0;
 } 
 
-int LoadPNG(PngDatas *png, char *filename)
+int LoadPNG(PngDatas *png, const char *filename)
 {
 	int ret=-1;
 	

@@ -182,7 +182,7 @@ int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct
 	}
 	if (writefds) {
 		net_writefds = (net_fd_set*)malloc(fdsize);
-		COPY_NFDS(net_errorfds, errorfds, nfds);
+		COPY_NFDS(net_writefds, writefds, nfds);
 	}
 	if (errorfds) {
 		net_errorfds = (net_fd_set*)malloc(fdsize);

@@ -1,28 +1,26 @@
 #pragma once
 
 #include <psl1ght/types.h>
-#include <netinet/in.h>
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/select.h>
+#include <netinet/in.h>
 #include <stdlib.h>
 
-#define libnet_errno *_net_errno_loc()
+#define net_errno *netErrnoLoc()
+#define net_h_errno *netHErrnoLoc();
 
-#define net_initialize_network() ({ \
-	static char __net_buffer[128 * 1024]; \
-	net_init_param_t __net_param; \
-	__net_param.memory = (u32)(u64)&__net_buffer; \
-	__net_param.memory_size = sizeof(__net_buffer); \
-	__net_param.flags = 0; \
-	net_initialize_network_ex(&__net_param); \
-})
+typedef u32 net_socklen_t;
 
-typedef struct net_init_param {
+typedef struct
+{
 	u32 memory;
 	s32 memory_size;
 	s32 flags;
-} net_init_param_t;
+} netInitialization;
 
-typedef struct net_sockinfo {
+typedef struct
+{
 	s32 s;
 	s32 proto;
 	s32 recv_queue_len;
@@ -32,18 +30,75 @@ typedef struct net_sockinfo {
 	struct in_addr remote_adr;
 	s32 remote_port;
 	s32 state;
-} net_sockinfo_t;
+} netSocketInfo;
+
+struct net_iovec
+{
+	u32			padding1;
+	lv2_void	iov_base;
+	u32			padding2;
+	lv2_size_t	iov_len;
+};
+
+struct net_msghdr
+{
+	u32				padding1;
+	lv2_void		msg_name;
+	net_socklen_t	msg_namelen;
+	u32				padding2;
+	u32				padding3;
+	lv2_void		msg_iov;
+	s32				msg_iovlen;
+	u32				padding4;
+	u32				padding5;
+	lv2_void		msg_control;
+	net_socklen_t	msg_controllen;
+	s32				msg_flags;
+};
+
+#define	NET_FD_SETSIZE	32
+//#define NBBY			8
+#define	NET_NFDBITS		(sizeof(net_fd_mask) * NBBY)
+typedef	u32 net_fd_mask;
+typedef	struct {
+	net_fd_mask	fds_bits[howmany(NET_FD_SETSIZE, NET_NFDBITS)];
+} net_fd_set;
 
 EXTERN_BEGIN
 
-s32* _net_errno_loc(void);
+s32 netInitialize();
+s32 netDeinitialize();
 
+s32* netErrnoLoc(void);
+s32* netHErrnoLoc(void);
 
-s32 net_finalize_network();
-s32 net_get_sockinfo(s32 socket, net_sockinfo_t* p, s32 n);
-s32 net_initialize_network_ex(net_init_param_t* param);
-s32 net_show_ifconfig();
-s32 net_show_nameserver();
-s32 net_show_route();
+s32 netFinalizeNetwork();
+#define netInitializeNetwork netInitialize
+s32 netGetSockInfo(s32 socket, netSocketInfo* p, s32 n);
+s32 netInitializeNetworkEx(netInitialization* param);
+s32 netShowIfConfig();
+s32 netShowNameserver();
+s32 netShowRoute();
+
+int netAccept(int socket, const struct sockaddr* address, net_socklen_t* address_len);
+int netBind(int socket, const struct sockaddr* address, net_socklen_t address_len);
+int netConnect(int socket, const struct sockaddr* address, net_socklen_t address_len);
+int netGetPeerName(int socket, struct sockaddr* address, net_socklen_t* address_len);
+int netGetSockName(int socket, struct sockaddr* address, net_socklen_t* address_len);
+int netGetSockOpt(int socket, int level, int option_name, void* option_value, net_socklen_t* option_len);
+int netListen(int socket, int backlog);
+ssize_t netRecv(int socket, void* buffer, size_t length, int flags);
+ssize_t netRecvFrom(int socket, void* buffer, size_t length, int flags, struct sockaddr* address, net_socklen_t* address_len);
+ssize_t netRecvMsg(int socket, struct net_msghdr* message, int flags);
+ssize_t netSend(int socket, const void* message, size_t length, int flags);
+ssize_t netSendTo(int socket, const void* message, size_t length, int flags, const struct sockaddr* dest_addr, net_socklen_t dest_len);
+ssize_t netSendMsg(int socket, const struct net_msghdr* message, int flags);
+int netSetSockOpt(int socket, int level, int option_name, const void* option_value, net_socklen_t option_len);
+int netShutdown(int socket, int how);
+int netSelect(int nfds, net_fd_set* readfds, net_fd_set* writefds, net_fd_set* errorfds, struct timeval* timeout);
+int netSocket(int domain, int type, int protocol);
+int netSocketPair(int domain, int type, int protocol, int socket_vector[2]);
+s32 netClose(int socket);
+s32 netGetSockInfo(s32 socket, netSocketInfo* p, s32 n);
 
 EXTERN_END

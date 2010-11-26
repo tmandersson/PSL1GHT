@@ -14,7 +14,7 @@
 #include <sys/types.h>        /*  socket types              */
 #include <arpa/inet.h>        /*  inet (3) funtions         */
 #include <unistd.h>           /*  misc. UNIX functions      */
-#include <sysmodule/sysmodule.h>
+#include <net/net.h>
 
 #include "helper.h"           /*  our own helper functions  */
 
@@ -54,8 +54,7 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
     }
 
-	printf("SysLoadModule(NET)=%d\n", SysLoadModule(SYSMODULE_NET));
-    printf("net_init()=%d\n", net_initialize_network());
+    printf("net_init()=%d\n", netInitialize());
 
     /*  Create the listening socket  */
 
@@ -119,7 +118,6 @@ int main(int argc, char *argv[]) {
 		}
 
     }
-	net_finalize_network();
-	SysUnloadModule(SYSMODULE_NET);
+	netDeinitialize();
 }
 

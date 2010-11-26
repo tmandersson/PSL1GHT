@@ -10,7 +10,7 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lio
+LIBS		:=	-lio -lnet
 
 TITLE		:=	Keyboard Test - PSL1GHT
 APPID		:=	TEST0KB01

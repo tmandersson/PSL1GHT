@@ -10,7 +10,7 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	
+LIBS		:=	-lnet -lsysmodule
 
 TITLE		:=	Network Test - PSL1GHT
 APPID		:=	TEST0NET1

@@ -15,7 +15,7 @@ int main(int argc, const char* argv[])
 	char* buffer = (char*)malloc(0x100);
 	strcpy(buffer, "This is just an act of kindness\n");
 	strcat(buffer, "\tto let you know that your time is up.\n");
-	fprintf(stdout, "0x%016llx: %s\n", buffer, buffer);
+	fprintf(stdout, "%p: %s\n", buffer, buffer);
 	free(buffer);
 
 	return 0;

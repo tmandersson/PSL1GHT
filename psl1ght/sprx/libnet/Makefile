@@ -10,6 +10,8 @@ INCLUDE		:=	. ../../include
 DATA		:=	data
 LIBS		:=	
 
+CFLAGS		+=	-std=gnu99
+
 LD			:=	ppu-ld
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))

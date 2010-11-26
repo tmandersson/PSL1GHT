@@ -169,33 +169,47 @@ int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct
 
 	size_t fdsize = sizeof(fd_set) * nfds;
 
-	if (readfds)
-		net_readfds = malloc(fdsize);
-	if (writefds)
-		net_writefds = malloc(fdsize);
-	if (errorfds)
-		net_errorfds = malloc(fdsize);
+#define COPY_NFDS(dest, src, num) { \
+	for (size_t i = 0; i < num; i++) { \
+		for (size_t j = 0; j < (sizeof(src[i].fds_bits) / sizeof(src[i].fds_bits[0])); j++) \
+			dest[i].fds_bits[j] = src[i].fds_bits[j]; \
+	} \
+}
+
+	if (readfds) {
+		net_readfds = (net_fd_set*)malloc(fdsize);
+		COPY_NFDS(net_readfds, readfds, nfds);
+	}
+	if (writefds) {
+		net_writefds = (net_fd_set*)malloc(fdsize);
+		COPY_NFDS(net_errorfds, errorfds, nfds);
+	}
+	if (errorfds) {
+		net_errorfds = (net_fd_set*)malloc(fdsize);
+		COPY_NFDS(net_errorfds, errorfds, nfds);
+	}
 
 	s32 ret;
 	if (LIBNET_INITIALIZED)
 		ret = netSelect(nfds, net_readfds, net_writefds, net_errorfds, timeout);
 	else
 		ret = lv2NetSelect(nfds, net_readfds, net_writefds, net_errorfds, timeout);
-	if (ret < 0)
-		return netErrno(ret);
 
 	if (net_readfds) {
-		memcpy(readfds, net_readfds, fdsize);
+		if (ret >= 0)
+			COPY_NFDS(readfds, net_readfds, nfds);
 		free(net_readfds);
 	}
 	if (net_writefds) {
-		memcpy(writefds, net_writefds, fdsize);
+		if (ret >= 0)
+			COPY_NFDS(writefds, net_writefds, nfds);
 		free(net_writefds);
 	}
 	if (net_errorfds) {
-		memcpy(errorfds, net_errorfds, fdsize);
+		if (ret >= 0)
+			COPY_NFDS(errorfds, net_errorfds, nfds);
 		free(net_errorfds);
 	}
 
-	return ret;
+	return netErrno(ret);
 }

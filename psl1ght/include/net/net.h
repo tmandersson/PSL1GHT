@@ -59,7 +59,7 @@ struct net_msghdr
 #define	NET_FD_SETSIZE	32
 //#define NBBY			8
 #define	NET_NFDBITS		(sizeof(net_fd_mask) * NBBY)
-typedef	u32 net_fd_mask;
+typedef	s32 net_fd_mask;
 typedef	struct {
 	net_fd_mask	fds_bits[howmany(NET_FD_SETSIZE, NET_NFDBITS)];
 } net_fd_set;

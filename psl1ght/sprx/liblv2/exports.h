@@ -18,6 +18,7 @@ EXPORT(sys_ppu_thread_unregister_atexit, 0xac6fc404);
 EXPORT(sys_lwmutex_create, 0x2f85c0ef);
 EXPORT(sys_lwmutex_destroy, 0xc3476d0c);
 EXPORT(sys_lwmutex_lock, 0x1573dc3f);
+EXPORT(sys_lwmutex_trylock, 0xaeb78725);
 EXPORT(sys_lwmutex_unlock, 0x1bc200f4);
 EXPORT(sys_initialize_tls, 0x744680a2);
 EXPORT(sys_time_get_system_time, 0x8461e528);

@@ -31,7 +31,8 @@ int netErrno(int ret)
 	return -1;
 }
 
-int accept(int socket, const struct sockaddr* address, socklen_t* address_len) {
+int accept(int socket, struct sockaddr* address, socklen_t* address_len)
+{
 	s32 ret;
 	net_socklen_t len;
 	net_socklen_t* lenp = (address && address_len) ? &len : NULL;
@@ -49,7 +50,8 @@ int accept(int socket, const struct sockaddr* address, socklen_t* address_len) {
 	return ret | SOCKET_FD_MASK;
 }
 
-int bind(int socket, const struct sockaddr* address, socklen_t address_len) {
+int bind(int socket, const struct sockaddr* address, socklen_t address_len)
+{
 	s32 ret;
 	if (LIBNET_INITIALIZED)
 		ret = netBind(FD(socket), address, (net_socklen_t)address_len);
@@ -213,3 +215,43 @@ int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct
 
 	return netErrno(ret);
 }
+
+int getsockname(int socket, struct sockaddr* address, socklen_t* address_len)
+{
+	s32 ret;
+	net_socklen_t len;
+	net_socklen_t* lenp = (address && address_len) ? &len : NULL;
+	if (LIBNET_INITIALIZED)
+		ret = netGetSockName(FD(socket), address, lenp);
+	else
+		ret = lv2NetGetSockName(FD(socket), address, lenp);
+
+	if (ret < 0)
+		return netErrno(ret);
+
+	if (lenp)
+		*address_len = len;
+
+	return ret;
+}
+
+int getpeername(int socket, struct sockaddr* address, socklen_t* address_len)
+{
+	s32 ret;
+	net_socklen_t len;
+	net_socklen_t* lenp = (address && address_len) ? &len : NULL;
+	if (LIBNET_INITIALIZED)
+		ret = netGetPeerName(FD(socket), address, lenp);
+	else
+		ret = lv2NetGetPeerName(FD(socket), address, lenp);
+
+	if (ret < 0)
+		return netErrno(ret);
+
+	if (lenp)
+		*address_len = len;
+
+	return ret;
+}
+
+

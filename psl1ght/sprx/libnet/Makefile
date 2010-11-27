@@ -10,7 +10,7 @@ INCLUDE		:=	. ../../include
 DATA		:=	data
 LIBS		:=	
 
-CFLAGS		+=	-std=gnu99
+CFLAGS		:=	-g -O2 -std=gnu99
 
 LD			:=	ppu-ld
 

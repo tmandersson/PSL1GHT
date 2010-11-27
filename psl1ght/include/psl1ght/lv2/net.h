@@ -6,9 +6,11 @@
 #include <net/net.h>
 #include <sys/select.h>
 
-LV2_SYSCALL lv2NetAccept(int socket, const struct sockaddr* address, net_socklen_t* address_len) { return Lv2Syscall3(700, socket, (u64)address, (u64)address_len); }
+LV2_SYSCALL lv2NetAccept(int socket, struct sockaddr* address, net_socklen_t* address_len) { return Lv2Syscall3(700, socket, (u64)address, (u64)address_len); }
 LV2_SYSCALL lv2NetBind(int socket, const struct sockaddr* address, net_socklen_t address_len) { return Lv2Syscall3(701, socket, (u64)address, address_len); }
 LV2_SYSCALL lv2NetConnect(int socket, const struct sockaddr* address, net_socklen_t address_len) { return Lv2Syscall3(702, socket, (u64)address, address_len); }
+LV2_SYSCALL lv2NetGetPeerName(int socket, struct sockaddr* address, net_socklen_t* address_len) { return Lv2Syscall3(703, socket, (u64)address, (u64)address_len); }
+LV2_SYSCALL lv2NetGetSockName(int socket, struct sockaddr* address, net_socklen_t* address_len) { return Lv2Syscall3(704, socket, (u64)address, (u64)address_len); }
 LV2_SYSCALL lv2NetListen(int socket, int backlog) { return Lv2Syscall2(706, socket, backlog); }
 LV2_SYSCALL lv2NetRecvFrom(int socket, void* buffer, size_t length, int flags,	struct sockaddr* address, net_socklen_t* address_len) { return Lv2Syscall6(707, socket, (u64)buffer, length, flags, (u64)address, (u64)address_len); }
 LV2_SYSCALL lv2NetSendTo(int socket, const void* message, size_t length, int flags, const struct sockaddr* dest_addr, net_socklen_t dest_len) { return Lv2Syscall6(710, socket, (u64)message, length, flags, (u64)dest_addr, dest_len); }

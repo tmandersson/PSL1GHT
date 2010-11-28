@@ -20,11 +20,12 @@
 #include "nv_shaders.h"
 #include "vshader.vcg.h"
 
+
+// Small matrix math library, these are not optimised at all.
 typedef struct
 {
        float data[4][4];
 } realityMatrix;
-
 
 realityMatrix realityMatrixMul(realityMatrix *left,realityMatrix *right)
 {
@@ -36,9 +37,9 @@ realityMatrix realityMatrixMul(realityMatrix *left,realityMatrix *right)
                for(col=0;col<4;++col)
                {
                        result.data[row][col]=left->data[row][0]*right->data[0][col]+
-											 left->data[row][1]*right->data[1][col]+
-											 left->data[row][2]*right->data[2][col]+
-											 left->data[row][3]*right->data[3][col];
+					     left->data[row][1]*right->data[1][col]+
+					     left->data[row][2]*right->data[2][col]+
+					     left->data[row][3]*right->data[3][col];
                }
        }
 
@@ -140,7 +141,6 @@ realityMatrix realityMatrixRotationZ(float angle)
 }
 
 int currentBuffer = 0;
-//realityTexture *ball; // Texture.
 
 u32 *tx_mem;
 u32 tx_offset;
@@ -149,6 +149,7 @@ Image dice;
 const struct _Vertex
 {
 	float x,y,z,w;
+	float a,r,g,b;
 	float u,v;
 } VertexBufferMain[]=
 {
@@ -226,6 +227,7 @@ void drawFrame(int buffer, long frame)
 	//shouldn't do attribute scan every frame but it's just a sample :)
 	positionAttr = realityVertexProgramGetInputAttribute((realityVertexProgram*)vshader_bin,"inputvertex.vertex");
 	textureAttr = realityVertexProgramGetInputAttribute((realityVertexProgram*)vshader_bin,"inputvertex.texcoord");
+
 
 	//Bind the memory array to the input attributes
 	//rsx requires the offset in his memory area

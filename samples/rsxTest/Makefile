@@ -35,7 +35,8 @@ VCGFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.vcg)))
 
 export OFILES	:=	$(CFILES:.c=.o) \
 					$(CXXFILES:.cpp=.o) \
-					$(SFILES:.S=.o)
+					$(SFILES:.S=.o) \
+					$(BINFILES:.bin=.bin.o)
 
 export BINFILES	:=	$(BINFILES:.bin=.bin.h)
 export VCGFILES	:=	$(VCGFILES:.vcg=.vcg.h)

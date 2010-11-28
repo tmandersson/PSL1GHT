@@ -10,7 +10,6 @@ INPUT(-lc)
 INPUT(-lpsl1ght)
 INPUT(-lc-glue-ppu)
 INPUT(-llv2)
-INPUT(-lnet)
 
 PHDRS
 {
@@ -133,7 +132,7 @@ SECTIONS
 		PROVIDE_HIDDEN (__preinit_array_start = .);
 		KEEP (*(.preinit_array))
 		PROVIDE_HIDDEN (__preinit_array_end = .);
-	}
+	} : hdr_data
 	.init_array     : {
 		PROVIDE_HIDDEN (__init_array_start = .);
 		KEEP (*(SORT(.init_array.*)))

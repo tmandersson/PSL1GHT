@@ -40,6 +40,10 @@ extern opd32 opd32_start[];
 
 typedef u32 mem_container_t;
 
+// 32bit types
+typedef u32 lv2_void;
+typedef u32 lv2_size_t;
+
 #ifdef __cplusplus
 #define EXTERN_BEGIN	extern "C" {
 #define EXTERN_END		}

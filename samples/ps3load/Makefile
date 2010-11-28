@@ -10,7 +10,7 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lzip -lz
+LIBS		:=	-lzip -lz -lnet -lsysmodule
 
 APPID		:=	PSL145310
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
@@ -34,7 +34,8 @@ BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
 
 export OFILES	:=	$(CFILES:.c=.o) \
 					$(CXXFILES:.cpp=.o) \
-					$(SFILES:.S=.o)
+					$(SFILES:.S=.o) \
+					$(BINFILES:.bin=.bin.o)
 
 export BINFILES	:=	$(BINFILES:.bin=.bin.h)
 

@@ -5,14 +5,14 @@
 
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCE		:=	../common
+SOURCE		:=	../common .
 INCLUDE		:=	. ../../include
 DATA		:=	data
 LIBS		:=	
 
-LD			:=	ppu-ld
+CFLAGS		:=	-g -O2 -std=gnu99
 
-CFLAGS		:=	-m32
+LD			:=	ppu-ld
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 
@@ -50,11 +50,11 @@ else
 
 DEPENDS	:= $(OFILES:.o=.d)
 
-$(OUTPUT).a: sprx.o
+$(OUTPUT).a: sprx.o socket.o init.o
 
 lib.o: lib.c
 	@echo "[CC]  $(notdir $<)"
-	@$(CC) $(DEPSOPTIONS) -S $(CFLAGS) $(INCLUDES) $< -o lib.S
+	@$(CC) $(DEPSOPTIONS) -S -m32 $(INCLUDES) $< -o lib.S
 	@$(CC) $(DEPSOPTIONS) -c lib.S -o $@
 
 sprx.o: stub.o lib.o

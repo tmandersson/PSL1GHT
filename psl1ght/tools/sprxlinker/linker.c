@@ -96,6 +96,7 @@ int main(int argc, const char* argv[])
 		return 1;
 	}
 
+	// Fill in the sprx stub counts
 	Elf_Scn* stubsection = GetSection(elf, ".lib.stub");
 	Elf_Data* stubdata = elf_getdata(stubsection, NULL);
 	Elf64_Shdr* stubshdr = elf64_getshdr(stubsection);
@@ -122,6 +123,7 @@ int main(int argc, const char* argv[])
 		}
 	}
 	
+	// Fill in the opd32 section
 	Elf_Scn* opdsection = GetSection(elf, ".opd");
 	Elf_Data* opddata = elf_getdata(opdsection, NULL);
 	Elf64_Shdr* opdshdr = elf64_getshdr(opdsection);
@@ -139,6 +141,14 @@ int main(int argc, const char* argv[])
 		if (write(fd, &opd32, sizeof(opd32)) != sizeof(opd32))
 			perror("sprxlinker");
 	}
+	
+	// Replace the entry point address with the 32bit opd
+	Elf64_Ehdr* ehdr = elf64_getehdr(elf);
+	Elf64_Addr entry = opd32shdr->sh_addr + (ehdr->e_entry - opdshdr->sh_addr) / sizeof(Opd64) * sizeof(Opd32);
+	lseek(fd, offsetof(Elf64_Ehdr, e_entry), SEEK_SET);
+	entry = BE64(entry);
+	if (write(fd, &entry, sizeof(entry)) != sizeof(entry))
+		perror("sprxlinker");
 
 	elf_end(elf);
 

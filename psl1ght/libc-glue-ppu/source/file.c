@@ -21,6 +21,11 @@ mode_t umask(mode_t cmask)
 	return mode;
 }
 
+// Allows us to link in libnet on demand, and still use standard IO
+#pragma weak closesocket
+#pragma weak send
+#pragma weak recv
+
 #define DEFAULT_FILE_MODE UMASK(S_IRWXU | S_IRWXG | S_IRWXO)
 int open(const char* path, int oflag, ...)
 {

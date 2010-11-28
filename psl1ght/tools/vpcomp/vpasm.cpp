@@ -747,16 +747,16 @@ _Instruction *ParseAsm(char *program,int *nInsts)
 			param[2]=ProcessSrc(token);
 
 			if(opcode->param1!=-1)
-				instruction.src[0]=param[opcode->param1];
+				instruction.src[0]=param[(int)opcode->param1];
 			else
 				instruction.src[0]=tmp;
 			if(opcode->param2!=-1)
-				instruction.src[1]=param[opcode->param2];
+				instruction.src[1]=param[(int)opcode->param2];
 			else
 				instruction.src[1]=tmp;
 			
 			if(opcode->param3!=-1)
-				instruction.src[2]=param[opcode->param3];
+				instruction.src[2]=param[(int)opcode->param3];
 			else
 				instruction.src[2]=tmp;
 			

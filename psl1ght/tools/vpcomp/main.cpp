@@ -162,10 +162,11 @@ int main(int argc,char **argv)
 		if(f==NULL)
 			fatal("Can't open input file");
 		fseek(f,0,SEEK_END);
-		int sz=ftell(f);
+		unsigned int sz=ftell(f);
 		fseek(f,0,SEEK_SET);
 		prg=(char*)malloc(sz);
-		fread(prg,sz,1,f);
+		if(fread(prg,sz,1,f) != sz)
+			fatal("The input file magically changed it's size on us");
 		fclose(f);
 	}
 

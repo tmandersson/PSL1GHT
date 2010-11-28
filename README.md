@@ -17,6 +17,7 @@ Credits
     Hermes      - sysmodule, libpngdec, libjpgdec
     BigBoss     - EyeToy support added to libcamera sample.
     ooPo        - ps3libraries
+    ElSemi	- Vertex Program Compiler
 
 
 Environment
@@ -32,7 +33,7 @@ a full newlib environment; at the moment only two toolchains do so:
 The SDK also includes a few standalone tools to help compilation. A host gcc
 is required to build raw2h, ps3load, and sprxlinker requires libelf. ps3load
 requires zlib installed. Python 2.x is required to run fself.py, sfo.py, and
-pkg.py.
+pkg.py. Nvidia's cg toolkit ([found here](http://developer.nvidia.com/object/cg_toolkit.html), or check your distro's repository) is reqired for compiling vertex programs.
 
 Most of the PSL1GHT samples included in the samples/ directory require various
 libraries from [ps3libraries](http://github.com/ooPo/ps3libraries) to be
@@ -60,9 +61,8 @@ Current Status
 
 ### Graphics
 
-Currently, PSL1GHT supports a double buffered framebuffer directly in the 
-RSX's memory for 2D graphical display.
-3D support is not currently implemented.
+PSL1GHT supports hardware acclerated 3d graphics. 
+Vertex shaders are a work in progress and Fragment shaders don't exsist yet.
 
 ### Input
 

@@ -149,7 +149,6 @@ Image dice;
 const struct _Vertex
 {
 	float x,y,z,w;
-	float a,r,g,b;
 	float u,v;
 } VertexBufferMain[]=
 {

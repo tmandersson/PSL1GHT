@@ -17,7 +17,7 @@ Credits
     Hermes      - sysmodule, libpngdec, libjpgdec
     BigBoss     - EyeToy support added to libcamera sample.
     ooPo        - ps3libraries
-    ElSemi	- Vertex Program Compiler
+    ElSemi      - Vertex Program Compiler
 
 
 Environment

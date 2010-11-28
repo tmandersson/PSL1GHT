@@ -1,4 +1,5 @@
 #include <psl1ght/lv2.h>
+#include <psl1ght/lv2/errno.h>
 #include <net/net.h>
 
 #include <stdlib.h>

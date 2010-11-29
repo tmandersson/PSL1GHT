@@ -101,9 +101,9 @@ s32 sys_ppu_thread_create(sys_ppu_thread_t * threadid, void (*entry) (u64 arg), 
 s32 sys_ppu_thread_get_id(sys_ppu_thread_t * threadid);
 void sys_ppu_thread_exit(u64 val);
 s32 sys_lwmutex_create(sys_lwmutex_t *lwmutex, const sys_lwmutex_attribute_t *lwmutex_attr);
-void sys_lwmutex_destroy(sys_lwmutex_t *lwmutex);
+s32 sys_lwmutex_destroy(sys_lwmutex_t *lwmutex);
 s32 sys_lwmutex_lock(sys_lwmutex_t *lwmutex, u64 timeout_usec);
 s32 sys_lwmutex_trylock(sys_lwmutex_t *lwmutex);
-void sys_lwmutex_unlock(sys_lwmutex_t *lwmutex);
+s32 sys_lwmutex_unlock(sys_lwmutex_t *lwmutex);
 
 EXTERN_END

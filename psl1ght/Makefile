@@ -14,6 +14,7 @@ all: $(STUBS)
 	@make -C tools/ps3load --no-print-directory
 	@make -C tools/sprxlinker --no-print-directory
 	@make -C tools/vpcomp --no-print-directory
+	@make -C tools/PS3Py --no-print-directory
 	@make -f Makefile.lib --no-print-directory
 	@make -C libc-glue-ppu --no-print-directory
 	@for dir in $(SPRXS) $(LIBS); do \
@@ -26,6 +27,7 @@ clean:
 	@make -C tools/ps3load clean --no-print-directory
 	@make -C tools/sprxlinker clean --no-print-directory
 	@make -C tools/vpcomp clean --no-print-directory
+	@make -C tools/PS3Py clean --no-print-directory
 	@make -f Makefile.lib clean --no-print-directory
 	@make -C libc-glue-ppu clean --no-print-directory
 	@for dir in $(SPRXS) $(LIBS); do \
@@ -44,6 +46,7 @@ install: all
 	@cp tools/PS3Py/sfo.xml $(PSL1GHT)/bin/
 	@cp tools/PS3Py/pkg.py $(PSL1GHT)/bin/
 	@cp tools/PS3Py/ICON0.PNG $(PSL1GHT)/bin/
+	@cp tools/PS3Py/pkgcrypt.so $(PSL1GHT)/bin/
 	@echo Installed to $(PSL1GHT)
 
 %.o: %.c

@@ -17,8 +17,7 @@ typedef struct sys_ppu_thread_stack_t {
 }sys_ppu_thread_stack_t;
 
 typedef struct sys_lwmutex_t {
-	u32 owner;
-	u32 waiter;
+	u64 lock_var;
 	u32 attribute;
 	u32 recursive_count;
 	u32 sleep_queue;

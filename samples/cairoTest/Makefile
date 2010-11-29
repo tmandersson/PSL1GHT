@@ -35,7 +35,8 @@ BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
 
 export OFILES	:=	$(CFILES:.c=.o) \
 					$(CXXFILES:.cpp=.o) \
-					$(SFILES:.S=.o)
+					$(SFILES:.S=.o) \
+					$(BINFILES:.bin=.bin.o)
 
 export BINFILES	:=	$(BINFILES:.bin=.bin.h)
 
@@ -43,7 +44,7 @@ export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 					-I$(CURDIR)/$(BUILD)
 export LIBPATHS :=      $(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir))
 
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean pkg run
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@

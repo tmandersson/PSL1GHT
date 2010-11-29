@@ -45,7 +45,7 @@ export VCGFILES	:=	$(VCGFILES:.vcg=.vcg.h)
 export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 					-I$(CURDIR)/$(BUILD)
 
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean pkg run
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@

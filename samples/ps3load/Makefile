@@ -43,7 +43,7 @@ export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 					-I$(CURDIR)/$(BUILD)
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir))
 
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean pkg run
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@

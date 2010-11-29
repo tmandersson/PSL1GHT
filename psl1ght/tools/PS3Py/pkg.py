@@ -225,9 +225,16 @@ def setContextNum(key, tmpnum):
 	key[0x3d] = ord(tmpchrs[5])
 	key[0x3e] = ord(tmpchrs[6])
 	key[0x3f] = ord(tmpchrs[7])
+
+import pkgcrypt
+
 def crypt(key, inbuf, length):
 	if not isinstance(key, list):
 		return ""
+	# Call our ultra fast c implemetation
+	return pkgcrypt.pkgcrypt(listToString(key), inbuf, length);
+
+	# Original python (slow) implementation
 	ret = ""
 	offset = 0
 	while length > 0:
@@ -245,6 +252,8 @@ def SHA1(data):
 	m = hashlib.sha1()
 	m.update(data)
 	return m.digest()
+
+pkgcrypt.register_sha1_callback(SHA1)
 	
 def listPkg(filename):
 	with open(filename, 'rb') as fp:

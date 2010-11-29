@@ -56,6 +56,14 @@ struct net_msghdr
 	s32				msg_flags;
 };
 
+struct net_hostent {
+	lv2_void h_name;
+	lv2_void h_aliases;
+	s32 h_addrtype;
+	s32 h_length;
+	lv2_void h_addr_list;
+};
+
 #define	NET_FD_SETSIZE	32
 //#define NBBY			8
 #define	NET_NFDBITS		(sizeof(net_fd_mask) * NBBY)
@@ -100,5 +108,8 @@ int netSocket(int domain, int type, int protocol);
 int netSocketPair(int domain, int type, int protocol, int socket_vector[2]);
 s32 netClose(int socket);
 s32 netGetSockInfo(s32 socket, netSocketInfo* p, s32 n);
+
+struct net_hostent* netGetHostByAddr(const char* addr, net_socklen_t len, int type);
+struct net_hostent* netGetHostByName(const char* name);
 
 EXTERN_END

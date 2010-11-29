@@ -254,4 +254,63 @@ int getpeername(int socket, struct sockaddr* address, socklen_t* address_len)
 	return ret;
 }
 
+#define MAX_HOST_NAMES 0x20
+static struct hostent host;
+static char* hostaliases[MAX_HOST_NAMES];
+static char* hostaddrlist[MAX_HOST_NAMES];
+static struct hostent* copyhost(struct net_hostent* nethost)
+{
+	if (!nethost)
+		return NULL;
 
+	memset(&host, 0, sizeof(host));
+	host.h_name = (char*)(u64)nethost->h_name;
+	host.h_addrtype = nethost->h_addrtype;
+	host.h_length = nethost->h_length;
+	host.h_aliases = hostaliases;
+	host.h_addr_list = hostaddrlist;
+
+	lv2_void* netaddrlist = (lv2_void*)(u64)nethost->h_addr_list;
+	lv2_void* netaliases = (lv2_void*)(u64)nethost->h_aliases;
+	for (int i = 0; i < MAX_HOST_NAMES; i++) {
+		host.h_addr_list[i] = (char*)(u64)netaddrlist[i];
+		if (!netaddrlist[i])
+			break;
+	}
+	for (int i = 0; i < MAX_HOST_NAMES; i++) {
+		host.h_aliases[i] = (char*)(u64)netaliases[i];
+		if (!netaliases[i])
+			break;
+	}
+
+	return &host;
+}
+struct hostent* gethostbyaddr(const char* addr, socklen_t len, int type)
+{
+	if (!LIBNET_INITIALIZED) {
+		errno = ENOSYS;
+		h_errno = TRY_AGAIN;
+		return NULL;
+	}
+
+	struct net_hostent* ret = netGetHostByAddr(addr, (net_socklen_t)len, type);
+	if (!ret)
+		h_errno = net_h_errno;
+
+	return copyhost(ret);
+}
+
+struct hostent* gethostbyname(const char* name)
+{
+	if (!LIBNET_INITIALIZED) {
+		errno = ENOSYS;
+		h_errno = TRY_AGAIN;
+		return NULL;
+	}
+
+	struct net_hostent* ret = netGetHostByName(name);
+	if (!ret)
+		h_errno = net_h_errno;
+
+	return copyhost(ret);
+}

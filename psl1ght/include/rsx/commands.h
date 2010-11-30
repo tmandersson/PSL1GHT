@@ -64,6 +64,7 @@ void realitySelectRenderTarget(gcmContextData *context, uint8_t target, uint32_t
 				uint16_t width, uint16_t height, uint16_t x, uint16_t y);
 
 void realityViewport(gcmContextData *context, uint16_t width, uint16_t height);
+void realityViewportClip(gcmContextData *context, u8 sel, uint16_t width, uint16_t height);
 void realityViewportTranslate(gcmContextData *context, float x, float y, float z, float w);
 void realityViewportScale(gcmContextData *context, float x, float y, float z, float w);
 
@@ -140,6 +141,10 @@ void realitySetTexture(gcmContextData *context, uint32_t unit, realityTexture *t
 void realityCullFace(gcmContextData *context, uint32_t face);
 void realityFrontFace(gcmContextData *context, uint32_t face);
 void realityCullEnable(gcmContextData *context, uint32_t enable);
+
+void realityAlphaFunc(gcmContextData *context, uint32_t func);
+void realityAlphaRef(gcmContextData *context, uint32_t ref);
+void realityAlphaEnable(gcmContextData *context, uint32_t enable);
 
 void realityBlendFunc(gcmContextData *context, uint32_t src, uint32_t dest);
 void realityBlendEquation(gcmContextData *context, uint32_t equation);

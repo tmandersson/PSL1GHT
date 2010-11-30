@@ -59,6 +59,11 @@ void realityViewport(gcmContextData *context, uint16_t width, uint16_t height) {
 	commandBufferPutCmd2(context, NV30_3D_VIEWPORT_HORIZ, width << 16, height << 16);
 }
 
+void realityViewportClip(gcmContextData *context, u8 sel, uint16_t width, uint16_t height) {
+    COMMAND_LENGTH(context, 3);
+	commandBufferPutCmd2(context, NV30_3D_VIEWPORT_CLIP_HORIZ(sel), (width-1) << 16, (height-1) << 16);
+}
+
 void realityVertexBegin(gcmContextData *context, uint32_t type) {
 	COMMAND_LENGTH(context, 2);
 	commandBufferPutCmd1(context, NV30_3D_VERTEX_BEGIN_END, type);
@@ -199,6 +204,21 @@ void realityFrontFace(gcmContextData *context, uint32_t face) {
 void realityCullEnable(gcmContextData *context, uint32_t enable) {
 	COMMAND_LENGTH(context, 2);
 	commandBufferPutCmd1(context, NV30_3D_CULL_FACE_ENABLE, enable);
+}
+
+void realityAlphaEnable(gcmContextData *context, uint32_t enable) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_ALPHA_FUNC_ENABLE, enable);
+}
+
+void realityAlphaRef(gcmContextData *context, uint32_t ref) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_ALPHA_FUNC_REF, ref);
+}
+
+void realityAlphaFunc(gcmContextData *context, uint32_t func) {
+	COMMAND_LENGTH(context, 2);
+	commandBufferPutCmd1(context, NV30_3D_ALPHA_FUNC_FUNC, func);
 }
 
 void realityBlendEnable(gcmContextData *context, uint32_t enable) {

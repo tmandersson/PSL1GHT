@@ -3,9 +3,9 @@
 static PyObject *sha1_callback = NULL;
 
 static void manipulate(uint8_t *key) {
-	/* We need to cast each byte to a 64 bit int so that gcc won't tuncate it
+	/* We need to cast each byte to a 64 bit int so that gcc won't truncate it
 	   down to a 32 bit in before shifting */
-	uint64_t temp = ((uint64_t) key[0x38]) << 56| 
+	uint64_t temp = ((uint64_t) key[0x38]) << 56|
 			((uint64_t) key[0x39]) << 48|
 			((uint64_t) key[0x3a]) << 40|
 			((uint64_t) key[0x3b]) << 32|

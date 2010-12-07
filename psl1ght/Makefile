@@ -49,7 +49,7 @@ install: all
 	@cp tools/PS3Py/sfo.xml $(PSL1GHT)/bin/
 	@cp tools/PS3Py/pkg.py $(PSL1GHT)/bin/
 	@cp tools/PS3Py/ICON0.PNG $(PSL1GHT)/bin/
-	@cp tools/PS3Py/pkgcrypt.so $(PSL1GHT)/bin/
+	@cp tools/PS3Py/pkgcrypt.* $(PSL1GHT)/bin/
 	@echo Installed to $(PSL1GHT)
 
 %.o: %.c

@@ -90,6 +90,23 @@ void realityTexCoord2f(gcmContextData *context, float s, float t) {
 				 ((ieee32) t).u);
 }
 
+void realityLoadVertexProgram_old(gcmContextData *context, realityVertexProgram_old *prog) {
+	int inst, command_size = prog->size * 2 + 7;
+	COMMAND_LENGTH(context, command_size);
+	
+	commandBufferPutCmd1(context, NV30_3D_VP_UPLOAD_FROM_ID, 0);
+	
+	for(inst = 0; inst < prog->size; inst += 4) {
+		commandBufferPutCmd4(context, NV30_3D_VP_UPLOAD_INST(inst), 
+					prog->data[inst + 0],
+					prog->data[inst + 1],
+					prog->data[inst + 2],
+					prog->data[inst + 3]);
+	}
+
+	commandBufferPutCmd1(context, NV30_3D_VP_START_FROM_ID, 0);
+	commandBufferPutCmd2(context, NV40_3D_VP_ATTRIB_EN, prog->in_reg, prog->out_reg);
+}
 
 void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *prog) {
 	int inst, command_size = prog->NumInsts * 5 + 7;

@@ -102,6 +102,12 @@ void realityDrawVertexBuffer(gcmContextData *context, uint32_t type, uint32_t st
 #define REALITY_INDEX_DATATYPE_U16	0x10
 void realityDrawVertexBufferIndex(gcmContextData *context, uint32_t type, uint32_t offset, uint32_t count, uint8_t dataType, uint8_t location);
 
+typedef struct {
+	uint32_t size;
+	uint32_t in_reg;
+	uint32_t out_reg;
+	uint32_t data[];
+} realityVertexProgram_old; 
 
 typedef struct {
 	uint32_t offset;
@@ -111,6 +117,7 @@ typedef struct {
 } realityFragmentProgram; 
 
 void realityLoadVertexProgram(gcmContextData *context, realityVertexProgram *prog);
+void realityLoadVertexProgram_old(gcmContextData *context, realityVertexProgram_old *prog);
 void realitySetVertexProgramConstant4f(gcmContextData *context, int constant, float values[4]);
 void realitySetVertexProgramConstant4fBlock(gcmContextData *context, int constant, int num4fConstants, float *values);
 void realityInstallFragmentProgram(gcmContextData *context, realityFragmentProgram *prog, uint32_t *addr);

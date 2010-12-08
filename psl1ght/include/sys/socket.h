@@ -93,6 +93,8 @@ struct linger
 
 #define SOCKET_FD_MASK	0x40000000
 
+#define SO_NBIO		0x1100
+
 EXTERN_BEGIN
 
 int accept(int socket, struct sockaddr* address, socklen_t* address_len);

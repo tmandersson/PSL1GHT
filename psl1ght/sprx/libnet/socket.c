@@ -314,3 +314,14 @@ struct hostent* gethostbyname(const char* name)
 
 	return copyhost(ret);
 }
+
+
+int setsockopt(int socket, int level, int option_name, const void* option_value, socklen_t option_len)
+{
+	if (!LIBNET_INITIALIZED) {
+		errno = ENOSYS;
+		h_errno = TRY_AGAIN;
+		return -1;
+	}
+	return netErrno(netSetSockOpt(FD(socket), level, option_name, option_value, option_len));
+}

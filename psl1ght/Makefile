@@ -15,7 +15,7 @@ all: $(STUBS)
 	@make -C tools/raw2h --no-print-directory
 	@make -C tools/ps3load --no-print-directory
 	@make -C tools/sprxlinker --no-print-directory
-	@if test -e $(CGINCLUDE); then @make -C tools/vpcomp --no-print-directory; fi
+	@if test -e $(CGINCLUDE); then make -C tools/vpcomp --no-print-directory; fi
 	@make -C tools/PS3Py --no-print-directory
 	@make -f Makefile.lib --no-print-directory
 	@make -C libc-glue-ppu --no-print-directory
@@ -28,7 +28,7 @@ clean:
 	@make -C tools/raw2h clean --no-print-directory
 	@make -C tools/ps3load clean --no-print-directory
 	@make -C tools/sprxlinker clean --no-print-directory
-	@if test -e $(CGINCLUDE); then @make -C tools/vpcomp clean --no-print-directory; fi
+	@if test -e $(CGINCLUDE); then make -C tools/vpcomp clean --no-print-directory; fi
 	@make -C tools/PS3Py clean --no-print-directory
 	@make -f Makefile.lib clean --no-print-directory
 	@make -C libc-glue-ppu clean --no-print-directory
@@ -42,7 +42,7 @@ install: all
 	@cp -r include $(PSL1GHT)/
 	@cp Makefile.base $(PSL1GHT)/
 	@cp tools/raw2h/raw2h tools/ps3load/ps3load tools/sprxlinker/sprxlinker $(PSL1GHT)/bin/
-	@if test -e $(CGINCLUDE); then @cp tools/vpcomp/vpcomp $(PSL1GHT)/bin/; fi
+	@if test -e $(CGINCLUDE); then cp tools/vpcomp/vpcomp $(PSL1GHT)/bin/; fi
 	@cp tools/PS3Py/fself.py $(PSL1GHT)/bin/
 	@cp tools/PS3Py/Struct.py $(PSL1GHT)/bin/
 	@cp tools/PS3Py/sfo.py $(PSL1GHT)/bin/

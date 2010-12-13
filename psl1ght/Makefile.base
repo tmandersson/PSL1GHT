@@ -17,10 +17,9 @@ SPRX		:= $(PSL1GHT)/bin/sprxlinker
 VPCOMP		:= $(PSL1GHT)/bin/vpcomp
 
 CFLAGS		:= -g \
-			   -I$(PSL1GHT)/include -I$(PS3DEV)/ppu/include
+			   -I$(PSL1GHT)/include -I$(PS3DEV)/host/ppu/include
 CXXFLAGS	:= $(CFLAGS)
-LDFLAGS		:= -T $(PSL1GHT)/lib/linker.x \
-			   -B$(PSL1GHT)/lib -B$(PS3DEV)/ppu/lib
+LDFLAGS		:= -B$(PSL1GHT)/lib -B$(PS3DEV)/host/ppu/lib
 
 DEPSOPTIONS	=	-MMD -MP -MF $(DEPSDIR)/$*.d
 

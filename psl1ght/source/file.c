@@ -2,8 +2,10 @@
 #include <psl1ght/lv2/tty.h>
 #include <psl1ght/lv2/errno.h>
 
-#include <errno.h>
+#include <sys/reent.h>
+#include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -12,6 +14,7 @@
 
 #include <sys/socket.h>
 
+// TODO: Probably should be thread-safe by mapping these to threads?
 #define UMASK(mode) ((mode) & ~glue_umask)
 static mode_t glue_umask = 0;
 mode_t umask(mode_t cmask)
@@ -27,9 +30,11 @@ mode_t umask(mode_t cmask)
 #pragma weak recv
 
 #define DEFAULT_FILE_MODE UMASK(S_IRWXU | S_IRWXG | S_IRWXO)
-int open(const char* path, int oflag, ...)
+int psl1ght_open_r(struct _reent* r, const char* path, int oflag, int mode)
 {
 	Lv2FsFile fd;
+
+	oflag |= mode;
 
 	int lv2flag = oflag & (O_ACCMODE | LV2_O_MSELF);
 	if (oflag & O_CREAT)
@@ -41,13 +46,13 @@ int open(const char* path, int oflag, ...)
 	if (oflag & O_APPEND)
 		lv2flag |= LV2_O_APPEND;
 
-	int mode = 0;
+	mode = 0;
 	if (oflag & O_WRONLY)
 		mode = DEFAULT_FILE_MODE;
 
 	int ret = lv2FsOpen(path, lv2flag, &fd, mode, NULL, 0);
 	if (ret)
-		return lv2Errno(ret);
+		return lv2ErrnoReentrant(r, ret);
 
 	if (oflag & O_CREAT)
 		lv2FsChmod(path, DEFAULT_FILE_MODE);
@@ -55,36 +60,41 @@ int open(const char* path, int oflag, ...)
 	return fd;
 }
 
-int fsync(int fd)
+int _open64_r(struct _reent* r, const char* file, int flags, int mode)
 {
-	return lv2Errno(lv2FsFsync(fd));
+	return psl1ght_open_r(r, file, flags, mode);
 }
 
-int truncate(const char* path, off_t length)
+int psl1ght_fsync_r(struct _reent* r, int fd)
 {
-	return lv2Errno(lv2FsTruncate(path, length));
+	return lv2ErrnoReentrant(r, lv2FsFsync(fd));
 }
 
-int ftruncate(int fd, off_t length)
+int _truncate_r(struct _reent* r, const char* path, off_t length)
 {
-	return lv2Errno(lv2FsFtruncate(fd, length));
+	return lv2ErrnoReentrant(r, lv2FsTruncate(path, length));
+}
+
+int psl1ght_ftruncate_r(struct _reent* r, int fd, off_t length)
+{
+	return lv2ErrnoReentrant(r, lv2FsFtruncate(fd, length));
 }
 
 int closesocket(int fd);
-int close(int fd)
+int psl1ght_close_r(struct _reent* r, int fd)
 {
 	if (fd & SOCKET_FD_MASK)
 		return closesocket(fd);
 
-	return lv2Errno(lv2FsClose(fd));
+	return lv2ErrnoReentrant(r, lv2FsClose(fd));
 }
 
-int unlink(const char* path)
+int psl1ght_unlink_r(struct _reent* r, const char* path)
 {
-	return lv2Errno(lv2FsUnlink(path));
+	return lv2ErrnoReentrant(r, lv2FsUnlink(path));
 }
 
-ssize_t write(int fd, const void* buffer, size_t size)
+ssize_t psl1ght_write_r(struct _reent* r, int fd, const void* buffer, size_t size)
 {
 	if (fd & SOCKET_FD_MASK)
 		return send(fd, buffer, size, 0);
@@ -98,11 +108,11 @@ ssize_t write(int fd, const void* buffer, size_t size)
 		ret = lv2FsWrite(fd, buffer, size, &written);
 
 	if (ret)
-		return lv2Errno(ret);
+		return lv2ErrnoReentrant(r, ret);
 	return written;
 }
 
-ssize_t read(int fd, void* buffer, size_t size)
+ssize_t psl1ght_read_r(struct _reent* r, int fd, void* buffer, size_t size)
 {
 	if (fd & SOCKET_FD_MASK)
 		return recv(fd, buffer, size, 0);
@@ -117,7 +127,7 @@ ssize_t read(int fd, void* buffer, size_t size)
 		ret = lv2FsRead(fd, buffer, size, &bytes);
 	
 	if (ret)
-		return lv2Errno(ret);
+		return lv2ErrnoReentrant(r, ret);
 	return bytes;
 }
 
@@ -134,59 +144,68 @@ static void convertLv2Stat(struct stat* st, Lv2FsStat* stat)
 	st->st_blksize = stat->st_blksize;
 }
 
-int fstat(int fd, struct stat* buf)
+int psl1ght_fstat_r(struct _reent* r, int fd, struct stat* buf)
 {
 	Lv2FsStat stat;
 	int ret = lv2FsFstat(fd, &stat);
 	if (!ret && buf)
 		convertLv2Stat(buf, &stat);
-	return lv2Errno(ret);
+	return lv2ErrnoReentrant(r, ret);
 }
 
-int stat(const char* path, struct stat* buf)
+int _fstat64_r(struct _reent* r, int fd, struct stat* buf)
+{
+	return psl1ght_fstat_r(r, fd, buf);
+}
+
+int _stat_r(struct _reent* r, const char* path, struct stat* buf)
 {
 	Lv2FsStat stat;
 	int ret = lv2FsStat(path, &stat);
 	if (!ret && buf)
 		convertLv2Stat(buf, &stat);
-	return lv2Errno(ret);
+	return lv2ErrnoReentrant(r, ret);
 }
 
-int mkdir(const char* path, mode_t mode)
+int _mkdir_r(struct _reent* r, const char* path, mode_t mode)
 {
-	return lv2Errno(lv2FsMkdir(path, UMASK(mode)));
+	return lv2ErrnoReentrant(r, lv2FsMkdir(path, UMASK(mode)));
 }
 
-int rmdir(const char* path)
+int _rmdir_r(struct _reent* r, const char* path)
 {
-	return lv2Errno(lv2FsRmdir(path));
+	return lv2ErrnoReentrant(r, lv2FsRmdir(path));
 }
 
-/* Newlib already implements this? How?
-int rename(const char* old, const char* new)
+int _rename_r(struct _reent* r, const char* old, const char* new)
 {
-	return lv2Errno(lv2FsRename(old, new));
+	return lv2ErrnoReentrant(r, lv2FsRename(old, new));
 }
-*/
 
-int link(const char* old, const char* new)
+
+int _link_r(struct _reent* r, const char* old, const char* new)
 {
-	errno = ENOSYS;
+	r->_errno = ENOSYS;
 	return -1;
 }
 
-off_t lseek(int fd, off_t offset, int whence)
+off_t psl1ght_lseek_r(struct _reent* r, int fd, off_t offset, int whence)
 {
 	u64 position;
 	int ret = lv2FsLSeek64(fd, offset, whence, &position);
 	if (ret)
-		return (off_t)lv2Errno(ret);
+		return (off_t)lv2ErrnoReentrant(r, ret);
 	return position;
 }
 
-int utime(const char* path, const struct utimbuf* times)
+off_t _lseek64_r(struct _reent* r, int fd, off_t offset, int whence)
 {
-	return lv2Errno(lv2FsUtime(path, (const Lv2FsUtimbuf*)times));
+	return psl1ght_lseek_r(r, fd, offset, whence);
+}
+
+int _utime_r(struct _reent* r, const char* path, const struct utimbuf* times)
+{
+	return lv2ErrnoReentrant(r, lv2FsUtime(path, (const Lv2FsUtimbuf*)times));
 }
 
 int isatty(int fd)
@@ -197,7 +216,7 @@ int isatty(int fd)
 	return 0;
 }
 
-int chmod(const char* path, mode_t mode)
+int psl1ght_chmod_r(struct _reent* r, const char* path, mode_t mode)
 {
-	return lv2Errno(lv2FsChmod(path, mode));
+	return lv2ErrnoReentrant(r, lv2FsChmod(path, mode));
 }

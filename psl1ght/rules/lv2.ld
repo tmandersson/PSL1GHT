@@ -3,12 +3,10 @@ OUTPUT_ARCH(powerpc:common64)
 
 ENTRY(_start)
 
-SEARCH_DIR($PSL1GHT/lib)
-
-INPUT(-lc-glue-ppu)
-INPUT(-lc)
+SEARCH_DIR("=/lib")
+SEARCH_DIR("$PSL1GHT/lib")
+INPUT("lv2-psl1ght.o")
 INPUT(-lpsl1ght)
-INPUT(-lc-glue-ppu)
 INPUT(-llv2)
 
 PHDRS

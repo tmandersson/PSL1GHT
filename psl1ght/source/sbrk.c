@@ -1,5 +1,7 @@
 #include <psl1ght/lv2.h>
 
+#include <sys/reent.h>
+#include <sys/types.h>
 #include <stddef.h>
 #include <errno.h>
 
@@ -17,7 +19,7 @@
 // Here's a very lazy and lossy sbrk. It's made of fail, but I'm lazy.
 char* memend = 0;
 char* pageend = 0;
-void* sbrk(long increment)
+caddr_t psl1ght_sbrk_r(struct _reent* r, ptrdiff_t increment)
 {
 	if (increment == 0)
 		return memend;
@@ -31,7 +33,7 @@ void* sbrk(long increment)
 	size_t allocsize = ROUND_UP(increment, PAGE_SIZE);
 	u32 taddr;
 	if (Lv2Syscall3(348, allocsize, PAGE_SIZE_FLAG, (u64)&taddr)) {
-		errno = ENOMEM;
+		r->_errno = ENOMEM;
 		return (void*)-1;
 	}
 	char* addr = (char*)(u64)taddr;

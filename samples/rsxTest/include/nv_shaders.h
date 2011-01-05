@@ -3,6 +3,19 @@
 
 #include <rsx/commands.h>
 
+static realityVertexProgram_old nv40_vp = {
+	.in_reg  = 0x00000309,
+	.out_reg = 0x0000c001,
+	.size = (3*4),
+	.data = {
+		/* MOV result.position, vertex.position */
+		0x40041c6c, 0x0040000d, 0x8106c083, 0x6041ff80,
+		/* MOV result.texcoord[0], vertex.texcoord[0] */
+		0x401f9c6c, 0x0040080d, 0x8106c083, 0x6041ff9c,
+		/* MOV result.texcoord[1], vertex.texcoord[1] */
+		0x401f9c6c, 0x0040090d, 0x8106c083, 0x6041ffa1,
+	}
+};
 
 /*******************************************************************************
  * NV30/NV40/G70 fragment shaders

@@ -89,11 +89,11 @@ struct linger
 #define PF_INET			AF_INET
 #define PF_INET6		AF_INET6
 
-#define ESHUTDOWN		110
+#define ESHUTDOWN				110
+#define NET_EINPROGRESS 	36
 
 #define SOCKET_FD_MASK	0x40000000
 
-#define SO_NBIO		0x1100
 
 EXTERN_BEGIN
 
@@ -102,8 +102,7 @@ int bind(int socket, const struct sockaddr* address, socklen_t address_len);
 int connect(int socket, const struct sockaddr* address, socklen_t address_len);
 int getpeername(int socket, struct sockaddr* address, socklen_t* address_len);
 int getsockname(int socket, struct sockaddr* address, socklen_t* address_len);
-int getsockopt(int socket, int level, int option_name, void* option_value,
-		socklen_t* option_len);
+int getsockopt(int socket, int level, int option_name, void* option_value, socklen_t* option_len);
 int listen(int socket, int backlog);
 ssize_t recv(int socket, void* buffer, size_t length, int flags);
 ssize_t recvfrom(int socket, void* buffer, size_t length, int flags,

@@ -18,4 +18,4 @@ LV2_SYSCALL lv2NetShutdown(int socket, int how) { return Lv2Syscall2(712, socket
 LV2_SYSCALL lv2NetSocket(int domain, int type, int protocol) { return Lv2Syscall3(713, domain, type, protocol); }
 LV2_SYSCALL lv2NetClose(int socket) { return Lv2Syscall1(714, socket); }
 //LV2_SYSCALL lv2NetPoll(struct pollfd fds[], nfds_t nfds, int timeout) { return Lv2Syscall3(715, (u64)fds, nfds, timeout); }
-LV2_SYSCALL lv2NetSelect(int nfds, net_fd_set* readfds, net_fd_set* writefds, net_fd_set* errorfds, struct timeval* timeout) { return Lv2Syscall5(716, nfds, (u64)readfds, (u64)writefds, (u64)errorfds, (u64)timeout); }
+LV2_SYSCALL lv2NetSelect(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct timeval_32* timeout) { return Lv2Syscall5(716, nfds, (u64)readfds, (u64)writefds, (u64)errorfds, (u64)timeout); }

@@ -27,6 +27,8 @@ typedef enum
 	
 	SYSMODULE_CAM = 0x23,
 	
+	SYSMODULE_MOVE = 0x5a,
+	
 } id_module;
 
 int SysLoadModule(id_module id);

@@ -113,7 +113,7 @@ s32 sys_lwmutex_lock(sys_lwmutex_t *lwmutex, u64 timeout_usec);
 s32 sys_lwmutex_trylock(sys_lwmutex_t *lwmutex);
 s32 sys_lwmutex_unlock(sys_lwmutex_t *lwmutex);
 
-typedef u64 sys_event_queue_t;
+typedef u32 sys_event_queue_t;
 typedef struct sys_event_t {
 	u64 source, data_1, data_2, data_3;
 } sys_event_t;

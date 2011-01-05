@@ -29,3 +29,9 @@ LV2_SYSCALL lv2SemaphoreDestroy(sys_semaphore_t semaid) { return Lv2Syscall1(91,
 LV2_SYSCALL lv2SemaphoreWait(sys_semaphore_t semaid, u64 timeout_usec) { return Lv2Syscall2(92, semaid, timeout_usec); }
 LV2_SYSCALL lv2SemaphoreTrywait(sys_semaphore_t semaid) { return Lv2Syscall1(93, semaid); }
 LV2_SYSCALL lv2SemaphorePost(sys_semaphore_t semaid, s32 count) { return Lv2Syscall2(94, semaid, count); }
+LV2_SYSCALL lv2SemaphoreGetValue(sys_semaphore_t semaid, s32 *count) { return Lv2Syscall2(114, semaid, (u64)count); }
+
+LV2_SYSCALL lv2QEventDestroy(sys_event_queue_t eveid, s32 mode) { return Lv2Syscall2(129, eveid, mode); }
+LV2_SYSCALL lv2QEventRcv(sys_event_queue_t eveid, sys_event_t * sysev, s32 timeout_usec) { return Lv2Syscall3(130, eveid, (u64)sysev, timeout_usec); }
+LV2_SYSCALL lv2QEventDrain(sys_event_queue_t eveid) { return Lv2Syscall1(133, eveid); }
+

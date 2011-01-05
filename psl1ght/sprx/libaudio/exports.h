@@ -6,7 +6,7 @@ EXPORT(audioPortStart, 0x89be28f2);
 EXPORT(audioQuit, 0xca5ac370);
 EXPORT(audioPortOpen, 0xcd7bc431);
 EXPORT(audioSetPortLevel, 0x56dfe179);
-EXPORT(audioCreateNotifyEventQueue, 0x2073b7f6);
+EXPORT(audioCreateNotifyEventQueue, 0x4e13af04);
 EXPORT(audioMiscSetAccessoryVolume, 0x31211f6b);
 EXPORT(audioSetNotifyEventQueue, 0x377e0cd9);
 EXPORT(audioGetPortTimestamp, 0x4109d08c);

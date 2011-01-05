@@ -1,6 +1,7 @@
 #pragma once
 
 #include <psl1ght/types.h>
+#include <sys/thread.h>
 
 EXTERN_BEGIN
 
@@ -40,5 +41,8 @@ int audioPortStop(u32 portNum);
 int audioGetPortConfig(u32 portNum, AudioPortConfig *portConfig);
 int audioPortClose(u32 portNum);
 int audioQuit(void);
+int audioCreateNotifyEventQueue(sys_event_queue_t * queue_id, u64 * queue_key);
+int audioSetNotifyEventQueue( u64 queue_key);
+int audioRemoveNotifyEventQueue( u64 queue_key);
 
 EXTERN_END

@@ -132,3 +132,23 @@ s32 sys_semaphore_post(sys_semaphore_t semaid, s32 count)
 {
 	return lv2SemaphorePost(semaid, count);
 }
+
+s32 sys_semaphore_get_value(sys_semaphore_t semaid, s32 * count)
+{
+	return lv2SemaphoreGetValue(semaid, count);
+}
+
+s32 sys_event_queue_destroy(sys_event_queue_t eveid, s32 mode)
+{
+	return lv2QEventDestroy(eveid, mode);
+}
+s32 sys_event_queue_receive(sys_event_queue_t eveid, sys_event_t * event, u64 timeout_usec)
+{
+	return lv2QEventRcv(eveid, event, timeout_usec);
+}
+
+s32 sys_event_queue_drain(sys_event_queue_t eveid)
+{
+	return lv2QEventDrain(eveid);
+}
+

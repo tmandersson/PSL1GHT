@@ -10,14 +10,14 @@ BUILD		:=	build
 SOURCE		:=	source
 INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	-lgcm_sys -lreality -lsysutil -lio -lpng -lz -lm
+LIBS		:=	
 
 TITLE		:=	Template - PSL1GHT
 APPID		:=	TEST00003
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
-CFLAGS		+= -O2 -Wall --std=gnu99
-CXXFLAGS	+= -O2 -Wall
+CFLAGS		+= -g -O2 -Wall --std=gnu99
+CXXFLAGS	+= -g -O2 -Wall
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 
@@ -31,16 +31,13 @@ CFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.c)))
 CXXFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.S)))
 BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
-VCGFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.vcg)))
 
 export OFILES	:=	$(CFILES:.c=.o) \
 					$(CXXFILES:.cpp=.o) \
 					$(SFILES:.S=.o) \
-					$(BINFILES:.bin=.bin.o) \
-					$(VCGFILES:.vcg=.vcg.o)
+					$(BINFILES:.bin=.bin.o)
 
 export BINFILES	:=	$(BINFILES:.bin=.bin.h)
-export VCGFILES	:=	$(VCGFILES:.vcg=.vcg.h)
 
 export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 					-I$(CURDIR)/$(BUILD)
@@ -73,7 +70,7 @@ DEPENDS	:= $(OFILES:.o=.d)
 
 $(OUTPUT).self: $(OUTPUT).elf
 $(OUTPUT).elf: $(OFILES)
-$(OFILES): $(BINFILES) $(VCGFILES)
+$(OFILES): $(BINFILES)
 
 -include $(DEPENDS)
 

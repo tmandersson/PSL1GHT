@@ -163,55 +163,15 @@ int closesocket(int socket)
 	return netErrno(ret);
 }
 
-int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct timeval* timeout)
+int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* errorfds, struct timeval_32* timeout)
 {
-	net_fd_set* net_readfds = NULL;
-	net_fd_set* net_writefds = NULL;
-	net_fd_set* net_errorfds = NULL;
-
-	size_t fdsize = sizeof(fd_set) * nfds;
-
-#define COPY_NFDS(dest, src, num) { \
-	for (size_t i = 0; i < num; i++) { \
-		for (size_t j = 0; j < (sizeof(src[i].fds_bits) / sizeof(src[i].fds_bits[0])); j++) \
-			dest[i].fds_bits[j] = src[i].fds_bits[j]; \
-	} \
-}
-
-	if (readfds) {
-		net_readfds = (net_fd_set*)malloc(fdsize);
-		COPY_NFDS(net_readfds, readfds, nfds);
-	}
-	if (writefds) {
-		net_writefds = (net_fd_set*)malloc(fdsize);
-		COPY_NFDS(net_writefds, writefds, nfds);
-	}
-	if (errorfds) {
-		net_errorfds = (net_fd_set*)malloc(fdsize);
-		COPY_NFDS(net_errorfds, errorfds, nfds);
-	}
-
 	s32 ret;
-	if (LIBNET_INITIALIZED)
-		ret = netSelect(nfds, net_readfds, net_writefds, net_errorfds, timeout);
+	if (LIBNET_INITIALIZED){
+		ret = netSelect(nfds, readfds, writefds, errorfds, timeout);
+		printf("netSelect(%d) = %08X\n", nfds, ret);
+	}
 	else
-		ret = lv2NetSelect(nfds, net_readfds, net_writefds, net_errorfds, timeout);
-
-	if (net_readfds) {
-		if (ret >= 0)
-			COPY_NFDS(readfds, net_readfds, nfds);
-		free(net_readfds);
-	}
-	if (net_writefds) {
-		if (ret >= 0)
-			COPY_NFDS(writefds, net_writefds, nfds);
-		free(net_writefds);
-	}
-	if (net_errorfds) {
-		if (ret >= 0)
-			COPY_NFDS(errorfds, net_errorfds, nfds);
-		free(net_errorfds);
-	}
+		ret = lv2NetSelect(nfds, readfds, writefds, errorfds, timeout);
 
 	return netErrno(ret);
 }
@@ -315,6 +275,15 @@ struct hostent* gethostbyname(const char* name)
 	return copyhost(ret);
 }
 
+int getsockopt(int socket, int level, int option_name, void* option_value, socklen_t* option_len)
+{
+	if (!LIBNET_INITIALIZED) {
+		errno = ENOSYS;
+		h_errno = TRY_AGAIN;
+		return -1;
+	}
+	return netErrno(netGetSockOpt(FD(socket), level, option_name, option_value, option_len));
+}
 
 int setsockopt(int socket, int level, int option_name, const void* option_value, socklen_t option_len)
 {

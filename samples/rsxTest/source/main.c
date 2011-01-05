@@ -18,7 +18,7 @@
 #include "texture.h"
 #include "rsxutil.h"
 #include "nv_shaders.h"
-#include "vprogram.vcg.h"
+#include "sysutil/events.h"
 
 int currentBuffer = 0;
 //realityTexture *ball; // Texture.
@@ -61,7 +61,7 @@ void drawFrame(int buffer, long frame) {
 				     REALITY_CLEAR_BUFFERS_DEPTH);
 
 	// Load shaders, because the rsx won't do anything without them.
-	realityLoadVertexProgram(context, (realityVertexProgram*)&vprogram_bin);
+	realityLoadVertexProgram_old(context, &nv40_vp);
 	realityLoadFragmentProgram(context, &nv30_fp); 
 
 	// Load texture
@@ -85,14 +85,36 @@ void drawFrame(int buffer, long frame) {
 	realityVertexEnd(context);
 }
 
+static void eventHandle(u64 status, u64 param, void * userdata) {
+    (void)param;
+    (void)userdata;
+	if(status == EVENT_REQUEST_EXITAPP){
+		printf("Quit game requested\n");
+		exit(0);
+	}else if(status == EVENT_MENU_OPEN){
+		//xmb opened, should prob pause game or something :P
+	}else if(status == EVENT_MENU_CLOSE){
+		//xmb closed, and then resume
+	}else if(status == EVENT_DRAWING_BEGIN){
+	}else if(status == EVENT_DRAWING_END){
+	}else{
+		printf("Unhandled event: %08llX\n", (unsigned long long int)status);
+	}
+}
+void appCleanup(){
+	sysUnregisterCallback(EVENT_SLOT0);
+	printf("Exiting for real.\n");
+}
 s32 main(s32 argc, const char* argv[])
 {
 	PadInfo padinfo;
 	PadData paddata;
 	int i;
 	
+	atexit(appCleanup);
 	init_screen();
 	ioPadInit(7);
+	sysRegisterCallback(EVENT_SLOT0, eventHandle, NULL);
 
 	// Load texture
 	dice = loadPng(dice_bin);
@@ -115,7 +137,7 @@ s32 main(s32 argc, const char* argv[])
 			if(padinfo.status[i]){
 				ioPadGetData(i, &paddata);
 				
-				if(paddata.BTN_CROSS){
+				if(paddata.BTN_CROSS || paddata.BTN_START){
 					return 0;
 				}
 			}
@@ -126,6 +148,7 @@ s32 main(s32 argc, const char* argv[])
 		drawFrame(currentBuffer, frame++); // Draw into the unused buffer
 		flip(currentBuffer); // Flip buffer onto screen
 		currentBuffer = !currentBuffer;
+		sysCheckCallback();
 
 	}
 	

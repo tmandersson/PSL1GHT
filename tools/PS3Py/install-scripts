@@ -9,5 +9,5 @@ done
 for file; do
   basefile=`basename "$file"`
   sed -e '1s!python.*!'"$python"'!' < "$file" > "$target"/"$basefile"
-  chmod +x "$target"/"$basefile"
+  test -x "$file" && chmod +x "$target"/"$basefile"
 done

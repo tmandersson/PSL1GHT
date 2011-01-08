@@ -18,7 +18,7 @@
 
 // for msgdialogs
 #include "sysutil/events.h"
-#include "sysutil/msgdialog.h"
+#include "io/msg.h"
 
 int currentBuffer = 0;
 
@@ -36,7 +36,7 @@ void my_flip()
 
 volatile int dialog_action = 0;
 
-void my_dialog(msgbutton button, void *userdata)
+void my_dialog(msgButton button, void *userdata)
 {
     switch(button) {
 
@@ -64,8 +64,8 @@ void dialog()
 
 // error code message
 
-    MsgDialogErrorCode(0xBEBACAFE, my_dialog, (void *) 0xEEEE0001, NULL);
-    MsgDialogDelayedClose(3000.0f); // 3 seconds
+    msgDialogErrorCode(0xBEBACAFE, my_dialog, (void *) 0xEEEE0001, NULL);
+    msgDialogDelayedClose(3000.0f); // 3 seconds
 
     dialog_action = 0;
     while(dialog_action!=-1)
@@ -73,13 +73,13 @@ void dialog()
 		sysCheckCallback();my_flip();
 		}
 
-    MsgDialogClose();
+    msgDialogClose();
 
 // yes/no message
 
-    msgtype mdialogyesno = MSGDIALOG_NORMAL | MSGDIALOG_BUTTON_TYPE_YESNO | MSGDIALOG_DISABLE_CANCEL_ON | MSGDIALOG_DEFAULT_CURSOR_NO;
+    msgType mdialogyesno = MSGDIALOG_NORMAL | MSGDIALOG_BUTTON_TYPE_YESNO | MSGDIALOG_DISABLE_CANCEL_ON | MSGDIALOG_DEFAULT_CURSOR_NO;
 
-    MsgDialogOpen(mdialogyesno, "Hey!!\nYou are Happy?", my_dialog, (void *) 0x11110001, NULL);
+    msgDialogOpen(mdialogyesno, "Hey!!\nYou are Happy?", my_dialog, (void *) 0x11110001, NULL);
 
     dialog_action = 0;
     while(!dialog_action)
@@ -87,18 +87,18 @@ void dialog()
 		sysCheckCallback();my_flip();
 		}
 
-    MsgDialogClose();
+    msgDialogClose();
 
     response = dialog_action;
 
 // OK message
 
-    msgtype mdialogok = MSGDIALOG_NORMAL | MSGDIALOG_BUTTON_TYPE_OK;
+    msgType mdialogok = MSGDIALOG_NORMAL | MSGDIALOG_BUTTON_TYPE_OK;
     
     if(response == 1)
-        MsgDialogOpen(mdialogok, "I'm glad you're happy :)\nMerry Christmas!!!", my_dialog, (void *) 0x22220001, NULL);
+        msgDialogOpen(mdialogok, "I'm glad you're happy :)\nMerry Christmas!!!", my_dialog, (void *) 0x22220001, NULL);
     else
-        MsgDialogOpen(mdialogok, "Ok, but removes your vinegar face :p\nIt's Christmas!!!", my_dialog, (void *) 0x22220002, NULL);
+        msgDialogOpen(mdialogok, "Ok, but removes your vinegar face :p\nIt's Christmas!!!", my_dialog, (void *) 0x22220002, NULL);
 
     dialog_action = 0;
     while(!dialog_action)
@@ -106,28 +106,28 @@ void dialog()
 		sysCheckCallback();my_flip();
 		}
 
-    MsgDialogClose();
+    msgDialogClose();
 
 // Single Progress bar 
 
-    msgtype mdialogprogress = MSGDIALOG_SINGLE_PROGRESSBAR;
+    msgType mdialogprogress = MSGDIALOG_SINGLE_PROGRESSBAR;
     
     happypercent = 0;
 
-    MsgDialogOpen(mdialogprogress, "Recharging happiness batteries...", my_dialog, (void *) 0x33330001, NULL);
-    MsgDialogProgressBarMessage(PROGRESSBAR_INDEX0, "You're Happy");
-    MsgDialogResetProgressBar(PROGRESSBAR_INDEX0);
+    msgDialogOpen(mdialogprogress, "Recharging happiness batteries...", my_dialog, (void *) 0x33330001, NULL);
+    msgDialogProgressBarMessage(PROGRESSBAR_INDEX0, "You're Happy");
+    msgDialogResetProgressBar(PROGRESSBAR_INDEX0);
    
     dialog_action = 0;
     while(!dialog_action)
 		{
-        MsgDialogIncProgressBar(PROGRESSBAR_INDEX0, happypercent);
+        msgDialogIncProgressBar(PROGRESSBAR_INDEX0, happypercent);
 		sysCheckCallback();my_flip();
         if(happypercent < 100) happypercent++;
         usleep(100*1000);
 		}
 
-    MsgDialogClose();
+    msgDialogClose();
 
 // Double Progress bar 
 
@@ -135,29 +135,29 @@ void dialog()
     
     moneypercent = 0;
 
-    MsgDialogOpen(mdialogprogress, "Recharging Virtual money...", my_dialog, (void *) 0x33330002, NULL);
-    MsgDialogProgressBarMessage(PROGRESSBAR_INDEX0, "You're Happy");
-    MsgDialogResetProgressBar(PROGRESSBAR_INDEX0);
-    MsgDialogProgressBarMessage(PROGRESSBAR_INDEX1, "Virtual money");
-    MsgDialogResetProgressBar(PROGRESSBAR_INDEX1);
+    msgDialogOpen(mdialogprogress, "Recharging Virtual money...", my_dialog, (void *) 0x33330002, NULL);
+    msgDialogProgressBarMessage(PROGRESSBAR_INDEX0, "You're Happy");
+    msgDialogResetProgressBar(PROGRESSBAR_INDEX0);
+    msgDialogProgressBarMessage(PROGRESSBAR_INDEX1, "Virtual money");
+    msgDialogResetProgressBar(PROGRESSBAR_INDEX1);
    
     dialog_action = 0;
     while(!dialog_action)
 		{
-        MsgDialogIncProgressBar(PROGRESSBAR_INDEX0, happypercent);
-        MsgDialogIncProgressBar(PROGRESSBAR_INDEX1, moneypercent);
+        msgDialogIncProgressBar(PROGRESSBAR_INDEX0, happypercent);
+        msgDialogIncProgressBar(PROGRESSBAR_INDEX1, moneypercent);
 		sysCheckCallback();my_flip();
         if(happypercent < 100) happypercent++;
         if(moneypercent < 100) moneypercent++;
         usleep(100*1000);
 		}
 
-    MsgDialogClose();
+    msgDialogClose();
 
 // OK with delay time 
 
-    MsgDialogOpen(mdialogok, "Congratulations!!!\nYou are now happy and you have virtual money :p", my_dialog, (void *) 0x22220003, NULL);
-    MsgDialogDelayedClose(3000.0f); // 3 seconds
+    msgDialogOpen(mdialogok, "Congratulations!!!\nYou are now happy and you have virtual money :p", my_dialog, (void *) 0x22220003, NULL);
+    msgDialogDelayedClose(3000.0f); // 3 seconds
 
     dialog_action = 0;
     while(!dialog_action)
@@ -165,12 +165,12 @@ void dialog()
 		sysCheckCallback();my_flip();
 		}
 
-    MsgDialogClose();
+    msgDialogClose();
 
 // OK with delay time 
 
-    MsgDialogOpen(mdialogok, "Good bye!!", my_dialog, (void *) 0x22220004, NULL);
-    MsgDialogDelayedClose(2000.0f); // 2 seconds
+    msgDialogOpen(mdialogok, "Good bye!!", my_dialog, (void *) 0x22220004, NULL);
+    msgDialogDelayedClose(2000.0f); // 2 seconds
 
     dialog_action = 0;
     while(!dialog_action)
@@ -178,7 +178,7 @@ void dialog()
 		sysCheckCallback();my_flip();
 		}
 
-     MsgDialogClose();
+     msgDialogClose();
     
 }
 

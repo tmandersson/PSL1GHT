@@ -14,7 +14,7 @@ int main(uint64_t ea, uint64_t outptr, uint64_t arg3, uint64_t arg4)
 	spu_mfcstat(MFC_TAG_UPDATE_ALL);
 
 	/* compare all characters with the small 'a' character code */
-	vec_uchar16 cmp = spu_cmpgt(v, spu_splats((unsigned char)'a'-1));
+	vec_uchar16 cmp = spu_cmpgt(v, spu_splats((unsigned char)('a'-1)));
 
 	/* for all small characters, we remove 0x20 to get the corresponding capital*/
 	vec_uchar16 sub = spu_splats((unsigned char)0x20) & cmp;

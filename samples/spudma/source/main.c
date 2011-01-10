@@ -61,11 +61,6 @@ int main(int argc, const char* argv[])
 	printf("Waiting for SPU to return...\n");
 	while (ret == 0);
 
-
-
-	printf("Terminating SPU thread group... ");
-	printf("%08x\n", lv2SpuThreadGroupTerminate(group_id, 42));
-
 	printf("Joining SPU thread group... ");
 	printf("%08x\n", lv2SpuThreadGroupJoin(group_id, &cause, &status));
 	printf("cause=%d status=%d\n", cause, status);

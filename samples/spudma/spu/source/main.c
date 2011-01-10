@@ -3,6 +3,8 @@
 
 #define TAG 1
 
+extern void spu_thread_exit(uint32_t);
+
 /* wait for dma transfer to be finished */
 static void wait_for_completion(void) {
 	mfc_write_tag_mask(1<<TAG);
@@ -23,6 +25,8 @@ int main(uint64_t ea, uint64_t outptr, uint64_t arg3, uint64_t arg4)
 
 	/* for all small characters, we remove 0x20 to get the corresponding capital*/
 	vec_uchar16 sub = spu_splats((unsigned char)0x20) & cmp;
+
+	/* convert all small characters to capitals */
 	v = v - sub;
 
 	/* send the updated vector to ppe */
@@ -34,5 +38,7 @@ int main(uint64_t ea, uint64_t outptr, uint64_t arg3, uint64_t arg4)
 	mfc_put(&ok, outptr, 4, TAG, 0, 0);
 	wait_for_completion();
 
+	/* properly exit the thread */
+	spu_thread_exit(0);
 	return 0;
 }

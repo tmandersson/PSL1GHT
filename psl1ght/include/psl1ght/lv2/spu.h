@@ -93,12 +93,15 @@ LV2_SYSCALL lv2SpuThreadGroupDisconnectEventAllThreads(u32 group, u8 spup) { ret
 #define Prxy_QueryType				0x00003204
 #define Prxy_QueryMask				0x0000321C
 #define Prxy_TagStatus				0x0000322C
+#define SPU_Out_Intr_MBox			0x00004000
 #define SPU_Out_MBox				0x00004004
 #define SPU_In_MBox					0x0000400C
 #define SPU_MBox_Status				0x00004014
 #define SPU_RunCntl					0x0000401C
 #define SPU_Status					0x00004024
 #define SPU_NPC						0x00004034
+#define SPU_Sig_Notify_1			0x0001400C
+#define SPU_Sig_Notify_2			0x0001C00C
 
 #define LV2_SPU_RAW_GET_BASE_OFFSET(spu) \
 	(LV2_SPU_RAW_BASE + LV2_SPU_RAW_OFFSET * (spu))

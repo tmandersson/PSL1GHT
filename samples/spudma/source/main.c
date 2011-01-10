@@ -20,11 +20,11 @@ int main(int argc, const char* argv[])
 	u32 group_id;
 	Lv2SpuThreadAttributes attr = { ptr2ea("mythread"), 8+1, LV2_SPU_THREAD_ATTRIBUTE_NONE };
 	Lv2SpuThreadArguments arg = { 0, 0, 0, 0 };
-	vu32 ret;
+	static vu32 ret __attribute__((aligned(16)));
 	u32 cause, status;
 	Lv2SpuThreadGroupAttributes grpattr = { 7+1, ptr2ea("mygroup"), 0, 0 };
 
-	char text[17] __attribute__((aligned(16))) = "abCdefGhIJklMnOP";
+	static char text[17] __attribute__((aligned(16))) = "abCdefGhIJklMnOP";
 
 	printf("Initializing 6 SPUs... ");
 	printf("%08x\n", lv2SpuInitialize(6, 0));

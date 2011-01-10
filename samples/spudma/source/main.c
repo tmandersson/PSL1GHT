@@ -43,11 +43,6 @@ int main(int argc, const char* argv[])
 	printf("Loading ELF image... ");
 	printf("%08x\n", sysSpuImageImport(&image, spu_bin, 0));
 
-	/* Make up attributes */
-	/* attr.nameAddress = "mythread";
-	attr.nameSize = 8+1;
-	attr.attribute = LV2_SPU_THREAD_ATTRIBUTE_NONE; */
-
 	printf("Creating thread group... ");
 	printf("%08x\n", lv2SpuThreadGroupCreate(&group_id, 1, 100, &grpattr));
 

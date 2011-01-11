@@ -59,6 +59,7 @@ LV2_SYSCALL lv2SpuThreadBindQueue(u32 thread, u32 queue, u32 spuq_num) { return 
 LV2_SYSCALL lv2SpuThreadUnbindQueue(u32 thread, u32 spuq_num) { return Lv2Syscall2(194, thread, spuq_num); }
 LV2_SYSCALL lv2SpuThreadWriteLocalStorage(u32 thread, u32 address, u64 value, u32 type) { return Lv2Syscall4(181, thread, address, value, type); }
 LV2_SYSCALL lv2SpuThreadReadLocalStorage(u32 thread, u32 address, u64* value, u32 type) { return Lv2Syscall4(182, thread, address, (u64)value, type); }
+LV2_SYSCALL lv2SpuThreadWriteSignal(u32 thread, u32 sig, u32 value) { return Lv2Syscall3(184, thread, sig, value); }
 LV2_SYSCALL lv2SpuThreadSetConfiguration(u32 thread, u64 value) { return Lv2Syscall2(187, thread, value); }
 LV2_SYSCALL lv2SpuThreadGetConfiguration(u32 thread, u64* value) { return Lv2Syscall2(188, thread, (u64)value); }
 LV2_SYSCALL lv2SpuThreadWriteMb(u32 thread, u32 value) { return Lv2Syscall2(190, thread, value); }

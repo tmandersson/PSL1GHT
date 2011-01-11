@@ -31,7 +31,7 @@ typedef struct{
 	u16 *str;
 } oskCallbackReturnParam;
 
-typedef struct{
+typedef enum{
 	OSK_DEVICE_PAD,
 	OSK_DEVICE_KB
 } oskInputDevice;
@@ -60,8 +60,8 @@ typedef struct{
 	s32 mask;
 	s32 inputWidth;
 	float inputFieldTransparacy;
-	CellOskDialogLayoutInfo *inputFieldLayoutInfo;
-	CellOskDialogLayoutInfo *inputPanelLayoutInfo;
+	oskDialogLayoutInfo *inputFieldLayoutInfo;
+	oskDialogLayoutInfo *inputPanelLayoutInfo;
 	u32 reserved;
 } oskSeparateWindowOption;
 

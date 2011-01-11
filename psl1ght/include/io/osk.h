@@ -8,6 +8,11 @@ EXTERN_BEGIN
 #define OSK_10KEY_PANEL 	1
 #define OSK_FULLKEY_PANEL 	2
 
+typedef struct{
+	float x;
+	float y;
+} oskPoint;
+
 typedef enum {
 	OSK_INITIAL_SYSTEM_PANEL,
 	OSK_INITIAL_10KEY_PANEL,
@@ -113,11 +118,6 @@ typedef struct{
 #define OSK_PROHIBIT_RETURN 		0x00000002
 #define OSK_PROHIBIT_INPUT_ANALOG 	0x00000008 
 
-
-typedef struct{
-	float x;
-	float y;
-} oskPoint;
 
 typedef struct{
 	u32 allowedPanels;

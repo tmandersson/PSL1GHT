@@ -56,12 +56,17 @@ typedef enum {
 } oskContinuousMode;
 
 typedef struct{ 
+	int layoutMode;
+	oskPoint position;
+} oskLayoutInfo;
+
+typedef struct{ 
 	oskContinuousMode continuous;
 	s32 mask;
 	s32 inputWidth;
 	float inputFieldTransparacy;
-	oskDialogLayoutInfo *inputFieldLayoutInfo;
-	oskDialogLayoutInfo *inputPanelLayoutInfo;
+	oskLayoutInfo *inputFieldLayoutInfo;
+	oskLayoutInfo *inputPanelLayoutInfo;
 	u32 reserved;
 } oskSeparateWindowOption;
 

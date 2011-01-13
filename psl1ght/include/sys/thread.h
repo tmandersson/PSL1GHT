@@ -32,17 +32,18 @@ typedef struct sys_lwmutex_attribute_t {
 	char name[8];
 }sys_lwmutex_attribute_t;
 
-#define   MUTEX_PROTOCOL_FIFO				1
-#define   MUTEX_PROTOCOL_PRIORITY			2
+#define   MUTEX_PROTOCOL_FIFO			1
+#define   MUTEX_PROTOCOL_PRIORITY		2
 #define   MUTEX_PROTOCOL_PRIORITY_INHERIT	3
 
-#define   MUTEX_RECURSIVE		0x10
+#define   MUTEX_RECURSIVE	0x10
 #define   MUTEX_NOT_RECURSIVE	0x20
 
-#define MUTEX_ATTR_PROTOCOL  0x0002
-#define MUTEX_ATTR_RECURSIVE 0x0020
-#define MUTEX_ATTR_PSHARED   0x0200
-#define MUTEX_ATTR_ADAPTIVE  0x2000
+#define   MUTEX_PROGRAM_NOT_SHARED	0x200
+
+#define   MUTEX_NOT_ADAPTIVE		0x2000
+#define   MUTEX_ADAPTIVE		0x1000
+
 typedef u32 sys_mutex_t;
 typedef struct sys_mutex_attribute_t {
 	u32 attr_protocol;

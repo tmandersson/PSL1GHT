@@ -1,3 +1,9 @@
+CGINCLUDE	:= /usr/include/Cg/cg.h
+
+ifeq ($(wildcard $(CGINCLUDE)),)
+$(error "Cannot compile vpcomp without nvidia's cg-framework")
+endif
+
 CFLAGS += -Wall -Os -g -pipe -I../../include/rsx
 LDFLAGS += -lstdc++
 

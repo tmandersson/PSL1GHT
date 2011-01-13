@@ -9,4 +9,4 @@ tools/raw2h/raw2h
 tools/sprxlinker/sprxlinker
 tools/ps3load/ps3load
 tools/PS3Py/pkgcrypt.so
-tools/vpcomp
+tools/vpcomp/vpcomp

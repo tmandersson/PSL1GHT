@@ -189,8 +189,7 @@ int psl1ght_rename_r(struct _reent* r, const char* old, const char* new)
 
 int psl1ght_link_r(struct _reent* r, const char* old, const char* new)
 {
-	r->_errno = ENOSYS;
-	return -1;
+	return lv2ErrnoReentrant(r, lv2FsLink(old, new));
 }
 
 off_t psl1ght_lseek_r(struct _reent* r, int fd, off_t offset, int whence)

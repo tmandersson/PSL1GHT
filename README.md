@@ -47,8 +47,8 @@ Run make install in the psl1ght directory to build it all, and make sure to
 set the environment variable $PSL1GHT to the folder where you wish to
 install it to, for example...
 
-    cd /path/to/psl1ght.git/psl1ght/
-    export PSL1GHT=/path/to/psl1ght.git/psl1ght/build
+    cd /path/to/psl1ght.git/
+    export PSL1GHT=/path/to/psl1ght.git/build
     make
     make install
 
@@ -101,7 +101,7 @@ example.
 
 Any dynamic libraries available to normal PS3 applications can be used with
 PSL1GHT, they just need to be made into a stub library and have the exports
-filled out. See any of the examples in psl1ght/sprx for information on the
+filled out. See any of the examples in sprx/ for information on the
 creation of SPRX stub libraries.
 
 The following libraries are currently supported:

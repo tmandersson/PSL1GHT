@@ -32,7 +32,7 @@ strip: all
 	$(STRIP) $(BIN)
 
 install: strip
-	install -m 755 $(BIN) $(DEVKITPPC)/bin
+	install -m 755 $(BIN) $(PSL1GHT)/host/bin/
 
 $(BIN): $(OBJS)
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
@@ -50,4 +50,3 @@ osx:
 	$(MAKE) clean
 	/opt/toolchains/i686-apple-darwin9-10.4/bin/i686-apple-darwin9-lipo -create $(BIN)_ppc $(BIN)_intel -output $(BIN)
 	rm $(BIN)_ppc $(BIN)_intel
-

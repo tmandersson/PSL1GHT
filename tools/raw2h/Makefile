@@ -12,5 +12,8 @@ all: $(TARGET)
 clean:
 	rm -rf $(TARGET)
 
+install: all
+	@cp $(TARGET) $(PSL1GHT)/host/bin/
+
 $(TARGET): $(CFILES)
 	$(CC) $(CFLAGS) $< -o $@

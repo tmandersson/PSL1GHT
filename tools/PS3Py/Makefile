@@ -7,3 +7,6 @@ pkgcrypt.so: crypt.c setup.py
 
 clean:
 	rm -rf build pkgcrypt.*
+
+install: all
+	@cp -fv fself.py Struct.py sfo.py sfo.xml pkg.py ICON0.PNG pkgcrypt.* $(PSL1GHT)/host/bin/

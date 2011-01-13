@@ -18,3 +18,9 @@ EXPORT(sys_ppu_thread_unregister_atexit, 0xac6fc404);
 EXPORT(sys_initialize_tls, 0x744680a2);
 EXPORT(sys_time_get_system_time, 0x8461e528);
 EXPORT(sys_prx_exitspawn_with_level, 0xa2c7ba64);
+
+EXPORT(sysLwMutexCreate, 0x2f85c0ef);
+EXPORT(sysLwMutexDestroy, 0xc3476d0c);
+EXPORT(sysLwMutexLock, 0x1573dc3f);
+EXPORT(sysLwMutexTryLock, 0xaeb78725);
+EXPORT(sysLwMutexUnlock, 0x1bc200f4);

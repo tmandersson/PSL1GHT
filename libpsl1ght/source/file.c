@@ -17,7 +17,7 @@
 // TODO: Probably should be thread-safe by mapping these to threads?
 #define UMASK(mode) ((mode) & ~glue_umask)
 static mode_t glue_umask = 0;
-mode_t umask(mode_t cmask)
+mode_t psl1ght_umask_r(struct _reent* r, mode_t cmask)
 {
 	mode_t mode = glue_umask;
 	glue_umask = cmask;
@@ -70,7 +70,7 @@ int psl1ght_fsync_r(struct _reent* r, int fd)
 	return lv2ErrnoReentrant(r, lv2FsFsync(fd));
 }
 
-int _truncate_r(struct _reent* r, const char* path, off_t length)
+int psl1ght_truncate_r(struct _reent* r, const char* path, off_t length)
 {
 	return lv2ErrnoReentrant(r, lv2FsTruncate(path, length));
 }
@@ -153,12 +153,12 @@ int psl1ght_fstat_r(struct _reent* r, int fd, struct stat* buf)
 	return lv2ErrnoReentrant(r, ret);
 }
 
-int _fstat64_r(struct _reent* r, int fd, struct stat* buf)
+int psl1ght_fstat64_r(struct _reent* r, int fd, struct stat* buf)
 {
 	return psl1ght_fstat_r(r, fd, buf);
 }
 
-int _stat_r(struct _reent* r, const char* path, struct stat* buf)
+int psl1ght_stat_r(struct _reent* r, const char* path, struct stat* buf)
 {
 	Lv2FsStat stat;
 	int ret = lv2FsStat(path, &stat);
@@ -167,23 +167,27 @@ int _stat_r(struct _reent* r, const char* path, struct stat* buf)
 	return lv2ErrnoReentrant(r, ret);
 }
 
-int _mkdir_r(struct _reent* r, const char* path, mode_t mode)
+int psl1ght_stat64_r(struct _reent* r, const char* path, struct stat* buf)
+{
+	return psl1ght_stat64_r(r, path, buf);
+}
+
+int psl1ght_mkdir_r(struct _reent* r, const char* path, mode_t mode)
 {
 	return lv2ErrnoReentrant(r, lv2FsMkdir(path, UMASK(mode)));
 }
 
-int _rmdir_r(struct _reent* r, const char* path)
+int psl1ght_rmdir_r(struct _reent* r, const char* path)
 {
 	return lv2ErrnoReentrant(r, lv2FsRmdir(path));
 }
 
-int _rename_r(struct _reent* r, const char* old, const char* new)
+int psl1ght_rename_r(struct _reent* r, const char* old, const char* new)
 {
 	return lv2ErrnoReentrant(r, lv2FsRename(old, new));
 }
 
-
-int _link_r(struct _reent* r, const char* old, const char* new)
+int psl1ght_link_r(struct _reent* r, const char* old, const char* new)
 {
 	r->_errno = ENOSYS;
 	return -1;
@@ -198,21 +202,21 @@ off_t psl1ght_lseek_r(struct _reent* r, int fd, off_t offset, int whence)
 	return position;
 }
 
-off_t _lseek64_r(struct _reent* r, int fd, off_t offset, int whence)
+off_t psl1ght_lseek64_r(struct _reent* r, int fd, off_t offset, int whence)
 {
 	return psl1ght_lseek_r(r, fd, offset, whence);
 }
 
-int _utime_r(struct _reent* r, const char* path, const struct utimbuf* times)
+int psl1ght_utime_r(struct _reent* r, const char* path, const struct utimbuf* times)
 {
 	return lv2ErrnoReentrant(r, lv2FsUtime(path, (const Lv2FsUtimbuf*)times));
 }
 
-int isatty(int fd)
+int psl1ght_isatty_r(struct _reent* r, int fd)
 {
 	if (fd == stdout->_file || fd == stdin->_file || fd == stderr->_file)
 		return 1;
-	errno = ENOTTY;
+	r->_errno = ENOTTY;
 	return 0;
 }
 

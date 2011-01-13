@@ -27,7 +27,7 @@ strip: all
 	$(STRIP) $(BIN)
 
 install: strip
-	install -m 755 $(BIN) $(DEVKITPPC)/bin
+	install -m 755 $(BIN) $(PSL1GHT)/host/bin
 
 $(BIN): $(OBJS)
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@

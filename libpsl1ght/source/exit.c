@@ -4,7 +4,7 @@
 
 void _fini();
 
-void _exit(int status)
+void psl1ght_exit(int status)
 {
 	_fini();
 	sysProcessExit(status);

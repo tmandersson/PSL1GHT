@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 // TODO: Actually convert the error codes
-static s32 lv2Error(s32 error)
+s32 lv2Error(s32 error)
 {
 	return EINVAL;
 }

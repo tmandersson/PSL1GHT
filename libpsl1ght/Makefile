@@ -1,22 +1,20 @@
 .SUFFIXES:
 
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	libpsl1ght
 BUILD		:=	build
-SOURCE		:=	../common .
-INCLUDE		:=	. ../../include
+SOURCE		:=	source
+INCLUDE		:=	include
 DATA		:=	data
 LIBS		:=	
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
-PSL1GHT_INTERNAL := $(CURDIR)/../..
+PSL1GHT_INTERNAL := $(CURDIR)/..
 else
-PSL1GHT_INTERNAL := $(CURDIR)/../../..
+PSL1GHT_INTERNAL := $(CURDIR)/../..
 endif
 include $(PSL1GHT_INTERNAL)/rules/internal.mk
 
-LD			:=	$(PREFIX)ld
-
-CFLAGS		:=	-g -O2 -std=gnu99
+CFLAGS		+= -O2 -Wall
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 
@@ -48,21 +46,18 @@ $(BUILD):
 
 clean:
 	@echo Clean...
-	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
+	@rm -rf $(BUILD) $(OUTPUT).a
+
+install: $(BUILD)
+	@mkdir -p $(PSL1GHT)/target/lib
+	@cp -f $(TARGET).a $(PSL1GHT)/target/lib/
 
 else
 
 DEPENDS	:= $(OFILES:.o=.d)
 
-$(OUTPUT).a: sprx.o socket.o init.o
-
-lib.o: lib.c
-	@echo "[CC]  $(notdir $<)"
-	@$(CC) $(DEPSOPTIONS) -S -m32 $(INCLUDES) $< -o lib.S
-	@$(CC) $(DEPSOPTIONS) -c lib.S -o $@
-
-sprx.o: stub.o lib.o
-	@$(LD) -r stub.o lib.o -o $@
+$(OUTPUT).a: $(OFILES)
+$(OFILES): $(BINFILES)
 
 -include $(DEPENDS)
 

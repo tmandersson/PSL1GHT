@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <sys/reent.h>
 
-struct _reent libc_global_reent;
-
 int main(int argc, const char* argv[], const char* envp[]);
 
 extern void _init();

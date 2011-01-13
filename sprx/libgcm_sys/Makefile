@@ -1,8 +1,5 @@
 .SUFFIXES:
 
--include ../../../Makefile.base
--include ../../../../Makefile.base
-
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCE		:=	../common
@@ -10,7 +7,14 @@ INCLUDE		:=	.
 DATA		:=	data
 LIBS		:=	
 
-LD			:=	ppu-ld
+ifneq ($(BUILD),$(notdir $(CURDIR)))
+PSL1GHT_INTERNAL := $(CURDIR)/../..
+else
+PSL1GHT_INTERNAL := $(CURDIR)/../../..
+endif
+include $(PSL1GHT_INTERNAL)/rules/internal.mk
+
+LD			:=	$(PREFIX)ld
 
 CFLAGS		:=	-m32
 

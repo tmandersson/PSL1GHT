@@ -4,10 +4,8 @@ OUTPUT_ARCH(powerpc:common64)
 ENTRY(_start)
 
 SEARCH_DIR("=/lib")
-SEARCH_DIR("$PSL1GHT/lib")
-INPUT("lv2-psl1ght.o")
-INPUT(-lpsl1ght)
-INPUT(-llv2)
+SEARCH_DIR("$PS3DEV/host/ppu/lib")
+SEARCH_DIR("$PSL1GHT/target/lib")
 
 PHDRS
 {

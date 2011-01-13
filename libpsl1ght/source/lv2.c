@@ -7,11 +7,9 @@
 // TODO: Actually convert the error codes
 s32 lv2Error(s32 error)
 {
-	if (error >= 0)
-		return error;
-
-	switch( error)
-	{
+	switch (error) {
+	case 0x00000000:
+		return 0;
     case 0x80010009:/* Not super-user */ 
          return EPERM; /* 1 */ 
     case 0x80010006:/* No such file or directory */ 

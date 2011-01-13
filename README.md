@@ -18,6 +18,7 @@ Credits
     BigBoss     - EyeToy support added to libcamera sample.
     ooPo        - ps3libraries
     ElSemi      - Vertex Program Compiler
+    zerkman     - SPU sample code
 
 
 Environment

@@ -20,7 +20,7 @@ typedef enum {
     MSGDIALOG_SINGLE_PROGRESSBAR    = 4096,
     MSGDIALOG_DOUBLE_PROGRESSBAR    = 8192
 
-} msgtype;
+} msgType;
 
 typedef enum {
 
@@ -31,23 +31,23 @@ typedef enum {
 	MSGDIALOG_BUTTON_NO,
 	MSGDIALOG_BUTTON_ESCAPE
 
-} msgbutton;
+} msgButton;
 
-typedef void (*MsgDialog)(msgbutton button, void *userdata);
+typedef void (*msgDialog)(msgButton button, void *userdata);
 
-s32 MsgDialogOpen(msgtype type, const char * msg, MsgDialog func, void * userdata, void *unused);
-s32 MsgDialogOpen_ex(msgtype type, const char * msg, opd32 * func, void * userdata, void *unused);
-s32 MsgDialogClose(void);
-s32 MsgDialogDelayedClose(float ms);
+s32 msgDialogOpen(msgType type, const char * msg, msgDialog func, void * userdata, void *unused);
+s32 msgDialogOpen_ex(msgType type, const char * msg, opd32 * func, void * userdata, void *unused);
+s32 msgDialogClose(void);
+s32 msgDialogDelayedClose(float ms);
 
-s32 MsgDialogErrorCode(u32 errorcode, MsgDialog func, void * userdata, void *unused);
-s32 MsgDialogErrorCode_ex(u32 errorcode, opd32 * func, void * userdata, void *unused);
+s32 msgDialogErrorCode(u32 errorcode, msgDialog func, void * userdata, void *unused);
+s32 msgDialogErrorCode_ex(u32 errorcode, opd32 * func, void * userdata, void *unused);
 
 #define PROGRESSBAR_INDEX0 0
 #define PROGRESSBAR_INDEX1 1
 
-s32 MsgDialogProgressBarMessage(u32 index, const char * msg);
-s32 MsgDialogResetProgressBar(u32 index);
-s32 MsgDialogIncProgressBar(u32 index, u32 percent);
+s32 msgDialogProgressBarMessage(u32 index, const char * msg);
+s32 msgDialogResetProgressBar(u32 index);
+s32 msgDialogIncProgressBar(u32 index, u32 percent);
 
 EXTERN_END

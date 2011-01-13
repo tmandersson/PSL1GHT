@@ -15,14 +15,15 @@ EXPORT(sysRegisterCallback_ex, 0x9d98afa0);
 EXPORT(sysCheckCallback, 0x189a74da);
 EXPORT(sysUnregisterCallback, 0x02ff3c1b);
 
-EXPORT(msgDialogClose, 0x20543730);
-EXPORT(msgDialogOpenErrorCode, 0x3e22cb4b);
-EXPORT(msgDialogOpen, 0xf81eca25);
-EXPORT(msgDialogProgressBarInc, 0x94862702);
+EXPORT(msgDialogClose, 0x62b0f803);
+EXPORT(msgDialogDelayedClose, 0x20543730);
+EXPORT(msgDialogErrorCode_ex, 0x3e22cb4b);;
+EXPORT(msgDialogOpen_ex, 0xf81eca25);
+EXPORT(msgDialogIncProgressBar, 0x94862702);
 EXPORT(msgDialogAbort, 0x62b0f803);
 EXPORT(msgDialogOpen2, 0x7603d3db);
-EXPORT(msgDialogProgressBarReset, 0x7bc2c8a8);
-EXPORT(msgDialogProgressBarSetMsg, 0x9d6af72a);
+EXPORT(msgDialogResetProgressBar, 0x7bc2c8a8);
+EXPORT(msgDialogProgressBarMessage, 0x9d6af72a);
 
 EXPORT(oskDialogGetInputText, 0x1d99c3ee);
 EXPORT(oskDialogSetInitialInputDevice, 0xf3b4b43e);

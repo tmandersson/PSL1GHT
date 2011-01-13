@@ -117,6 +117,6 @@ s32 lv2ErrnoReentrant(struct _reent* r, s32 error)
 {
 	if (error >= 0)
 		return error;
-	r->_errno lv2Error(error);
+	r->_errno = lv2Error(error);
 	return -1;
 }

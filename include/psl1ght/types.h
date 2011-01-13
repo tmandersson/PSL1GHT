@@ -44,6 +44,15 @@ typedef u32 mem_container_t;
 typedef u32 lv2_void;
 typedef u32 lv2_size_t;
 
+typedef s64 system_time_t;
+
+struct timeval_32 {
+	u32      tv_sec;
+	s32 tv_usec;
+};
+
+#define vec_float4 vector float;
+
 #ifdef __cplusplus
 #define EXTERN_BEGIN	extern "C" {
 #define EXTERN_END		}

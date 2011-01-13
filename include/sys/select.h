@@ -9,7 +9,7 @@
 
 EXTERN_BEGIN
 
-int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
+int select(int, fd_set*, fd_set*, fd_set*, struct timeval_32*);
 int pselect(int, fd_set*, fd_set*, fd_set*, const struct timespec*, const sigset_t*);
 
 EXTERN_END

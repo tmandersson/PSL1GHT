@@ -1,6 +1,6 @@
 PREFIX		:= spu-
 
-include base.mk
+include $(PSL1GHT)/host/base.mk
 
 CFLAGS		:= -g
 CXXFLAGS	:= $(CFLAGS)

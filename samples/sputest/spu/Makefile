@@ -3,7 +3,7 @@ ifeq ($(strip $(PSL1GHT)),)
 $(error "PSL1GHT must be set in the environment.")
 endif
 
-include $(PSL1GHT)/Makefile.base
+include $(PSL1GHT)/host/spu.mk
 
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
@@ -12,16 +12,8 @@ INCLUDE		:=	include
 DATA		:=	data
 LIBS		:=	
 
-CFLAGS		:=	-g -O2 -Wall --std=gnu99
-CXXFLAGS	:=	-g -O2 -Wall
-LDFLAGS		:=	
-
-PREFIX		:= spu-
-AR			:= $(PREFIX)ar
-AS			:= $(PREFIX)gcc
-CC			:= $(PREFIX)gcc
-CXX			:= $(PREFIX)g++
-LD			:= $(CC)
+CFLAGS		+=	-O2 -Wall --std=gnu99
+CXXFLAGS	+=	-O2 -Wall
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 

@@ -1,0 +1,13 @@
+#! /bin/sh
+target="$1"
+shift
+for python in python2 python2.6 python2.4 python; do
+  if "$python" -V >/dev/null 2>&1; then
+    break
+  fi
+done
+for file; do
+  basefile=`basename "$file"`
+  sed -e '1s!python.*!'"$python"'!' < "$file" > "$target"/"$basefile"
+  chmod +x "$target"/"$basefile"
+done

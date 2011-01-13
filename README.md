@@ -69,7 +69,7 @@ Vertex shaders are a work in progress and Fragment shaders don't exsist yet.
 PS3 controllers are fully supported, and pressing the PS button brings up the
 in-game XMB menu, assuming the framebuffer is working.
 
-But you can't currently quit from the xmb without your ps3 giving up and rebooting.
+Quitting from the XMB requires the application to register a callback ot handle the event. An example using this is the camera example.
 
 ### Filesystem Access
 

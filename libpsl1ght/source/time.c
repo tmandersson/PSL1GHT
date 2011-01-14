@@ -4,32 +4,29 @@
 #include <errno.h>
 #include <sys/time.h>
 
-int gettimeofday(struct timeval * tv, void * unused)
+int psl1ght_gettimeofday_r(struct _reent* r, struct timeval * tv, void * unused)
 {
-    int ret;
-    u64 sec, nsec;
+	int ret;
+	u64 sec, nsec;
 
-    ret= lv2GetCurrentTime(&sec, &nsec);
+	ret = lv2GetCurrentTime(&sec, &nsec);
 
-    if(ret<0) return lv2Errno(ret);
+	if (ret)
+		return lv2ErrnoReentrant(r, ret);
 
-    tv->tv_sec = sec;
-    tv->tv_usec = nsec/1000;
-    
-    return 0;
+	tv->tv_sec = sec;
+	tv->tv_usec = nsec / 1000;
+
+	return 0;
 }
 
-int settimeofday(const struct timeval * tv, const struct timezone * tz)
+int psl1ght_settimeofday_r(struct _reent* r, const struct timeval * tv, const struct timezone * tz)
 {
-    int ret;
-    u64 sec, nsec;
+	int ret;
+	u64 sec, nsec;
 
-    sec  = tv->tv_sec;
-    nsec = tv->tv_usec * 1000;
- 
-    ret = lv2SetCurrentTime(sec, nsec);
+	sec  = tv->tv_sec;
+	nsec = tv->tv_usec * 1000;
 
-    if(ret<0) return lv2Errno(ret);
-
-    return 0;
+	return lv2ErrnoReentrant(r, lv2SetCurrentTime(sec, nsec));
 }

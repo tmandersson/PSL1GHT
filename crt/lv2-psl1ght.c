@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-//struct _reent libc_global_reent;
-
 extern caddr_t psl1ght_sbrk_r(struct _reent* r, ptrdiff_t increment);
 extern int psl1ght_close_r(struct _reent* r, int fd);
 extern int psl1ght_open_r(struct _reent* r, const char* path, int oflag, int mode);
@@ -37,6 +35,8 @@ extern long int psl1ght_telldir_r(struct _reent* r, DIR* dir);
 extern struct dirent* psl1ght_readdir_r(struct _reent* r, DIR* dir);
 extern int psl1ght_readdir_r_r(struct _reent* r, DIR* dir, struct dirent* dirent, struct dirent** out);
 extern DIR* psl1ght_opendir_r(struct _reent* r, const char* path);
+extern int psl1ght_settimeofday_r(struct _reent* r, const struct timeval * tv, const struct timezone * tz);
+extern int psl1ght_gettimeofday_r(struct _reent* r, struct timeval * tv, void * unused);
 extern int psl1ght_lwmutex_create_r(struct _reent* r, sys_lwmutex_t* lwmutex, const sys_lwmutex_attr_t* attr);
 extern int psl1ght_lwmutex_destroy_r(struct _reent* r, sys_lwmutex_t* lwmutex);
 extern int psl1ght_lwmutex_lock_r(struct _reent* r, sys_lwmutex_t*lwmutex, unsigned long long timeout);
@@ -82,8 +82,9 @@ static void initSyscalls()
 	__syscalls.telldir_r = psl1ght_telldir_r;
 
 	__syscalls.isatty_r = psl1ght_isatty_r;
+	__syscalls.gettod_r = psl1ght_gettimeofday_r;
+	__syscalls.settod_r = psl1ght_settimeofday_r;
 /*	__syscalls.execve_r = psl1ght_execve_r;
-	__syscalls.gettod_r = psl1ght_gettod_r;
 	__syscalls.getrusage_r = psl1ght_getrusage_r;*/
 
 	__syscalls.sys_lwmutex_create_r = psl1ght_lwmutex_create_r;

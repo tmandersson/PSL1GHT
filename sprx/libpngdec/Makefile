@@ -1,19 +1,22 @@
 .SUFFIXES:
-ifeq ($(strip $(PSL1GHT)),)
-$(error "PSL1GHT must be set in the environment.")
-endif
-
-include $(PSL1GHT)/host/spu.mk
 
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCE		:=	source
-INCLUDE		:=	include
+SOURCE		:=	../common .
+INCLUDE		:=	. ../../include
 DATA		:=	data
 LIBS		:=	
 
-CFLAGS		+=	-O2 -Wall --std=gnu99
-CXXFLAGS	+=	-O2 -Wall
+ifneq ($(BUILD),$(notdir $(CURDIR)))
+PSL1GHT_INTERNAL := $(CURDIR)/../..
+else
+PSL1GHT_INTERNAL := $(CURDIR)/../../..
+endif
+include $(PSL1GHT_INTERNAL)/rules/internal.mk
+
+LD			:=	$(PREFIX)ld
+
+CFLAGS		:=	-O2
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 
@@ -45,17 +48,21 @@ $(BUILD):
 
 clean:
 	@echo Clean...
-	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).a ../data/$(TARGET).bin
+	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
 
 else
 
 DEPENDS	:= $(OFILES:.o=.d)
 
-../../data/spu.bin: $(OUTPUT).elf
-	@cp $< $@
+$(OUTPUT).a: sprx.o loadpng.o
 
-$(OUTPUT).elf: $(OFILES)
-$(OFILES): $(BINFILES)
+lib.o: lib.c
+	@echo "[CC]  $(notdir $<)"
+	@$(CC) $(DEPSOPTIONS) -S -m32 $(INCLUDES) $< -o lib.S
+	@$(CC) $(DEPSOPTIONS) -c lib.S -o $@
+
+sprx.o: stub.o lib.o
+	@$(LD) -r stub.o lib.o -o $@
 
 -include $(DEPENDS)
 

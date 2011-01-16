@@ -3,25 +3,22 @@ ifeq ($(strip $(PSL1GHT)),)
 $(error "PSL1GHT must be set in the environment.")
 endif
 
-include $(PSL1GHT)/Makefile.base
+include $(PSL1GHT)/host/ppu.mk
 
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCE		:=	source
-INCLUDE		:=	include ../include
+INCLUDE		:=	include
 DATA		:=	data
-LIBS		:=	
+LIBS		:=	-laudio -lm
 
-CFLAGS		:=	-g -O2 -Wall --std=gnu99
-CXXFLAGS	:=	-g -O2 -Wall
-LDFLAGS		:=	
+TITLE		:=	Test Audio - PSL1GHT
+APPID		:=	TESTAUDIO
+CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
+PKGFILES	:=	release
 
-PREFIX		:= spu-
-AR			:= $(PREFIX)ar
-AS			:= $(PREFIX)gcc
-CC			:= $(PREFIX)gcc
-CXX			:= $(PREFIX)g++
-LD			:= $(CC)
+CFLAGS		+= -O2 -Wall -std=gnu99
+CXXFLAGS	+= -O2 -Wall
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 
@@ -35,33 +32,45 @@ CFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.c)))
 CXXFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.S)))
 BINFILES	:= $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
+VCGFILES	:= $(foreach dir,$(SOURCE),$(notdir $(wildcard $(dir)/*.vcg)))
+
+ifeq ($(strip $(CXXFILES)),)
+export LD	:=	$(CC)
+else
+export LD	:=	$(CXX)
+endif
 
 export OFILES	:=	$(CFILES:.c=.o) \
 					$(CXXFILES:.cpp=.o) \
-					$(SFILES:.S=.o)
+					$(SFILES:.S=.o) \
+					$(VCGFILES:.vcg=.vcg.o) \
+					$(BINFILES:.bin=.bin.o)
 
 export BINFILES	:=	$(BINFILES:.bin=.bin.h)
 
 export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 					-I$(CURDIR)/$(BUILD)
 
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean pkg run
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 clean:
-	@echo Clean...
-	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).a ../data/$(TARGET).bin
+	@echo "[RM]  $(notdir $(OUTPUT))"
+	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a $(OUTPUT)*.pkg
+
+run: $(BUILD)
+	@$(PS3LOADAPP) $(OUTPUT).self
+
+pkg: $(BUILD) $(OUTPUT).pkg
 
 else
 
 DEPENDS	:= $(OFILES:.o=.d)
 
-../../data/spu.bin: $(OUTPUT).elf
-	@cp $< $@
-
+$(OUTPUT).self: $(OUTPUT).elf
 $(OUTPUT).elf: $(OFILES)
 $(OFILES): $(BINFILES)
 

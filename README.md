@@ -19,7 +19,7 @@ Credits
     ooPo        - ps3libraries
     ElSemi      - Vertex Program Compiler
     zerkman     - SPU sample code
-    geohot      - make_self_npdrm (geohot has in no way authorized the usage of his tools in PSL1GHT, and as far as we know he does not even know we have used them. The tools are public domain so we did not require permission to use them.)
+    geohot      - make_self_npdrm (geohot has in no way authorized the usage of his tools in PSL1GHT, and as far as we know he does not even know we have used them. The tools are GPLv3 so we did not require permission to use them, as long as we obey GPLv3)
 
 
 

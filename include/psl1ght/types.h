@@ -47,14 +47,16 @@ typedef u32 lv2_size_t;
 typedef s64 system_time_t;
 
 struct timeval_32 {
-	u32      tv_sec;
+	u32 tv_sec;
 	s32 tv_usec;
 };
 
 typedef  union vec_float4
-{   __vector float vector;
-        float array[4];
+{
+	__vector float vector;
+	float array[4];
 } vec_float4;
+
 #ifdef __cplusplus
 #define EXTERN_BEGIN	extern "C" {
 #define EXTERN_END		}

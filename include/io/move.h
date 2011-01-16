@@ -78,8 +78,8 @@ typedef struct GemState {
 typedef struct GemAttribute {
 	u32 version;
 	u32 max;
-	void * memory; //pointer to memory to use for gem lib, if you specify null it will automatically allocate for you
-	Spurs * spurs; //pointer to Spurs object
+	lv2_void memory; //pointer to memory to use for gem lib, if you specify null it will automatically allocate for you
+	lv2_void spurs; //pointer to Spurs object
 	u8 spu_priorities[8]; 
 } GemAttribute;
 
@@ -138,8 +138,8 @@ typedef struct GemVideoConvertAttribute {
 	float red_gain;
 	float green_gain;
 	float blue_gain;
-	u32 buffer_memory;
-	u32 video_data_out;
+	lv2_void buffer_memory;
+	lv2_void video_data_out;
 	u8 alpha;
 } GemVideoConvertAttribute;
 

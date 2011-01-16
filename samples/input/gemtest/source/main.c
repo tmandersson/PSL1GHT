@@ -292,7 +292,7 @@ int proccessGem(int t)
 		
 			
 		case 0:
-			ret=gemUpdateStart(readex.buffer, readex.timestamp);
+			ret=gemUpdateStart((void*)(u64)readex.buffer, readex.timestamp);
 			if(ret!=0)
 			{
 				printf("Return from gemUpdateStart %X\n",ret);
@@ -300,7 +300,7 @@ int proccessGem(int t)
 		break;
 		case 1:
 		
-			ret=gemConvertVideoStart(readex.buffer);
+			ret=gemConvertVideoStart((void*)(u64)readex.buffer);
 			if(ret!=0)
 			{
 				printf("Return from gemConvertVideoStart %X\n",ret);
@@ -431,7 +431,7 @@ int setupCamera()
 				printf("Video dimensions: %dx%d\n", cameraInfo.width, cameraInfo.height);
 				printf("Buffer at %08X\n", cameraInfo.buffer);
 				printf("Setting CameraReadEx buffer to cameraInfo buffer\n");
-				readex.buffer=(u8*)(u64)cameraInfo.buffer; 
+				readex.buffer=cameraInfo.buffer; 
 				break;
 			default:
 				printf("Error %X detected opening PlayStation Eye\n",ret);
@@ -568,8 +568,8 @@ int initGem()
 	gem_video_convert.blue_gain=1.0f;
 	buffer_mem=(void *)memalign(128,640*480);
 	video_out=(void *)malloc(640*480*4);  //TODO always is empty i don't know why		
-	gem_video_convert.buffer_memory=buffer_mem;
-	gem_video_convert.video_data_out=video_out;
+	gem_video_convert.buffer_memory=(u64)buffer_mem;
+	gem_video_convert.video_data_out=(u64)video_out;
 	gem_video_convert.alpha=255;
 		
 			

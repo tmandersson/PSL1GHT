@@ -51,8 +51,10 @@ struct timeval_32 {
 	s32 tv_usec;
 };
 
-#define vec_float4 vector float;
-
+typedef  union vec_float4
+{   __vector float vector;
+        float array[4];
+} vec_float4;
 #ifdef __cplusplus
 #define EXTERN_BEGIN	extern "C" {
 #define EXTERN_END		}

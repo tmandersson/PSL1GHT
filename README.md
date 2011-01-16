@@ -15,7 +15,7 @@ Credits
     Tempus      - PSL1GHT Logo
     lousyphreak - libaudio
     Hermes      - sysmodule, libpngdec, libjpgdec
-    BigBoss     - EyeToy support added to libcamera sample.
+    BigBoss     - EyeToy support added to libcamera sample, libgem(Move) sample.
     ooPo        - ps3libraries
     ElSemi      - Vertex Program Compiler
     zerkman     - SPU sample code
@@ -118,3 +118,5 @@ The following libraries are currently supported:
 * libsysmodule
 * libpngdec
 * libjpgdec
+* libgem
+

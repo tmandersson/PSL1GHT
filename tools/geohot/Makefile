@@ -23,7 +23,7 @@ package_finalize: package_finalize.c
 	$(CC) $< $(CFLAGS) $(LDFLAGS) -o $@
 
 install: $(TARGETS)
-	@install -m 755 build/* $(PSL1GHT)/host/bin/
+	@install -m 755 $(TARGETS) $(PSL1GHT)/host/bin/
 
 clean:
 	@rm -f $(TARGETS)

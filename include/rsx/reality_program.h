@@ -3,6 +3,16 @@
 
 #include <psl1ght/types.h>
 
+//Param types
+#define PARAM_FLOAT		0
+#define PARAM_FLOAT2	1
+#define PARAM_FLOAT3	2
+#define PARAM_FLOAT4	3
+
+
+#define PARAM_FLOAT4x4	4
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -65,6 +75,22 @@ typedef struct reality_attrib
 	u32 name_off;
 	u32 index;
 } realityProgramAttrib;
+
+
+
+void *realityVertexProgramGetUCode(realityVertexProgram *vertexprogram);
+u32 realityVertexProgramGetInputMask(realityVertexProgram *vertexprogram);
+u32 realityVertexProgramGetOutputMask(realityVertexProgram *vertexprogram);
+realityProgramAttrib *realityVertexProgramGetAttributes(realityVertexProgram *vertexprogram);
+s32 realityVertexProgramGetInputAttribute(realityVertexProgram *vertexprogram,const char *name);
+realityProgramConst *realityVertexProgramGetConstants(realityVertexProgram *vertexprogram);
+s32 realityVertexProgramGetConstant(realityVertexProgram *vertexprogram,const char *name);
+
+void* realityFragmentProgramGetUCode(realityFragmentProgram *fp,u32 *size);
+realityProgramConst* realityFragmentProgramGetConsts(realityFragmentProgram *fp);
+s32 realityFragmentProgramGetConst(realityFragmentProgram *fp,const char *name);
+realityProgramAttrib* realityFragmentProgramGetAttribs(realityFragmentProgram *fp);
+s32 realityFragmentProgramGetAttrib(realityFragmentProgram *fp,const char *name);
 
 #ifdef __cplusplus
 	}

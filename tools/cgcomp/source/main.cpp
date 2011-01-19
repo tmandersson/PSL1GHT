@@ -33,7 +33,7 @@ struct _options
 	true,
 	false
 };
-
+ 
 #define CG_SOURCE				4112
 #define CG_COMPILED_PROGRAM		4106
 #define CG_PROFILE_VP30			6148

@@ -43,6 +43,7 @@ struct _opcode
 	u32 suffixes;
 } fp_opcodes[] = {
    { "ADD", OPCODE_ADD, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
+   { "BRK", OPCODE_BRK, INPUT_CC, OUTPUT_NONE, 0                   },
    { "COS", OPCODE_COS, INPUT_1S, OUTPUT_S, _R | _H |      _C | _S },
    { "DDX", OPCODE_DDX, INPUT_1V, OUTPUT_V, _R | _H |      _C | _S },
    { "DDY", OPCODE_DDY, INPUT_1V, OUTPUT_V, _R | _H |      _C | _S },
@@ -88,6 +89,8 @@ struct _opcode
    { "UP4UB", OPCODE_UP4UB, INPUT_1S, OUTPUT_V,            _C | _S },
    { "X2D", OPCODE_X2D, INPUT_3V, OUTPUT_V, _R | _H |      _C | _S },
    { "PRINT", OPCODE_PRINT, INPUT_1V_S, OUTPUT_NONE, 0             },
+   { "REP", OPCODE_BGNREP, INPUT_1V, OUTPUT_NONE, 0                },
+   { "ENDREP", OPCODE_ENDREP, INPUT_NONE, OUTPUT_NONE, 0           },
    //
    { "END", OPCODE_END,0,0,0 },
    { NULL, (enum nvfx_opcode) -1, 0, 0, 0 }
@@ -230,17 +233,18 @@ void CFPParser::ParseInstruction(struct nvfx_insn *insn,opcode *opc,const char *
 		ParseMaskedDstReg(token,insn);
 	}
 
-	if(opc->inputs==INPUT_1V) {
+	if(opc->outputs!=OUTPUT_NONE && opc->inputs!=INPUT_NONE) {
 		token = SkipSpaces(strtok(NULL,","));
+	}
+
+	if(opc->inputs==INPUT_1V) {
 		ParseVectorSrc(token,&insn->src[0]);
 	} else if(opc->inputs==INPUT_2V) {
-		token = SkipSpaces(strtok(NULL,","));
 		ParseVectorSrc(token,&insn->src[0]);
 
 		token = SkipSpaces(strtok(NULL,","));
 		ParseVectorSrc(token,&insn->src[1]);
 	} else if(opc->inputs==INPUT_3V) {
-		token = SkipSpaces(strtok(NULL,","));
 		ParseVectorSrc(token,&insn->src[0]);
 
 		token = SkipSpaces(strtok(NULL,","));
@@ -249,10 +253,8 @@ void CFPParser::ParseInstruction(struct nvfx_insn *insn,opcode *opc,const char *
 		token = SkipSpaces(strtok(NULL,","));
 		ParseVectorSrc(token,&insn->src[2]);
 	} else if(opc->inputs==INPUT_1S) {
-		token = SkipSpaces(strtok(NULL,","));
 		ParseScalarSrc(token,&insn->src[0]);
 	} else if(opc->inputs==INPUT_2S) {
-		token = SkipSpaces(strtok(NULL,","));
 		ParseScalarSrc(token,&insn->src[0]);
 
 		token = SkipSpaces(strtok(NULL,","));
@@ -260,7 +262,6 @@ void CFPParser::ParseInstruction(struct nvfx_insn *insn,opcode *opc,const char *
 	} else if(opc->inputs==INPUT_1V_T) {
 		u8 unit,target;
 
-		token = SkipSpaces(strtok(NULL,","));
 		ParseVectorSrc(token,&insn->src[0]);
 
 		token = SkipSpaces(strtok(NULL,","));
@@ -273,7 +274,6 @@ void CFPParser::ParseInstruction(struct nvfx_insn *insn,opcode *opc,const char *
 	} else if(opc->inputs==INPUT_3V_T) {
 		u8 unit,target;
 
-		token = SkipSpaces(strtok(NULL,","));
 		ParseVectorSrc(token,&insn->src[0]);
 
 		token = SkipSpaces(strtok(NULL,","));
@@ -289,6 +289,8 @@ void CFPParser::ParseInstruction(struct nvfx_insn *insn,opcode *opc,const char *
 		ParseTextureTarget(token,&target);
 
 		insn->unit = unit;
+	} else if(opc->inputs==INPUT_CC) {
+		ParseCond(token,insn);
 	}
 }
 
@@ -505,7 +507,7 @@ void CFPParser::ParseMaskedDstReg(const char *token,struct nvfx_insn *insn)
 		insn->dst.index = idx;
 		insn->dst.is_fp16 = (token[0]=='H');
 	} else if(token[0]=='o' && token[1]=='[') {
-		token = ParseOutputReg(token,&idx);
+		token = ParseOutputReg(&token[2],&idx);
 
 		insn->dst.type = NVFXSR_OUTPUT;
 		insn->dst.index = idx;

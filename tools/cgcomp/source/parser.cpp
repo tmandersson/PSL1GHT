@@ -213,34 +213,40 @@ const char* CParser::ParseMaskedDstRegExt(const char *token,struct nvfx_insn *in
 	token = ParseOutputMask(token,&insn->mask);
 	if(token && *token!='\0') {
 		if(token[0]=='(') {
-			token = ConvertCond(&token[1],insn);
-			if(token[0]=='.') {
-				s32 k = 0;
-				
-				token++;
-
-				insn->cc_swz[0] = insn->cc_swz[1] = insn->cc_swz[2] = insn->cc_swz[3] = 0;
-				for(k=0;token[k] && token[k]!=')' && k<4;k++) {
-					if(token[k]=='x')
-						insn->cc_swz[k] = NVFX_SWZ_X;
-					else if(token[k]=='y')
-						insn->cc_swz[k] = NVFX_SWZ_Y;
-					else if(token[k]=='z')
-						insn->cc_swz[k] = NVFX_SWZ_Z;
-					else if(token[k]=='w')
-						insn->cc_swz[k] = NVFX_SWZ_W;
-				}
-				if(k && k<4) {
-					u8 lastswz = insn->cc_swz[k - 1];
-					while(k<4) {
-						insn->cc_swz[k] = lastswz;
-						k++;
-					}
-				}
-				token += k;
-			}
+			token = ParseCond(&token[1],insn);
 			token++;
 		}
+	}
+	return token;
+}
+
+const char* CParser::ParseCond(const char *token,struct nvfx_insn *insn)
+{
+	token = ConvertCond(&token[1],insn);
+	if(token[0]=='.') {
+		s32 k = 0;
+		
+		token++;
+
+		insn->cc_swz[0] = insn->cc_swz[1] = insn->cc_swz[2] = insn->cc_swz[3] = 0;
+		for(k=0;token[k] && token[k]!=')' && k<4;k++) {
+			if(token[k]=='x')
+				insn->cc_swz[k] = NVFX_SWZ_X;
+			else if(token[k]=='y')
+				insn->cc_swz[k] = NVFX_SWZ_Y;
+			else if(token[k]=='z')
+				insn->cc_swz[k] = NVFX_SWZ_Z;
+			else if(token[k]=='w')
+				insn->cc_swz[k] = NVFX_SWZ_W;
+		}
+		if(k && k<4) {
+			u8 lastswz = insn->cc_swz[k - 1];
+			while(k<4) {
+				insn->cc_swz[k] = lastswz;
+				k++;
+			}
+		}
+		token += k;
 	}
 	return token;
 }

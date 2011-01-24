@@ -12,8 +12,13 @@
 #define PROG_TYPE_VP			1
 #define PROG_TYPE_FP			2
 
+#ifdef __BIG_ENDIAN__
+#define SWAP16(v) (v)
+#define SWAP32(v) (v)
+#else
 #define SWAP16(v) ((v)>>8)|((v)<<8)
 #define SWAP32(v) ((v)>>24)|((v)<<24)|(((v)&0xFF00)<<8)|(((v)&0xFF0000)>>8)
+#endif
 
 struct _options
 {
@@ -420,12 +425,13 @@ int compileFP()
 int main(int argc,char *argv[])
 {
 	int ret = 0;
-	if(!InitCompiler()) {
+
+	readoptions(&Options,argc,argv);
+
+	if(Options.gen_asm!=true && !InitCompiler()) {
         fprintf(stderr, "Unable to load Cg, aborting.\n");
         return EXIT_FAILURE;
     }
-
-	readoptions(&Options,argc,argv);
 
 	switch(Options.prog_type) {
 		case PROG_TYPE_VP:

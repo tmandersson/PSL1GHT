@@ -1,15 +1,22 @@
 #include <rsx/buffer.h>
 #include <assert.h>
 
-s32 rsxContextCallback(gcmContextData* context, u32 count)
+s32 __attribute__((noinline)) rsxContextCallback(gcmContextData *context,u32 count)
 {
-	opd32* callback = (opd32*)(u64)context->callback;
-	opd64 opd = {
-		(void*)(u64)callback->func,
-		(void*)(u64)callback->rtoc,
-		0
-	};
-	return ((s32(*)())&opd)();
+	register s32 result asm("3");
+	asm volatile (
+		"stdu	1,-128(1)\n"
+		"mr		31,2\n"
+		"lwz	0,0(%0)\n"
+		"lwz	2,4(%0)\n"
+		"mtctr	0\n"
+		"bctrl\n"
+		"mr		2,31\n"
+		"addi	1,1,128\n"
+		: : "b"(context->callback)
+		: "r31", "r0", "r1", "r2", "lr"
+	);
+	return result;
 }
 
 void commandBufferPut(gcmContextData* context, uint32_t value) {

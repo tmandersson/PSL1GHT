@@ -34,6 +34,9 @@ private:
 	void emit_insn(u8 op,struct nvfx_insn *insn);
 	void emit_dst(struct nvfx_reg *dst,bool *have_const);
 	void emit_src(s32 pos,struct nvfx_src *src,bool *have_const);
+	void emit_brk(struct nvfx_insn *insn);
+	void emit_rep(struct nvfx_insn *insn);
+	void fixup_rep();
 
 	void grow_insns(int count);
 
@@ -66,6 +69,7 @@ private:
 
 	std::list<param> m_lImmData;
 	std::list<struct fragment_program_data> m_lConstData;
+	std::stack<int> m_repStack;
 };
 
 #endif

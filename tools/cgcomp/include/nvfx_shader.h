@@ -516,6 +516,8 @@ enum nvfx_opcode
    OPCODE_X2D,       /*                            X             */
    OPCODE_XOR,       /*                                          */
    OPCODE_XPD,       /*   X        X                         X   */
+   OPCODE_BGNREP,    /*                            2             */
+   OPCODE_ENDREP,    /*                            2             */
    MAX_OPCODE
 };
 

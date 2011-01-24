@@ -2,6 +2,7 @@
 #define __PARSER_H__
 
 #include <list>
+#include <stack>
 #include <string>
 #include <sstream>
 
@@ -81,6 +82,7 @@ protected:
 	const char* ParseTempReg(const char *token,s32 *idx);
 	const char* ConvertCond(const char *token,struct nvfx_insn *insn);
 	const char* ParseMaskedDstRegExt(const char *token,struct nvfx_insn *insn);
+	const char* ParseCond(const char *token,struct nvfx_insn *insn);
 
 	s32 GetParamType(const char *param_str);
 	virtual s32 ConvertInputReg(const char *token) = 0;

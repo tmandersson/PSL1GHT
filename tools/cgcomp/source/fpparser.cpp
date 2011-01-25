@@ -508,6 +508,7 @@ void CFPParser::ParseMaskedDstReg(const char *token,struct nvfx_insn *insn)
 		insn->dst.is_fp16 = (token[0]=='H');
 	} else if(token[0]=='o' && token[1]=='[') {
 		token = ParseOutputReg(&token[2],&idx);
+		token++;
 
 		insn->dst.type = NVFXSR_OUTPUT;
 		insn->dst.index = idx;

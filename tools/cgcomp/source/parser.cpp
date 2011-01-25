@@ -222,7 +222,7 @@ const char* CParser::ParseMaskedDstRegExt(const char *token,struct nvfx_insn *in
 
 const char* CParser::ParseCond(const char *token,struct nvfx_insn *insn)
 {
-	token = ConvertCond(&token[1],insn);
+	token = ConvertCond(token,insn);
 	if(token[0]=='.') {
 		s32 k = 0;
 		

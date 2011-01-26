@@ -1,4 +1,5 @@
 #include <Python.h>
+#include <stdint.h>
 
 static PyObject *sha1_callback = NULL;
 

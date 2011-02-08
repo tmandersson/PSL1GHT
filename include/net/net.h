@@ -64,7 +64,7 @@ struct net_hostent {
 	lv2_void h_addr_list;
 };
 
-#define	NET_FD_SETSIZE	32
+#define	NET_FD_SETSIZE	1024
 //#define NBBY			8
 #define	NET_NFDBITS		(sizeof(net_fd_mask) * NBBY)
 typedef	s32 net_fd_mask;

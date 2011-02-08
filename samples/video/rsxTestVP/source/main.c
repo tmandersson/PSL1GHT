@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
@@ -214,18 +213,18 @@ void drawFrame(int buffer, long frame)
 
 	// Load shaders, because the rsx won't do anything without them.
 	realityLoadVertexProgram(context, (realityVertexProgram*)vshader_bin);
-	realityLoadFragmentProgram(context, &nv30_fp); 
+	realityLoadFragmentProgram_old(context, &nv30_fp); 
 
 	//Pass the matrix to the shader
-	realitySetVertexProgramConstant4fBlock(context,matrixParam,4,(float*)(matrix.data));
+	realitySetVertexProgramConstant4fBlock(context, (realityVertexProgram*)vshader_bin,matrixParam,4,(float*)(matrix.data));
 
 	// Load texture
 	load_tex(0, tx_offset, dice.width, dice.height, dice.width*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
 
 	//Get the input attributes by name
 	//shouldn't do attribute scan every frame but it's just a sample :)
-	positionAttr = realityVertexProgramGetInputAttribute((realityVertexProgram*)vshader_bin,"inputvertex.vertex");
-	textureAttr = realityVertexProgramGetInputAttribute((realityVertexProgram*)vshader_bin,"inputvertex.texcoord");
+	positionAttr = realityVertexProgramGetAttribute((realityVertexProgram*)vshader_bin,"inputvertex.vertex");
+	textureAttr = realityVertexProgramGetAttribute((realityVertexProgram*)vshader_bin,"inputvertex.texcoord");
 
 
 	//Bind the memory array to the input attributes
@@ -260,7 +259,7 @@ s32 main(s32 argc, const char* argv[])
 	// install fragment shader in rsx memory
 	u32 *frag_mem = rsxMemAlign(256, 256);
 	printf("frag_mem = 0x%08lx\n", (u64) frag_mem);
-	realityInstallFragmentProgram(context, &nv30_fp, frag_mem);
+	realityInstallFragmentProgram_old(context, &nv30_fp, frag_mem);
 
 	//Transfer the vertex buffer to RSX memory (main memory mapping is not supported yet)
 	VertexBufferRSX = rsxMemAlign(64,4*sizeof(struct _Vertex));

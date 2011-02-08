@@ -430,6 +430,7 @@ int main(int argc,char *argv[])
 
 	if(Options.gen_asm!=true && !InitCompiler()) {
         fprintf(stderr, "Unable to load Cg, aborting.\n");
+        fprintf(stderr, "Please install Cg toolkit and/or set the path (i.e. LD_LIBRARY_PATH) to the shared library accordingly.\n");
         return EXIT_FAILURE;
     }
 

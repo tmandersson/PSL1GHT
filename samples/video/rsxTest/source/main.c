@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
@@ -62,7 +61,7 @@ void drawFrame(int buffer, long frame) {
 
 	// Load shaders, because the rsx won't do anything without them.
 	realityLoadVertexProgram_old(context, &nv40_vp);
-	realityLoadFragmentProgram(context, &nv30_fp); 
+	realityLoadFragmentProgram_old(context, &nv30_fp); 
 
 	// Load texture
 	load_tex(0, tx_offset, dice.width, dice.height, dice.width*4,  NV40_3D_TEX_FORMAT_FORMAT_A8R8G8B8, 1);
@@ -125,7 +124,7 @@ s32 main(s32 argc, const char* argv[])
 	// install fragment shader in rsx memory
 	u32 *frag_mem = rsxMemAlign(256, 256);
 	printf("frag_mem = 0x%08lx\n", (u64) frag_mem);
-	realityInstallFragmentProgram(context, &nv30_fp, frag_mem);
+	realityInstallFragmentProgram_old(context, &nv30_fp, frag_mem);
 
 	long frame = 0; // To keep track of how many frames we have rendered.
 	

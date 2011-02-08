@@ -8,7 +8,7 @@
  * NV30/NV40/G70 fragment shaders
  */
 
-static realityFragmentProgram nv30_fp = {
+static realityFragmentProgram_old nv30_fp = {
 .num_regs = 2,
 .size = (2*4),
 .data = {

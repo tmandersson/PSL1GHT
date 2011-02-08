@@ -98,6 +98,24 @@ void realityTexCoord2f(gcmContextData *context, float s, float t) {
 				 ((ieee32) t).u);
 }
 
+void realityAttr4f(gcmContextData *context, int attr,
+    float x, float y, float z, float w) {
+	COMMAND_LENGTH(context, 5);
+	commandBufferPutCmd4(context, NV30_3D_VTX_ATTR_4F(attr),
+				 ((ieee32) x).u,
+				 ((ieee32) y).u,
+				 ((ieee32) z).u,
+				 ((ieee32) w).u);
+}
+
+void realityAttr2f(gcmContextData *context, int attr, float x, float y) {
+	COMMAND_LENGTH(context, 5);
+	commandBufferPutCmd2(context, NV30_3D_VTX_ATTR_2F(attr),
+	    ((ieee32) x).u,
+	    ((ieee32) y).u);
+}
+
+
 void realityLoadVertexProgram_old(gcmContextData *context, realityVertexProgram_old *prog) {
 	int inst, command_size = prog->size * 2 + 7;
 	COMMAND_LENGTH(context, command_size);

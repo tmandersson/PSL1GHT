@@ -89,6 +89,10 @@ void realityVertex4f(gcmContextData *context, float x, float y, float z, float w
 
 void realityTexCoord2f(gcmContextData *context, float s, float t);
 
+void realityAttr4f(gcmContextData *context, int attr, float x, float y, float z, float w);
+void realityAttr2f(gcmContextData *context, int attr, float x, float y);
+
+
 //Vertex buffers
 //Bind an input attribute to a vertex buffer array
 

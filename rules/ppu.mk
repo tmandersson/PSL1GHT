@@ -14,7 +14,7 @@ PS3LOADAPP	:= $(PSL1GHT_BIN)/ps3load
 PKG			:= $(PSL1GHT_BIN)/pkg.py
 PKG_GEO		:= $(PSL1GHT_BIN)/package_finalize
 SPRX		:= $(PSL1GHT_BIN)/sprxlinker
-VPCOMP		:= $(PSL1GHT_BIN)/vpcomp
+CGCOMP		:= $(PSL1GHT_BIN)/cgcomp
 
 SFOXML		:= $(PSL1GHT_BIN)/sfo.xml
 ICON0		:= $(PSL1GHT_BIN)/ICON0.PNG
@@ -35,8 +35,14 @@ LDFLAGS		:= -B$(PSL1GHT)/target/lib \
 	@$(SELF) $(BUILDDIR)/$(notdir $<) $@
 
 %.vcg.h: %.vcg
-	@echo "[VPCOMP] $(notdir $<)"
-	@$(VPCOMP) $< $(notdir $(BUILDDIR)/$(basename $<).rvp) >> /dev/null
+	@echo "[CGCOMP] $(notdir $<)"
+	@$(CGCOMP) -v $< $(notdir $(BUILDDIR)/$(basename $<).rvp) >> /dev/null
+	@$(RAW2H)  $(BUILDDIR)/$(notdir $(basename $<).rvp) $(BUILDDIR)/$(notdir $<).h $(BUILDDIR)/$(notdir $<).S $(notdir $(basename $<)_bin)
+	@$(AS) -x assembler-with-cpp $(ASFLAGS) -c $(BUILDDIR)/$(notdir $<).S -o $(BUILDDIR)/$(notdir $<).o
+
+%.fcg.h: %.fcg
+	@echo "[CGCOMP] $(notdir $<)"
+	@$(CGCOMP) -f $< $(notdir $(BUILDDIR)/$(basename $<).rvp) >> /dev/null
 	@$(RAW2H)  $(BUILDDIR)/$(notdir $(basename $<).rvp) $(BUILDDIR)/$(notdir $<).h $(BUILDDIR)/$(notdir $<).S $(notdir $(basename $<)_bin)
 	@$(AS) -x assembler-with-cpp $(ASFLAGS) -c $(BUILDDIR)/$(notdir $<).S -o $(BUILDDIR)/$(notdir $<).o
 

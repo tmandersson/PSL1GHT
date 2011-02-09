@@ -29,7 +29,7 @@ A GCC toolchain that supports the PowerPC 64bit architecture is required to
 build PSL1GHT and its samples. It also requires the toolchain to provide
 a patched newlib environment; at the moment only one toolchain does so:
 
-* [ps3toolchain](http://github.com/ooPo/ps3toolchain)
+* [ps3toolchain](http://github.com/ps3dev/ps3toolchain)
 
 The SDK also includes a few standalone tools to help compilation. A host gcc
 is required to build raw2h, ps3load, and sprxlinker requires libelf. ps3load

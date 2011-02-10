@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <sys/select.h>
 #include <netinet/in.h>
+#include <poll.h>
 #include <stdlib.h>
 
 #define net_errno *netErrnoLoc()
@@ -108,6 +109,7 @@ int netSocket(int domain, int type, int protocol);
 int netSocketPair(int domain, int type, int protocol, int socket_vector[2]);
 s32 netClose(int socket);
 s32 netGetSockInfo(s32 socket, netSocketInfo* p, s32 n);
+s32 netPoll(struct pollfd* fds, nfds_t nfds, int timeout);
 
 struct net_hostent* netGetHostByAddr(const char* addr, net_socklen_t len, int type);
 struct net_hostent* netGetHostByName(const char* name);

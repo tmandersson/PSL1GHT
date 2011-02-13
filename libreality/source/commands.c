@@ -220,7 +220,7 @@ void realitySetFragmentProgramParameter(gcmContextData *context,realityFragmentP
 					params[1] = swapF32_16(value[(i*4) + 1]);
 					params[2] = swapF32_16(value[(i*4) + 2]);
 					params[3] = swapF32_16(value[(i*4) + 3]);
-					rsxInlineTransfer(context,offset + consts[index + i].index,params,4,GCM_LOCATION_RSX);
+					realityInlineTransfer(context,offset + consts[index + i].index,params,4,REALITY_RSX_MEMORY);
 				}
 			}
 			return;

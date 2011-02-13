@@ -47,7 +47,7 @@ private:
 	{
 		s32 i;
 		std::list<param>::iterator it = m_lParameters.begin();
-		for(;it!=m_lImmData.end();it++) {
+		for(;it!=m_lParameters.end();it++) {
 			for(i=0;i<it->count;i++) {
 				if((int)(it->index + i)==index) {
 					if(it->is_const && it->is_internal)

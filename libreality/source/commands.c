@@ -221,8 +221,8 @@ void realitySetFragmentProgramParameter(gcmContextData *context,realityFragmentP
 				params[3] = swapF32_16(value[(i*4) + 3]);
 				rsxInlineTransfer(context,offset + consts[index + i].index,params,4,GCM_LOCATION_RSX);
 			}
+			return;
 		}
-		return;
 
 		case PARAM_FLOAT4:
 			params[3] = swapF32_16(value[3]);

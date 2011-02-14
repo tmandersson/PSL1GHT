@@ -248,6 +248,14 @@ void realitySetTexture(gcmContextData *context, uint32_t unit, realityTexture *t
 		(1 << NV40_3D_TEX_SIZE1_DEPTH__SHIFT));
 }
 
+void realitySetTextureControl(gcmContextData *context, uint32_t unit,uint32_t enable,uint16_t minlod,uint16_t maxlod,uint8_t maxaniso) {
+	COMMAND_LENGTH(context,2);
+	commandBufferPutCmd1(context,NV30_3D_TEX_ENABLE(unit),((maxaniso << NV40_3D_TEX_ENABLE_ANISO__SHIFT) | 
+												      (maxlod << NV40_3D_TEX_ENABLE_MIPMAP_MAX_LOD__SHIFT) |
+												      (minlod << NV40_3D_TEX_ENABLE_MIPMAP_MIN_LOD__SHIFT) |
+												      (enable << 31)));
+}
+
 void realityViewportTranslate(gcmContextData *context, float x, float y, float z, float w) {
 	COMMAND_LENGTH(context, 5);
 	commandBufferPutCmd4(context, NV30_3D_VIEWPORT_TRANSLATE, 

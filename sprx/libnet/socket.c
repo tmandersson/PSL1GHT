@@ -125,7 +125,9 @@ int netErrno(int ret)
 		return ret;
 
 	if (net_errno < sizeof(neterrno2errno) / sizeof(neterrno2errno[0]))
-		errno = neterrno2errno[net_errno] ?: EPERM;
+		errno = neterrno2errno[net_errno] ?: ENOTSUP;
+	else
+		errno = ENOTSUP;
 
 	return -1;
 }

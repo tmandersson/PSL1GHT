@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 
 #include "spu.bin.h"
 
@@ -26,7 +27,7 @@ int main(int argc, const char* argv[])
 	printf("\tEntry Point: %08x\n\tSegment Count: %08x\n", entry, segmentcount);
 
 	size_t segmentsize = sizeof(sysSpuSegment) * segmentcount;
-	segments = (sysSpuSegment*)malloc(segmentsize);
+	segments = (sysSpuSegment*)memalign(128, segmentsize);
 	memset(segments, 0, segmentsize);
 
 	printf("Getting ELF segments... ");

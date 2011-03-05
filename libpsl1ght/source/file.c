@@ -8,7 +8,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <string.h>
 #include <utime.h>
 
@@ -99,7 +98,7 @@ ssize_t psl1ght_write_r(struct _reent* r, int fd, const void* buffer, size_t siz
 
 	u64 written;
 	int ret;
-	if (fd == stdout->_file || fd == stderr->_file) {
+	if (fd == STDOUT_FILENO || fd == STDERR_FILENO) {
 		ret = lv2TtyWrite(fd, buffer, size, (u32*)(void*)&written);
 		written >>= 32;
 	} else
@@ -118,7 +117,7 @@ ssize_t psl1ght_read_r(struct _reent* r, int fd, void* buffer, size_t size)
 	u64 bytes;
 	int ret;
 	
-	if (fd == stdin->_file) {
+	if (fd == STDIN_FILENO) {
 		ret = lv2TtyRead(fd, buffer, size, (u32*)(void*)&bytes);
 		bytes >>= 32;
 	} else
@@ -211,7 +210,7 @@ int psl1ght_utime_r(struct _reent* r, const char* path, const struct utimbuf* ti
 
 int psl1ght_isatty_r(struct _reent* r, int fd)
 {
-	if (fd == stdout->_file || fd == stdin->_file || fd == stderr->_file)
+	if (fd == STDOUT_FILENO || fd == STDIN_FILENO || fd == STDERR_FILENO)
 		return 1;
 	r->_errno = ENOTTY;
 	return 0;

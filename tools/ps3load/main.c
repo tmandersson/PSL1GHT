@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <libgen.h>
+
 #ifndef _WIN32
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -77,7 +78,7 @@ static bool tcp_write (int s, const u8 *buf, u32 len) {
 	left = len;
 	p = buf;
 	while (left) {
-		block = send (s, p, left, 0);
+		block = send (s, (const char *)p, left, 0);
 
 		if (block < 0) {
 			perror ("send failed");

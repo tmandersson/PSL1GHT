@@ -46,7 +46,7 @@ private:
 
 	inline param GetImmData(int index)
 	{
-		s32 i;
+		u32 i;
 		std::list<param>::iterator it = m_lParameters.begin();
 		for(;it!=m_lParameters.end();it++) {
 			for(i=0;i<it->count;i++) {
@@ -61,7 +61,7 @@ private:
 
 	inline param GetInputAttrib(int index)
 	{
-		s32 i;
+		u32 i;
 		std::list<param>::iterator it = m_lParameters.begin();
 		for(;it!=m_lParameters.end();it++) {
 			for(i=0;i<it->count;i++) {

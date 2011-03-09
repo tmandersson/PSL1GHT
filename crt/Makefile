@@ -11,7 +11,8 @@ STUBS		:= $(SFILES:.S=.o) $(CFILES:.c=.o)
 all: $(STUBS) $(CRT0)
 
 clean:
-	rm -f $(STUBS) $(CRT0)
+	@echo clean...
+	@rm -f $(STUBS) $(CRT0)
 
 install: all
 	@mkdir -p $(PS3DEV)/host/ppu/ppu/lib

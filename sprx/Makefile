@@ -2,11 +2,15 @@ TARGETS	:=	libaudio libcamera libgcm_sys libio libjpgdec liblv2 libnet libpngdec
 
 all:
 	@for dir in $(TARGETS); do \
+		echo; \
+		echo Entering Directory $$dir; \
 		$(MAKE) --no-print-directory -C $$dir; \
+		echo Leaving Directory $$dir; \
 	done
 
 clean:
 	@for dir in $(TARGETS); do \
+		echo Cleaning $$dir; \
 		$(MAKE) --no-print-directory -C $$dir clean; \
 	done
 

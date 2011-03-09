@@ -1,10 +1,12 @@
 CFLAGS += -Wall -Os -g -pipe
 
-ifeq ($(WIN32), 1)
-PREFIX ?= i586-mingw32msvc-
-BIN_EXT = .exe
-CFLAGS += -Iwin32/include
-LDFLAGS += -Lwin32/lib -lws2_32 -lz
+UNAME	:=	$(shell uname -s)
+
+ifneq (,$(findstring MINGW,$(UNAME)))
+PREFIX	?=
+CFLAGS	+=	
+LDFLAGS	+=	-static -lws2_32 -lz
+BIN_EXT	?=	.exe
 else
 PREFIX ?=
 BIN_EXT =
@@ -16,16 +18,17 @@ CFLAGS += -DUSE_LIBFTDI
 LDFLAGS += -lftdi -lusb
 endif
 
-CC = $(PREFIX)gcc
+CC = 	$(PREFIX)gcc
 STRIP = $(PREFIX)strip
 
 BIN = ps3load$(BIN_EXT)
 
-OBJS = main.o
+OBJS =	main.o
 
 all: $(BIN)
 
 clean:
+	@echo clean...
 	@rm -f *.o core core.* $(BIN)
 
 strip: all
@@ -35,10 +38,10 @@ install: strip
 	@install -m 755 $(BIN) $(PSL1GHT)/host/bin/
 
 $(BIN): $(OBJS)
-	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
+	@$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 
 %o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 osx:
 	$(MAKE) clean

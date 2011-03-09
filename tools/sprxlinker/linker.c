@@ -17,6 +17,12 @@
 #define BE64(num) ((uint64_t)((uint64_t)BE32(num) << 32) | BE32(num >> 32))
 #endif
 
+#ifdef _WIN32
+#define OFLAGS O_RDWR | O_BINARY
+#else
+#define OFLAGS O_RDWR
+#endif
+
 typedef struct
 {
 	uint32_t header1;
@@ -77,7 +83,7 @@ int main(int argc, const char* argv[])
 		printf("Usage: %s [elf path]\n", argv[0]);
 		return 0;
 	}
-	int fd = open(argv[1], O_RDWR);
+	int fd = open(argv[1], OFLAGS);
 	if (fd < 0) {
 		fprintf(stderr, "Unable to open elf file: %s\n", argv[1]);
 		return 1;

@@ -136,7 +136,7 @@ int netErrno(int ret)
 int accept(int socket, struct sockaddr* address, socklen_t* address_len)
 {
 	s32 ret;
-	net_socklen_t len;
+	net_socklen_t len = address_len ? *address_len : 0;
 	net_socklen_t* lenp = (address && address_len) ? &len : NULL;
 	if (LIBNET_INITIALIZED)
 		ret = netAccept(FD(socket), address, lenp);
@@ -296,7 +296,7 @@ int poll(struct pollfd fds[], nfds_t nfds, int timeout)
 int getsockname(int socket, struct sockaddr* address, socklen_t* address_len)
 {
 	s32 ret;
-	net_socklen_t len;
+	net_socklen_t len = address_len ? *address_len : 0;
 	net_socklen_t* lenp = (address && address_len) ? &len : NULL;
 	if (LIBNET_INITIALIZED)
 		ret = netGetSockName(FD(socket), address, lenp);
@@ -315,7 +315,7 @@ int getsockname(int socket, struct sockaddr* address, socklen_t* address_len)
 int getpeername(int socket, struct sockaddr* address, socklen_t* address_len)
 {
 	s32 ret;
-	net_socklen_t len;
+	net_socklen_t len = address_len ? *address_len : 0;
 	net_socklen_t* lenp = (address && address_len) ? &len : NULL;
 	if (LIBNET_INITIALIZED)
 		ret = netGetPeerName(FD(socket), address, lenp);

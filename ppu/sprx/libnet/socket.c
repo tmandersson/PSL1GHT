@@ -169,7 +169,7 @@ static struct hostent* copyhost(struct net_hostent *nethost)
 int accept(int socket,struct sockaddr* address,socklen_t* address_len)
 {
 	s32 ret = 0;
-	socklen_t len;
+	socklen_t len = address_len ? *address_len : 0;
 	socklen_t *lenp = (address && address_len) ? &len : NULL;
 
 	if(LIBNET_INITIALZED) {
@@ -319,7 +319,7 @@ int select(int nfds,fd_set *readfds,fd_set *writefds,fd_set *errorfds,struct tim
 int getsockname(int socket,struct sockaddr* address,socklen_t *address_len)
 {
 	s32 ret = 0;
-	socklen_t len;
+	socklen_t len = address_len ? *address_len : 0;
 	socklen_t *lenp = (address && address_len) ? &len : NULL;
 
 	if(LIBNET_INITIALZED) {
@@ -341,7 +341,7 @@ int getsockname(int socket,struct sockaddr* address,socklen_t *address_len)
 int getpeername(int socket,struct sockaddr* address,socklen_t *address_len)
 {
 	s32 ret = 0;
-	socklen_t len;
+	socklen_t len = address_len ? *address_len : 0;
 	socklen_t *lenp = (address && address_len) ? &len : NULL;
 
 	if(LIBNET_INITIALZED) {

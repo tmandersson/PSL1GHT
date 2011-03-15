@@ -3,6 +3,10 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+endif
+
 ifeq ($(strip $(DEVKITPS3)),)
 $(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
 endif
@@ -10,9 +14,9 @@ endif
 all:
 	
 install:
-	@[ -d $(DEVKITPS3)/ppu/include/vectormath ] || mkdir -p $(DEVKITPS3)/ppu/include/vectormath
-	@cp -frv $(CURDIR)/c $(DEVKITPS3)/ppu/include/vectormath
-	@cp -frv $(CURDIR)/cpp $(DEVKITPS3)/ppu/include/vectormath
+	@[ -d $(DEVKITPRO)/libpsl1ght/ppu/include/vectormath ] || mkdir -p $(DEVKITPRO)/libpsl1ght/ppu/include/vectormath
+	@cp -frv $(CURDIR)/c $(DEVKITPRO)/libpsl1ght/ppu/include/vectormath
+	@cp -frv $(CURDIR)/cpp $(DEVKITPRO)/libpsl1ght/ppu/include/vectormath
 	
 clean:
 	

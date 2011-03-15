@@ -1,3 +1,7 @@
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+endif
+
 ifeq ($(strip $(DEVKITPS3)),)
 $(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
 endif

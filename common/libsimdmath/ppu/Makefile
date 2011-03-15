@@ -3,6 +3,10 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+endif
+
 ifeq ($(strip $(DEVKITPS3)),)
 $(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
 endif
@@ -63,14 +67,14 @@ ppu:
 #---------------------------------------------------------------------------------
 install-header:
 #---------------------------------------------------------------------------------
-	@[ -d $(DEVKITPS3)/ppu/include/simdmath ] || mkdir -p $(DEVKITPS3)/ppu/include/simdmath
-	@cp -frv $(CURDIR)/../common/simdmath.h $(DEVKITPS3)/ppu/include/simdmath
+	@[ -d $(DEVKITPRO)/libpsl1ght/ppu/include/simdmath ] || mkdir -p $(DEVKITPRO)/libpsl1ght/ppu/include/simdmath
+	@cp -frv $(CURDIR)/../common/simdmath.h $(DEVKITPRO)/libpsl1ght/ppu/include/simdmath
 
 #---------------------------------------------------------------------------------
 install: install-header
 #---------------------------------------------------------------------------------
-	@[ -d $(DEVKITPS3)/ppu/lib ] || mkdir -p $(DEVKITPS3)/ppu/lib
-	@cp -frv $(CURDIR)/lib/ppu/*.a $(DEVKITPS3)/ppu/lib
+	@[ -d $(DEVKITPRO)/libpsl1ght/ppu/lib ] || mkdir -p $(DEVKITPRO)/libpsl1ght/ppu/lib
+	@cp -frv $(CURDIR)/lib/ppu/*.a $(DEVKITPRO)/libpsl1ght/ppu/lib
 
 #---------------------------------------------------------------------------------
 $(LIBRARY).a: $(OBJS)	

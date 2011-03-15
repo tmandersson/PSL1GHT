@@ -1,7 +1,9 @@
 export PATH	:=	$(DEVKITPS3)/bin:$(DEVKITPS3)/ppu/bin:$(PATH)
 
-export DEVKITPS3_INC	:=	-I$(DEVKITPS3)/ppu/include -I$(DEVKITPS3)/ppu/include/simdmath
-export DEVKITPS3_LIB	:=	-L$(DEVKITPS3)/ppu/lib
+export PORTLIBS	:=	$(DEVKITPRO)/portlibs/ppu
+
+export LIBPSL1GHT_INC	:=	-I$(DEVKITPRO)/libpsl1ght/ppu/include -I$(DEVKITPRO)/libpsl1ght/ppu/include/simdmath
+export LIBPSL1GHT_LIB	:=	-L$(DEVKITPRO)/libpsl1ght/ppu/lib
 
 PREFIX	:=	ppu-
 

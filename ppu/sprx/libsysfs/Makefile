@@ -1,6 +1,10 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+endif
+
 ifeq ($(strip $(DEVKITPS3)),)
 $(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
 endif
@@ -71,8 +75,8 @@ ppu:
 #---------------------------------------------------------------------------------
 install:
 #---------------------------------------------------------------------------------
-	@[ -d $(DEVKITPS3)/ppu/lib ] || mkdir -p $(DEVKITPS3)/ppu/lib
-	@cp -frv $(CURDIR)/lib/ppu/*.a $(DEVKITPS3)/ppu/lib
+	@[ -d $(DEVKITPRO)/libpsl1ght/ppu/lib ] || mkdir -p $(DEVKITPRO)/libpsl1ght/ppu/lib
+	@cp -frv $(CURDIR)/lib/ppu/*.a $(DEVKITPRO)/libpsl1ght/ppu/lib
 
 #---------------------------------------------------------------------------------
 $(LIBRARY).a: sprx.o sysfs_wrapper.o

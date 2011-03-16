@@ -1,4 +1,4 @@
-TARGETS	:=	libaudio libcamera libgcm_sys libio libjpgdec liblv2 libnet libnetctl libpngdec libsysmodule libsysutil libgem
+TARGETS	:=	libsysfs libaudio libcamera libgcm_sys libio libjpgdec liblv2 libnet libnetctl libpngdec libsysmodule libsysutil libgem
 
 all:
 	@for dir in $(TARGETS); do \

@@ -21,7 +21,7 @@ EXPORT(msgDialogErrorCode_ex, 0x3e22cb4b);;
 EXPORT(msgDialogOpen_ex, 0xf81eca25);
 EXPORT(msgDialogIncProgressBar, 0x94862702);
 EXPORT(msgDialogAbort, 0x62b0f803);
-EXPORT(msgDialogOpen2, 0x7603d3db);
+EXPORT(msgDialogOpen2_ex, 0x7603d3db);
 EXPORT(msgDialogResetProgressBar, 0x7bc2c8a8);
 EXPORT(msgDialogProgressBarMessage, 0x9d6af72a);
 

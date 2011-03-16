@@ -11,6 +11,11 @@ s32 msgDialogOpen(u32 type, const char * msg, msgDialog func, void * userdata, v
 	return msgDialogOpen_ex(type, msg, OPD32(func), userdata, unused);
 }
 
+s32 msgDialogOpen2(u32 type, const char * msg, msgDialog func, void * userdata, void *unused)
+{
+	return msgDialogOpen2_ex(type, msg, OPD32(func), userdata, unused);
+}
+
 s32 msgDialogErrorCode(u32 errorcode, msgDialog func, void * userdata, void *unused)
 {
     return msgDialogErrorCode_ex(errorcode, OPD32(func), userdata, unused);

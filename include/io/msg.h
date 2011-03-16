@@ -37,6 +37,11 @@ typedef void (*msgDialog)(msgButton button, void *userdata);
 
 s32 msgDialogOpen(msgType type, const char * msg, msgDialog func, void * userdata, void *unused);
 s32 msgDialogOpen_ex(msgType type, const char * msg, opd32 * func, void * userdata, void *unused);
+
+s32 msgDialogOpen2(msgType type, const char * msg, msgDialog func, void * userdata, void *unused);
+s32 msgDialogOpen2_ex(msgType type, const char * msg, opd32 * func, void * userdata, void *unused);
+s32 msgDialogAbort(void);
+
 s32 msgDialogClose(void);
 s32 msgDialogDelayedClose(float ms);
 

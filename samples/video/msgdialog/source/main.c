@@ -79,7 +79,7 @@ void dialog()
 
     msgType mdialogyesno = MSGDIALOG_NORMAL | MSGDIALOG_BUTTON_TYPE_YESNO | MSGDIALOG_DISABLE_CANCEL_ON | MSGDIALOG_DEFAULT_CURSOR_NO;
 
-    msgDialogOpen(mdialogyesno, "Hey!!\nYou are Happy?", my_dialog, (void *) 0x11110001, NULL);
+    msgDialogOpen2(mdialogyesno, "Hey!!\nYou are Happy?", my_dialog, (void *) 0x11110001, NULL);
 
     dialog_action = 0;
     while(!dialog_action)
@@ -96,9 +96,9 @@ void dialog()
     msgType mdialogok = MSGDIALOG_NORMAL | MSGDIALOG_BUTTON_TYPE_OK;
     
     if(response == 1)
-        msgDialogOpen(mdialogok, "I'm glad you're happy :)\nMerry Christmas!!!", my_dialog, (void *) 0x22220001, NULL);
+        msgDialogOpen2(mdialogok, "I'm glad you're happy :)\nMerry Christmas!!!", my_dialog, (void *) 0x22220001, NULL);
     else
-        msgDialogOpen(mdialogok, "Ok, but removes your vinegar face :p\nIt's Christmas!!!", my_dialog, (void *) 0x22220002, NULL);
+        msgDialogOpen2(mdialogok, "Ok, but removes your vinegar face :p\nIt's Christmas!!!", my_dialog, (void *) 0x22220002, NULL);
 
     dialog_action = 0;
     while(!dialog_action)
@@ -114,7 +114,7 @@ void dialog()
     
     happypercent = 0;
 
-    msgDialogOpen(mdialogprogress, "Recharging happiness batteries...", my_dialog, (void *) 0x33330001, NULL);
+    msgDialogOpen2(mdialogprogress, "Recharging happiness batteries...", my_dialog, (void *) 0x33330001, NULL);
     msgDialogProgressBarMessage(PROGRESSBAR_INDEX0, "You're Happy");
     msgDialogResetProgressBar(PROGRESSBAR_INDEX0);
    
@@ -135,7 +135,7 @@ void dialog()
     
     moneypercent = 0;
 
-    msgDialogOpen(mdialogprogress, "Recharging Virtual money...", my_dialog, (void *) 0x33330002, NULL);
+    msgDialogOpen2(mdialogprogress, "Recharging Virtual money...", my_dialog, (void *) 0x33330002, NULL);
     msgDialogProgressBarMessage(PROGRESSBAR_INDEX0, "You're Happy");
     msgDialogResetProgressBar(PROGRESSBAR_INDEX0);
     msgDialogProgressBarMessage(PROGRESSBAR_INDEX1, "Virtual money");
@@ -156,7 +156,7 @@ void dialog()
 
 // OK with delay time 
 
-    msgDialogOpen(mdialogok, "Congratulations!!!\nYou are now happy and you have virtual money :p", my_dialog, (void *) 0x22220003, NULL);
+    msgDialogOpen2(mdialogok, "Congratulations!!!\nYou are now happy and you have virtual money :p", my_dialog, (void *) 0x22220003, NULL);
     msgDialogDelayedClose(3000.0f); // 3 seconds
 
     dialog_action = 0;
@@ -169,7 +169,7 @@ void dialog()
 
 // OK with delay time 
 
-    msgDialogOpen(mdialogok, "Good bye!!", my_dialog, (void *) 0x22220004, NULL);
+    msgDialogOpen2(mdialogok, "Good bye!!", my_dialog, (void *) 0x22220004, NULL);
     msgDialogDelayedClose(2000.0f); // 2 seconds
 
     dialog_action = 0;

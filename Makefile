@@ -22,6 +22,9 @@ all: install-ctrl
 samples:
 	@$(MAKE) -C samples --no-print-directory
 
+doc:
+	@doxygen doxygen.conf
+
 install-ctrl:
 	@[ -d $(DEVKITPS3) ] || mkdir -p $(DEVKITPS3)
 	@[ -f $(DEVKITPS3)/base_rules ] || cp -frv base_rules $(DEVKITPS3)
@@ -42,5 +45,6 @@ clean:
 	@$(MAKE) -C ppu clean --no-print-directory
 	@$(MAKE) -C spu clean --no-print-directory
 	@$(MAKE) -C tools clean --no-print-directory
-	
+	@rm -rf doc
+
 .PHONY: all clean install

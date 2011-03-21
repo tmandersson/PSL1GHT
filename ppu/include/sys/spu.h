@@ -147,46 +147,137 @@ LV2_SYSCALL sysSpuRawDestroy(u32 spu)
 	return lv2syscall1(161,spu);
 }
 
+/*! \brief Create an interrupt tag for a raw SPU.
+ \param spu
+ The raw SPU identifier.
+ \param classid
+ The interrupt class identifier.
+ \param hardwarethread
+ The hardware thread identifier
+ \param tag
+ Pointer to the returned interrupt tag identifier.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuCreateInterrupTag(u32 spu,u32 classid,u32 hardwarethread,u32 *tag)
 {
 	return lv2syscall4(150,spu,classid,hardwarethread,(u64)tag);
 }
 
+/*! \brief Set the value of the interrupt mask register for a raw SPU.
+ \param spu
+ The raw SPU identifier.
+ \param classid
+ The interrupt class identifier.
+ \param mask
+ The new interrupt mask register value.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuSetIntMask(u32 spu,u32 classid,u64 mask)
 {
 	return lv2syscall3(151,spu,classid,mask);
 }
 
+/*! \brief Get the value of the interrupt mask register for a raw SPU.
+ \param spu
+ The raw SPU identifier.
+ \param classid
+ The interrupt class identifier.
+ \param mask
+ Pointer to the returned interrupt mask register value.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuGetIntMask(u32 spu,u32 classid,u64 *mask)
 {
 	return lv2syscall3(152,spu,classid,(u64)mask);
 }
 
+/*! \brief Set the value of the interrupt status register for a raw SPU.
+ \param spu
+ The raw SPU identifier.
+ \param classid
+ The interrupt class identifier.
+ \param mask
+ The new interrupt status register value.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuRawSetIntStat(u32 spu, u32 classid, u64 stat)
 { 
 	return lv2syscall3(153, spu, classid, stat);
 }
 
+/*! \brief Get the value of the interrupt status register for a raw SPU.
+ \param spu
+ The raw SPU identifier.
+ \param classid
+ The interrupt class identifier.
+ \param mask
+ Pointer to the returned interrupt status register value.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuRawGetIntStat(u32 spu, u32 classid, u64* stat)
 {
 	return lv2syscall3(154, spu, classid, (u64)stat);
 }
 
+/*! \brief Read from the raw SPU's outbound interrupt mailbox register.
+ \param spu
+ The raw SPU identifier.
+ \param value
+ Pointer to the read value.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuRawReadPuintMb(u32 spu, u32* value)
 {
 	return lv2syscall2(163, spu, (u64)value);
 }
 
+/*! \brief Configure the raw SPU's signal notification.
+ \param spu
+ The raw SPU identifier.
+ \param value
+ A OR combination of the following values:
+  - \ref SPU_SIGNAL1_OVERWRITE
+  - \ref SPU_SIGNAL1_OR
+  - \ref SPU_SIGNAL2_OVERWRITE
+  - \ref SPU_SIGNAL2_OR
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuRawSetConfiguration(u32 spu, u32 value)
 {
 	return lv2syscall2(196, spu, value);
 }
 
+/*! \brief Get the configuration of the raw SPU's signal notification.
+ \param spu
+ The raw SPU identifier.
+ \param value
+ Pointer to the read configuration value, which is a OR combination of the
+ following values:
+  - \ref SPU_SIGNAL1_OVERWRITE
+  - \ref SPU_SIGNAL1_OR
+  - \ref SPU_SIGNAL2_OVERWRITE
+  - \ref SPU_SIGNAL2_OR
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuRawGetConfirugation(u32 spu, u32* value)
-{ 
+{
 	return lv2syscall2(197, spu, (u64)value);
 }
 
+/*! \brief Recover a raw SPU from a page fault.
+ \param spu
+ The raw SPU identifier.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuRawRecoverPageFault(u32 spu)
 {
 	return lv2syscall1(199, spu);

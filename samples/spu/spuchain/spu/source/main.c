@@ -61,12 +61,12 @@ int main(uint64_t arg0,uint64_t arg1,uint64_t arg2,uint64_t arg3)
 		send_response(1);
 	} else {
 		/* write the result to local store of next SPU */
-		uint64_t ea = 0xf0000000ULL + ((uint32_t)&v)
-					+ 0x00100000ULL * (spu.rank+1);
+		uint64_t ea = SPU_THREAD_BASE + ((uint32_t)&v)
+					+ SPU_THREAD_OFFSET * (spu.rank+1);
 		mfc_put(&v, ea, 16, TAG, 0, 0);
 
 		/* send signal to next spu */
-		ea = 0xf005400cULL + 0x00100000ULL * (spu.rank+1);
+		ea = SPU_THREAD_BASE + SPU_THREAD_Sig_Notify_1 + SPU_THREAD_OFFSET * (spu.rank+1);
 		mfc_putf(((uint32_t*)&sig)+3, ea, 4, TAG, 0, 0);
 
 		/* enqueue a sync command to ensure everything is actually

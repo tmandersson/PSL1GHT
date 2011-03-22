@@ -82,12 +82,15 @@ A SPU thread can :
  - issue DMA transfers with its MFC, between its local store and main memory, or
    between its local store and another SPU thread's local store. In the latter
    case the beginning of a SPU thread's local store effective address is
-   <code>0xf0000000ULL + spu * 0x00100000ULL</code> (having \c spu the same
-   thread index value as provided to \ref sysSpuThreadInitialize).
- - write to another SPU's signal notification register. In that case, the
-   effective address to write to is
-   <code>0xf005400cULL + spu * 0x00100000ULL</code> (having \c spu the same
-   thread index value as provided to \ref sysSpuThreadInitialize).
+   <code>SPU_THREAD_BASE + spu * SPU_THREAD_OFFSET</code> (having \c spu the
+   same thread index value as provided to \ref sysSpuThreadInitialize).
+ - write to another SPU's signal notification register. This must be done by
+   writing to the memory-mapped IO registers through DMA transfers.
+   In that case, the effective address to write to is
+   <code>SPU_THREAD_BASE + spu * SPU_THREAD_OFFSET</code> (having \c spu the same
+   thread index value as provided to \ref sysSpuThreadInitialize) to which we
+   add either \c SPU_THREAD_Sig_Notify_1 or \c SPU_THREAD_Sig_Notify_2, depending
+   on the signal notification register to be written to.
 
 For more information about DMA transfers and SPU programming in general, refer
 to the Cell Broadband Engine documentation.

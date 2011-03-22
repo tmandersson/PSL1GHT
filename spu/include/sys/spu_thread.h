@@ -11,6 +11,12 @@
 
 #include <sys/cdefs.h>
 
+#define SPU_THREAD_BASE							0xF0000000ULL
+#define SPU_THREAD_OFFSET						0x00100000ULL
+
+#define SPU_THREAD_Sig_Notify_1					0x5400C
+#define SPU_THREAD_Sig_Notify_2					0x5C00C
+
 #ifdef __cplusplus
 extern "C" {
 #endif

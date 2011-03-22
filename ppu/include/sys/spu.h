@@ -1,10 +1,12 @@
-/*! \file spu.h
-  \brief SPU management.
+/*! \file sys/spu.h
+  \brief SPU management syscalls.
 
   These are the LV2 syscalls for SPU management (raw SPUs and SPU threads).
+
+  \see \ref spu_man
 */
 
-/*! \page spu_api SPU management
+/*! \page spu_man SPU management
 
 \section Introduction
 
@@ -19,15 +21,76 @@ of local memory (local store) and a Memory Flow Controller (MFC), responsible
 for DMA transfers between local store and main memory, as well as synchronization
 with the other SPEs and the PPE.
 
+The system allows two ways of handling SPEs by either using the <em>raw SPU</em>
+primitives or the <em>SPU thread</em> primitives.
+Both methods allow to
+efficiently exploit the SPEs, but SPU threads allow more flexibility.
+This tutorial only deals with SPU threads.
+
+
 \section spu_threads SPU threads
 
-A PPU program can create SPU threads, which are dedicated SPU programs running
-on a SPU. Up to 6 SPU threads can run simultaneously, one on each of the available
-SPUs.
+SPU threads are dedicated SPU programs running on the SPEs. There can
+be more running SPU threads as there are available SPEs, in that cas the system
+performs thread scheduling in order all threads to appear to be running
+simultaneously.
+However, scheduling has a cost, so performance-aware applications should try
+to avoid context switches by running exactly the needed number of threads.
+Ideally, unless in some very specific circumstances, only maximum 6 threads
+should be running simultaneously, as 6 SPEs are available on the PS3.
 
-\todo finish the page
+\subsection sputhr_run Running and stopping threads
+
+Creating and running a SPU thread basically requires the following steps:
+ - import a SPU program into a SPU image (see \ref sysSpuImageOpen, \ref sysSpuImageImport)
+ - create a SPU thread group (see \ref sysSpuThreadGroupCreate).
+ - create the SPU thread (\ref sysSpuThreadInitialize) for that group. Eventually
+   create several threads for the group.
+ - run the SPU thread group (\ref sysSpuThreadGroupStart).
+
+Then all threads of the group will run simultaneously.
+The whole thread group
+may eventually be preempted to allow the execution of concurrent thread groups.
+Obvisoulsy, if there is only one thread group running, or if all running thread
+groups do not exceed a total of 6 threads, no thread group is preempted.
+
+The PPU can suspend and resume a thread group (\ref sysSpuThreadGroupSuspend,
+\ref sysSpuThreadGroupResume), preempt it (\ref sysSpuThreadGroupYield),
+or even terminate it (\ref sysSpuThreadGroupTerminate).
+
+A SPU thread can eventually terminate itself with a call to \ref spu_thread_exit.
+It also can terminate the whole SPU thread group (\ref spu_thread_group_exit),
+or call the SPU thread group scheduler (\ref spu_thread_group_yield).
+
+A SPU thread group is terminated if all its threads are terminated.
+
+The PPE must join a SPU thread group (\ref sysSpuThreadGroupJoin) to ensure its
+threads are terminated.
 
 
+\subsection sputhr_com Communication between threads
+
+SPU threads can communicate with the running PPE threads, and also with other
+SPU threads within the same SPU thread group.
+
+A PPE thread can :
+ - read or write to a SPU thread's local store
+   (\ref sysSpuThreadWriteLocalStorage, \ref sysSpuThreadReadLocalStorage)
+ - write to a SPU's signal notification register (\ref sysSpuThreadWriteSignal)
+
+A SPU thread can :
+ - issue DMA transfers with its MFC, between its local store and main memory, or
+   between its local store and another SPU thread's local store. In the latter
+   case the beginning of a SPU thread's local store effective address is
+   <code>0xf0000000ULL + spu * 0x00100000ULL</code> (having \c spu the same
+   thread index value as provided to \ref sysSpuThreadInitialize).
+ - write to another SPU's signal notification register. In that case, the
+   effective address to write to is
+   <code>0xf005400cULL + spu * 0x00100000ULL</code> (having \c spu the same
+   thread index value as provided to \ref sysSpuThreadInitialize).
+
+For more information about DMA transfers and SPU programming in general, refer
+to the Cell Broadband Engine documentation.
 */
 #ifndef __SYS_SPU_H__
 #define __SYS_SPU_H__
@@ -178,7 +241,7 @@ LV2_SYSCALL sysSpuRawDestroy(u32 spu)
  \param classid
  The interrupt class identifier.
  \param hardwarethread
- The hardware thread identifier
+ The hardware thread identifier.
  \param tag
  Pointer to the returned interrupt tag identifier.
  \return

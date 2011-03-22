@@ -4,6 +4,31 @@
   These are the LV2 syscalls for SPU management (raw SPUs and SPU threads).
 */
 
+/*! \page spu_api SPU management
+
+\section Introduction
+
+The Cell Broadband Engine (CBE) is the processor of the PS3. It features one
+main core, the PPE (Power Processing Element), which is a dual threaded core from
+the IBM POWER family, and six Synergistic Processing Elements (SPEs) are available
+to the user programs.
+
+The SPEs are the computing elements of the Cell Broadband Engine processor of the
+PS3. They feature a computing core (SPU = Synergistic Processing Unit), 256 kB
+of local memory (local store) and a Memory Flow Controller (MFC), responsible
+for DMA transfers between local store and main memory, as well as synchronization
+with the other SPEs and the PPE.
+
+\section spu_threads SPU threads
+
+A PPU program can create SPU threads, which are dedicated SPU programs running
+on a SPU. Up to 6 SPU threads can run simultaneously, one on each of the available
+SPUs.
+
+\todo finish the page
+
+
+*/
 #ifndef __SYS_SPU_H__
 #define __SYS_SPU_H__
 

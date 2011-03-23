@@ -30,7 +30,7 @@ UNAME := $(shell uname -s)
 
 ifneq (,$(findstring MINGW,$(UNAME)))
 	EXEEXT		:= .exe
-	PLATFORM_LIBS	:=	-lws2_32
+	PLATFORM_LIBS	:=	-static -lws2_32
 endif
 
 ifneq (,$(findstring Linux,$(shell uname -s)))

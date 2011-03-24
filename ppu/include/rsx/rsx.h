@@ -1,3 +1,11 @@
+/*! \file rsx.h
+ \brief RSX library.
+
+This library contains the necessary functions for handling the RSX, the
+accelerated 3D chip of the PS3.
+
+*/
+
 #ifndef __RSX_H__
 #define __RSX_H__
 
@@ -10,6 +18,12 @@
 extern "C" {
 #endif
 
+/*! \brief Initialize the RSX context.
+\param cmdSize The command buffer size.
+\param ioSize The allocated IO buffer size.
+\param ioAddress Pointer to an allocated buffer of \p ioSize bytes.
+\return Pointer to the allocated context structure.
+*/
 gcmContextData* rsxInit(const u32 cmdSize,const u32 ioSize,const void *ioAddress);
 
 s32 rsxAddressToOffset(void *ptr,u32 *offset);

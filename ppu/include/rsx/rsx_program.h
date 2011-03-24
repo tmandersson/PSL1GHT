@@ -1,3 +1,7 @@
+/*! \file rsx_program.h
+\brief RSX shader programming management.
+*/
+
 #ifndef __RSX_PROGRAM_H__
 #define __RSX_PROGRAM_H__
 

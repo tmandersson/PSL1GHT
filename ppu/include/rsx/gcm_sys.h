@@ -1,3 +1,7 @@
+/*! \file gcm_sys.h
+\brief RSX commands.
+*/
+
 #ifndef __GCM_SYS_H__
 #define __GCM_SYS_H__
 

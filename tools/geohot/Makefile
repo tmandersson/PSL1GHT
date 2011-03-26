@@ -1,7 +1,6 @@
-CFLAGS	+=	-I/opt/local/include -I/opt/local -I/usr/include
-LDFLAGS	+=	-L/opt/local/lib -L/usr/lib -lgmp -lcrypto -lz
+CFLAGS	+=	-I/opt/local/include -I/opt/local -I/usr/include -I/usr/local/include
+LDFLAGS	+=	-L/opt/local/lib -L/usr/lib -L/usr/local/lib -lgmp -lcrypto -lz
 POSTFIX	:=	
-CC		:=	gcc
 
 TARGETS	:=	make_self$(POSTFIX) make_self_npdrm$(POSTFIX) package_finalize$(POSTFIX)
 

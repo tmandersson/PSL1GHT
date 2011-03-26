@@ -132,7 +132,6 @@ The possible values are:
 	u8 padding[9];
 
 /*! \brief offset in bytes between the beginnings of consecutive lines.
-\todo to be verified.
 */
 	u32 pitch;
 } VideoConfiguration;

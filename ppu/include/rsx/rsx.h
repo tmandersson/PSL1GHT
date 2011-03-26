@@ -6,6 +6,21 @@ accelerated 3D chip of the PS3.
 
 */
 
+/*! \page rsxqk Quick guide to RSX programming
+
+RSX is the 3D accelerated of the PS3. Here are the basic steps to get it handle
+your 3D objects in your application.
+
+\section Initialization
+
+First of all, you need to setup the display.
+
+\todo Finish that page.
+
+
+*/
+
+
 #ifndef __RSX_H__
 #define __RSX_H__
 

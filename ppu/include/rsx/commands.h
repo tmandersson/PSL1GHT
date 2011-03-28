@@ -1,3 +1,9 @@
+/*! \file commands.h
+ \brief RSX commands.
+
+These are functions to enqueue commands into the RSX's command buffer.
+*/
+
 #ifndef __RSX_COMMANDS_H__
 #define __RSX_COMMANDS_H__
 
@@ -33,9 +39,28 @@ void rsxSetColorMask(gcmContextData *context,u32 mask);
 void rsxSetColorMaskMRT(gcmContextData *context,u32 mask);
 void rsxSetSurface(gcmContextData *context,gcmSurface *surface);
 void rsxSetReferenceCommand(gcmContextData *context,u32 ref_value);
+
+/*! \brief Enqueues a Wait for label command.
+\param context Pointer to the context object.
+\param index Label index
+\param valuie Label value
+*/
 void rsxSetWaitLabel(gcmContextData *context,u8 index,u32 value);
+
+/*! \brief Enqueues a Write Command label command.
+\param context Pointer to the context object.
+\param index Label index
+\param value Label value
+*/
 void rsxSetWriteCommandLabel(gcmContextData *context,u8 index,u32 value);
+
+/*! \brief Enqueues a Write Backend label command.
+\param context Pointer to the context object.
+\param index Label index
+\param value Label value
+*/
 void rsxSetWriteBackendLabel(gcmContextData *context,u8 index,u32 value);
+
 void rsxSetViewportClip(gcmContextData *context,u8 sel,u16 width,u16 height);
 void rsxSetViewport(gcmContextData *context,u16 x,u16 y,u16 width,u16 height,f32 min,f32 max,const f32 scale[4],const f32 offset[4]);
 void rsxInvalidateTextureCache(gcmContextData *context,u32 type);

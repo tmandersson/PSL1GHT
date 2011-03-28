@@ -1,5 +1,5 @@
 /*! \file gcm_sys.h
-\brief RSX commands.
+\brief RSX low level management.
 */
 
 #ifndef __GCM_SYS_H__
@@ -10,8 +10,11 @@
 #define GCM_TRUE								1
 #define GCM_FALSE								0
 
+/*! \brief flip on horizontal sync, accurate mode */
 #define GCM_FLIP_HSYNC							1
+/*! \brief flip on vertical sync */
 #define GCM_FLIP_VSYNC							2
+/*! \brief flip on horizontal sync, inaccurate mode */
 #define GCM_FLIP_HSYNC_AND_BREAK_EVERYTHING		3
 
 #define GCM_MAX_MRT_COUNT						4
@@ -238,6 +241,7 @@ typedef struct _gcmCtrlRegister
 	vu32 ref;
 } gcmControlRegister;
 
+/*! \brief RSX Configuration structure. */
 typedef struct _gcmCfg
 {
 	u32 localAddress;
@@ -287,17 +291,91 @@ typedef struct _gcmTexture
 
 typedef s32 (*gcmContextCallback)(gcmContextData *context,u32 count);
 
+/*! \brief Initialize the RSX context.
+
+\param ctx Pointer to where the effective address of the allocated context
+ structure will be stored.
+\param cmdSize The command buffer size.
+\param ioSize The allocated IO buffer size.
+\param ioAddress Pointer to an allocated buffer of \p ioSize bytes.
+\return zero if no error occured, nonzero otherwise.
+*/
 s32 gcmInitBody(u32 *ctx,const u32 cmdSize,const u32 ioSize,const void *ioAddress);
+
+/*! \brief Converts an effective address in RSX memory to an offset.
+\param address The effective address to be converted.
+\param offset A pointer to the returned offset value.
+\return zero if no error occured, nonzero otherwise.
+*/
 s32 gcmAddressToOffset(u32 address,u32 *offset);
+
+/*! \brief Converts an offset to an effective address in RSX memory.
+\param offset The offset to be converted.
+\param address A pointer to the returned effective address.
+\return zero if no error occured, nonzero otherwise.
+*/
 s32 gcmIoOffsetToAddress(u32 offset,u32 *address);
+
+/*! \brief Retrieves the RSX configuration.
+\param config A pointer to the configuration structure to be updated.
+\return zero if no error occured, nonzero otherwise.
+*/
 s32 gcmGetConfiguration(gcmConfiguration *config);
+
+/*! \brief Gets the flip status.
+
+Once a flip occurred, querying for a subsequent flip requires the flip status
+to be reset using \ref gcmResetFlipStatus.
+\return zero if no flip occured, nonzero otherwise.
+*/
 s32 gcmGetFlipStatus();
+
+/*! \brief Enqueues a flip command into the command buffer.
+\param context Pointer to the context object.
+\param bufferId Framebuffer id to flip to (as configured with
+   \ref gcmSetDisplayBuffer).
+\return zero if no error occured, nonzero otherwise.
+*/
 s32 gcmSetFlip(gcmContextData *context,u32 bufferId);
+
+/*! \brief Configures a display framebuffer.
+\param bufferId The buffer id (0-7).
+\param offset The offset of the allocated memory block (see \ref rsxAddressToOffset).
+\param pitch The size of a buffer line in bytes.
+\param width The buffer width in pixels.
+\param width The buffer height in pixels.
+\return zero if no error occured, nonzero otherwise.
+*/
 s32 gcmSetDisplayBuffer(u32 bufferId,u32 offset,u32 pitch,u32 width,u32 height);
+
+/*! \brief Maps a memory block in main memory for RSX to access it.
+\param address Pointer to the block to be mapped.
+\param size Size of the block in bytes.
+\param offset A pointer to the returned mapped offset value.
+\return zero if no error occured, nonzero otherwise.
+*/
 s32 gcmMapMainMemory(const void *address,const u32 size,u32 *offset);
+
+/*! \brief Get address of specified label.
+\param index The label index whose address is to be obtained.
+\return Pointer to the label address.
+*/
 u32* gcmGetLabelAddress(const u8 index);
+
+/*! \brief Reset the flip status. */
 void gcmResetFlipStatus();
+
+/*! \brief Set flip mode.
+\param mode The specified flip mode. Possible vales are:
+ - \ref GCM_FLIP_HSYNC
+ - \ref GCM_FLIP_VSYNC
+ - \ref GCM_FLIP_HSYNC_AND_BREAK_EVERYTHING
+*/
 void gcmSetFlipMode(s32 mode);
+
+/*! \brief Wait for a flip to be completed.
+\param context Pointer to the context object.
+*/
 void gcmSetWaitFlip(gcmContextData *context);
 void gcmSetVBlankHandler(void (*handler)(const u32 head));
 void gcmSetFlipHandler(void (*handler)(const u32 head));

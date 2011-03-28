@@ -33,7 +33,14 @@ First of all, you need to setup the display.
 extern "C" {
 #endif
 
-/*! \brief Initialize the RSX context.
+/*! \brief Initialize the RSX context and the RSX memory manager.
+
+The user must provide a 1 MB-aligned IO buffer allocated in main memory, which
+size is a multiple of 1 megabyte.
+
+This function initializes a heap structure in RSX memory space, allowing
+dynamic memory allocation using \ref rsxMalloc, \ref rsxMemalign and
+\ref rsxFree.
 \param cmdSize The command buffer size.
 \param ioSize The allocated IO buffer size.
 \param ioAddress Pointer to an allocated buffer of \p ioSize bytes.
@@ -41,7 +48,19 @@ extern "C" {
 */
 gcmContextData* rsxInit(const u32 cmdSize,const u32 ioSize,const void *ioAddress);
 
+/*! \brief Converts a pointer value in RSX memory to an offset.
+\param The pointer whose value is to be converted.
+\param A pointer to the returned offset value.
+\return zero if no error occured, nonzero otherwise.
+*/
 s32 rsxAddressToOffset(void *ptr,u32 *offset);
+
+/*! \brief Flushes the RSX command buffer.
+
+This ensures all remaining commands in the command buffer are executed, and
+that the buffer is empty when that function returns.
+\param context Pointer to the context object.
+*/
 void rsxFlushBuffer(gcmContextData *context);
 void rsxResetCommandBuffer(gcmContextData *context);
 void rsxFinish(gcmContextData *context,u32 ref_value);

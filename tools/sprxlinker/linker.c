@@ -120,7 +120,7 @@ int main(int argc,char *argv[])
 			}
 		}
 	}
-
+	
 	Elf_Scn *opdsection = getSection(elf,".opd");
 	Elf_Data *opddata = elf_getdata(opdsection,NULL);
 	Elf64_Shdr *opdshdr = elf64_getshdr(opdsection);

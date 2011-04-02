@@ -69,7 +69,7 @@ int main(uint64_t arg0,uint64_t arg1,uint64_t arg2,uint64_t arg3)
 		ea = SPU_THREAD_BASE + SPU_THREAD_Sig_Notify_1 + SPU_THREAD_OFFSET * (spu.rank+1);
 		mfc_putf(((uint32_t*)&sig)+3, ea, 4, TAG, 0, 0);
 
-		/* enqueue a sync command to ensure everything is actually
+		/* enqueue a sync command to ensure everything is actually 
 		   written to destination before the thread is exited */
 		mfc_sync(TAG);
 	}

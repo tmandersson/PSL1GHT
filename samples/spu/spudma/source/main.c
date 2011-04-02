@@ -20,7 +20,7 @@ int main(int argc,char *argv[])
 	sysSpuThreadArgument arg = { 0, 0, 0, 0 };
 	sysSpuThreadGroupAttribute grpattr = { 7+1, ptr2ea("mygroup"), 0, 0 };
 	sysSpuThreadAttribute attr = { ptr2ea("mythread"), 8+1, SPU_THREAD_ATTR_NONE };
-	
+
 	printf("spudma starting....\n");
 
 	sysSpuInitialize(6,0);

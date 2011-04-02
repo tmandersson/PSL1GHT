@@ -388,7 +388,7 @@ void CCompilerFP::emit_rep(struct nvfx_insn *insn)
 	param fpd = GetImmData(insn->src[0].reg.index);
 
 	if (insn->src[0].reg.type != NVFXSR_IMM ||
-	    (*fpd.values)[0] < 0.0 || (*fpd.values)[0] > 255.0) {
+		(*fpd.values)[0] < 0.0 || (*fpd.values)[0] > 255.0) {
 		fprintf(stderr,"Input to REP must be immediate number 0-255\n");
 		exit(EXIT_FAILURE);
 	}

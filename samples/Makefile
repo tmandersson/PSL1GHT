@@ -17,7 +17,7 @@ all:
 	@$(MAKE) -C network --no-print-directory
 	@$(MAKE) -C spu --no-print-directory
 	@$(MAKE) -C sys --no-print-directory
-	
+
 clean:
 	@$(MAKE) -C audio clean --no-print-directory
 	@$(MAKE) -C graphics clean --no-print-directory

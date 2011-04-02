@@ -8,7 +8,7 @@ TARGET		:=	cgcomp
 BUILD		:=	build
 SOURCES		:=	source
 INCLUDE		:=	include
-LIBDIRS		:=	
+LIBDIRS		:=
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -53,7 +53,7 @@ ifneq (,$(findstring Linux,$(UNAME)))
 	OS := Linux
 	EXTRAINSTALL := libCg.so
 endif
-	
+
 
 LIBS		:=
 
@@ -116,7 +116,7 @@ install: $(BUILD)
 	@echo Installing $(TARGET)$(EXEEXT) $(EXTRAINSTALL)
 	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
 	@install -m 755  $(OUTPUT) $(EXTLIBDIR)$(EXTRAINSTALL) $(DEVKITPS3)/bin
-		
+
 #---------------------------------------------------------------------------------
 else
 

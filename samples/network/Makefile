@@ -13,7 +13,7 @@ endif
 
 all:
 	@$(MAKE) -C ps3load --no-print-directory
-	
+
 clean:
 	@$(MAKE) -C ps3load clean --no-print-directory
 	

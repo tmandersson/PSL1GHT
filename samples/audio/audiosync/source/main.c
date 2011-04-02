@@ -18,7 +18,7 @@ void fillBuffer(f32 *buf)
 	for(i=0;i<AUDIO_BLOCK_SAMPLES;i++) {
 		buf[i*2 + 0] = (f32)*((s16*)&tada48_16_2_raw[pos])/32768.0f;
 		buf[i*2 + 1] = (f32)*((s16*)&tada48_16_2_raw[pos + 2])/32768.0f;
-		
+
 		pos += 4;
 		if(pos>=tada48_16_2_raw_size) pos = 0;
 	}
@@ -55,7 +55,7 @@ int main(int argc,char *argv[])
 	params.level = 1.0f;
 	ret = audioPortOpen(&params,&portNum);
 	printf("audioPortOpen: %08x\n",ret);
-	printf("      portNum: %d\n",portNum);
+	printf("  portNum: %d\n",portNum);
 
 	ret = audioGetPortConfig(portNum,&config);
 	printf("audioGetPortConfig: %08x\n",ret);
@@ -83,7 +83,7 @@ int main(int argc,char *argv[])
 	i = 0;
 	while(i<1000) {
 		playOneBlock(&config);
-		i++;
+			i++;
 	}
 
 	ret = audioPortStop(portNum);

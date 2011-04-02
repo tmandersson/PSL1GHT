@@ -24,7 +24,7 @@ INCLUDE		:= .
 CFLAGS		:= -O2 -Wall --std=gnu99
 LDFLAGS		:= -lelf
 
-CC			:= gcc
+CC		:= gcc
 
 CFILES		:= $(foreach dir,$(SOURCE),$(wildcard $(dir)/*.c))
 INCLUDES	:= $(foreach dir,$(INCLUDE),-I$(dir))
@@ -39,8 +39,8 @@ install: all
 clean:
 	@echo clean ...
 	@rm -rf $(TARGET)
-	
-$(TARGET):	$(CFILES)
+
+$(TARGET): $(CFILES)
 			@echo building ... $(notdir $@)
 			@$(CC) $(CFLAGS) $(INCLUDES) $< -o $@ $(LDFLAGS)
 			

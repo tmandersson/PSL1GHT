@@ -38,7 +38,7 @@ struct _options
 	true,
 	false
 };
-
+ 
 #define CG_SOURCE				4112
 #define CG_COMPILED_PROGRAM		4106
 #define CG_PROFILE_VP30			6148
@@ -365,7 +365,7 @@ int compileFP()
 				for(i=0;i<it->count;i++) {
 					s32 k = 0;
 					rsxConstOffsetTable *const_table = (rsxConstOffsetTable*)(fragmentprogram + lastoff);
-
+					
 					const_table->num = SWAP32(0);
 					for(std::list<struct fragment_program_data>::iterator d=const_relocs.begin();d!=const_relocs.end();d++) {
 						if(d->index==(it->index + i)) {
@@ -467,7 +467,7 @@ int main(int argc,char *argv[])
 
 	if(Options.gen_asm!=true && !InitCompiler()) {
         fprintf(stderr, "Unable to load Cg, aborting.\n");
-		fprintf(stderr, "Please install Cg toolkit and/or set the path (i.e. LD_LIBRARY_PATH) to the shared library accordingly.\n");
+        fprintf(stderr, "Please install Cg toolkit and/or set the path (i.e. LD_LIBRARY_PATH) to the shared library accordingly.\n");
         return EXIT_FAILURE;
     }
 

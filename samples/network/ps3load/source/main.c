@@ -26,15 +26,15 @@
 
 #define PS3LOADVER		"v0.3"
 
-#define PORT			4299
+#define PORT 4299
 #define MAX_ARG_CNT		256
 
 #define STACKSIZE		(256*1024)
 
 #define MIN(a,b)		((a)<(b) ? (a) : (b))
 
-#define ZIP_PATH		"/dev_hdd0/tmp/ps3load"
-#define SELF_PATH		ZIP_PATH ".self"
+#define ZIP_PATH "/dev_hdd0/tmp/ps3load"
+#define SELF_PATH ZIP_PATH ".self"
 
 #define ERROR(err,msg) do { \
 	if((err)<0) { \
@@ -72,7 +72,7 @@ static void empty_directory(const char *path)
 			rmdir(newpath);
 		} else
 			remove(newpath);
-	}
+		}
 	closedir(dirp);
 }
 

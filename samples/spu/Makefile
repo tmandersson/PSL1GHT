@@ -21,7 +21,7 @@ all:
 	@$(MAKE) -C spudma --no-print-directory
 	@$(MAKE) -C sputest --no-print-directory
 	@$(MAKE) -C sputhread --no-print-directory
-	
+
 clean:
 	@$(MAKE) -C spuchain clean --no-print-directory
 	@$(MAKE) -C spudma clean --no-print-directory

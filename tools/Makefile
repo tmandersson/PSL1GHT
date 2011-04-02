@@ -22,11 +22,11 @@ all:
 	@$(MAKE) -C generic --no-print-directory
 	@$(MAKE) -C cgcomp --no-print-directory
 	@$(MAKE) -C ps3py --no-print-directory
-	
+
 install-socat:
 	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
 	@cp -frv $(CURDIR)/socat/$(host)/* $(DEVKITPS3)/bin
-		
+
 install:
 	@$(MAKE) -C geohot install --no-print-directory
 	@$(MAKE) -C sprxlinker install --no-print-directory
@@ -42,5 +42,5 @@ clean:
 	@$(MAKE) -C generic clean --no-print-directory
 	@$(MAKE) -C cgcomp clean --no-print-directory
 	@$(MAKE) -C ps3py clean --no-print-directory
-	
+
 .PHONY: all clean install install-socat

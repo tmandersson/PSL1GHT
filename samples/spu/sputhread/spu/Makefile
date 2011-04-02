@@ -107,7 +107,7 @@ clean:
 #---------------------------------------------------------------------------------
 else
 
-DEPENDS	:=	$(OFILES:.o=.d)
+DEPENDS	:= $(OFILES:.o=.d)
 
 #---------------------------------------------------------------------------------
 # main targets
@@ -115,7 +115,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 ../../data/spu.bin: $(OUTPUT).elf
 	cp $< $@
 
-$(OUTPUT).elf:	$(OFILES)
+$(OUTPUT).elf: $(OFILES)
 
 -include $(DEPENDS)
 

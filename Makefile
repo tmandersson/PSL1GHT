@@ -39,7 +39,7 @@ install:
 	@$(MAKE) -C ppu install --no-print-directory
 	@$(MAKE) -C spu install --no-print-directory
 	@$(MAKE) -C tools install --no-print-directory
-	
+
 clean:
 	@$(MAKE) -C common clean --no-print-directory
 	@$(MAKE) -C ppu clean --no-print-directory

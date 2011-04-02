@@ -25,7 +25,7 @@ CFLAGS	+=	$(INCLUDE)
 
 LDFLAGS	=	$(DEBUGFLAGS)
 
-UNAME := $(shell uname -s)
+UNAME	:=	$(shell uname -s)
 
 
 ifneq (,$(findstring MINGW,$(UNAME)))

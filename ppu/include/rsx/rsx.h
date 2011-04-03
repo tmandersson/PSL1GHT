@@ -49,8 +49,8 @@ dynamic memory allocation using \ref rsxMalloc, \ref rsxMemalign and
 gcmContextData* rsxInit(const u32 cmdSize,const u32 ioSize,const void *ioAddress);
 
 /*! \brief Converts a pointer value in RSX memory to an offset.
-\param The pointer whose value is to be converted.
-\param A pointer to the returned offset value.
+\param ptr The pointer whose value is to be converted.
+\param offset A pointer to the returned offset value.
 \return zero if no error occured, nonzero otherwise.
 */
 s32 rsxAddressToOffset(void *ptr,u32 *offset);

@@ -343,7 +343,7 @@ s32 gcmSetFlip(gcmContextData *context,u32 bufferId);
 \param offset The offset of the allocated memory block (see \ref rsxAddressToOffset).
 \param pitch The size of a buffer line in bytes.
 \param width The buffer width in pixels.
-\param width The buffer height in pixels.
+\param height The buffer height in pixels.
 \return zero if no error occured, nonzero otherwise.
 */
 s32 gcmSetDisplayBuffer(u32 bufferId,u32 offset,u32 pitch,u32 width,u32 height);

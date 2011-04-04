@@ -63,8 +63,41 @@ void rsxSetWriteBackendLabel(gcmContextData *context,u8 index,u32 value);
 
 void rsxSetViewportClip(gcmContextData *context,u8 sel,u16 width,u16 height);
 void rsxSetViewport(gcmContextData *context,u16 x,u16 y,u16 width,u16 height,f32 min,f32 max,const f32 scale[4],const f32 offset[4]);
+
+/*! \brief Invalidates a texture cache.
+\param context Pointer to the context object.
+\param type Type of texture cache to be invalidated. Possible values are:
+ - \ref GCM_INVALIDATE_TEXTURE
+ - \ref GCM_INVALIDATE_VERTEX_TEXTURE
+*/
 void rsxInvalidateTextureCache(gcmContextData *context,u32 type);
+
+/*! \brief Loads a texture.
+\param context Pointer to the context object.
+\param index Texture index.
+\param texture Pointer to the texture data.
+*/
 void rsxLoadTexture(gcmContextData *context,u8 index,const gcmTexture *texture);
+
+/*! \brief Set texture control parameters.
+\param context Pointer to the context object.
+\param index Texture index.
+\param enable Enable flag. Possible values are:
+ - \ref GCM_TRUE
+ - \ref GCM_FALSE
+\param minlod min lod value
+\param maxlod max lod value
+\param maxaniso max aniso value. Possible values are:
+ - \ref GCM_TEXTURE_MAX_ANISO_1
+ - \ref GCM_TEXTURE_MAX_ANISO_2
+ - \ref GCM_TEXTURE_MAX_ANISO_4
+ - \ref GCM_TEXTURE_MAX_ANISO_6
+ - \ref GCM_TEXTURE_MAX_ANISO_8
+ - \ref GCM_TEXTURE_MAX_ANISO_10
+ - \ref GCM_TEXTURE_MAX_ANISO_12
+ - \ref GCM_TEXTURE_MAX_ANISO_16
+\todo finish args documentation.
+*/
 void rsxTextureControl(gcmContextData *context,u8 index,u32 enable,u16 minlod,u16 maxlod,u8 maxaniso);
 void rsxTextureFilter(gcmContextData *context,u8 index,u8 min,u8 mag,u8 conv);
 void rsxTextureWrapMode(gcmContextData *context,u8 index,u8 wraps,u8 wrapt,u8 wrapr,u8 unsignedRemap,u8 zfunc,u8 gamma);

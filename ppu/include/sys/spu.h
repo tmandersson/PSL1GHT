@@ -6,7 +6,7 @@
   \see \ref spu_man
 */
 
-/*! \page spu_man SPU management
+/*! \page spu_man Quick guide to SPU management
 
 \section Introduction
 

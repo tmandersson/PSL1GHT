@@ -3,13 +3,13 @@
 
 \mainpage psl1ght-v2 Documentation
 
-\author shagkur
-\author miigotu
-\author zerkman
+\author the psl1ght-v2 team
 
 \section Main topics
 
-Visit the \ref page_install "Installation page".
+ - The \ref page_install "Installation page".
+ - The \ref spu_man.
+ - The \ref rsxqk.
 
 \section Links
  - <a href="http://git-hacks.com/devkitpro-addons/devkitps3-psl1ght-v2">

@@ -19,7 +19,8 @@ Credits
     ooPo        - ps3libraries
     ElSemi      - Vertex Program Compiler
     zerkman     - SPU sample code
-
+    shagkur     - Author
+    miigotu     - Author
 
 
 Environment
@@ -63,7 +64,7 @@ Current Status
 
 ### Graphics
 
-PSL1GHT supports hardware acclerated 3d graphics. 
+PSL1GHT supports hardware acclerated 3d graphics.
 Vertex shaders are a work in progress and Fragment shaders don't exsist yet.
 
 ### Input

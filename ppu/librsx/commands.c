@@ -841,3 +841,13 @@ void rsxSetBlendEnable(gcmContextData *context,u32 enable)
 
 	RSX_CONTEXT_CURRENT_END(2);
 }
+
+void rsxSetTransformBranchBits(gcmContextData *context,u32 branchBits)
+{
+	RSX_CONTEXT_CURRENT_BEGIN(2);
+
+	RSX_CONTEXT_CURRENTP[0] = RSX_METHOD(NV40TCL_VP_TRANSFORM_BRANCH_BITS,1);
+	RSX_CONTEXT_CURRENTP[1] = branchBits;
+
+	RSX_CONTEXT_CURRENT_END(2);
+}

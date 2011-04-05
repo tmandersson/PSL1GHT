@@ -11,6 +11,14 @@ CC	:=	gcc
 
 CFLAGS	:=	-Wall -Wno-char-subscripts -O2 -s
 
+ifeq ($(strip $(PS3DEV)),)
+  ifeq ($(strip $(DEVKITPS3)),)
+    export PS3DEV := /usr/local/ps3dev
+  else
+    export PS3DEV := $(DEVKITPS3)
+  endif
+endif
+
 ifneq (,$(findstring MINGW,$(shell uname -s)))
 	exeext		:= .exe
 endif

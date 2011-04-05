@@ -1,5 +1,13 @@
 UNAME	:=	$(shell uname -s)
 
+ifeq ($(strip $(PS3DEV)),)
+  ifeq ($(strip $(DEVKITPS3)),)
+    export PS3DEV := /usr/local/ps3dev
+  else
+    export PS3DEV := $(DEVKITPS3)
+  endif
+endif
+
 ifneq (,$(findstring MINGW,$(UNAME)))
 	PLATFORM	:= win32
 	COMPILER	:= --compiler=mingw32

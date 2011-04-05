@@ -22,6 +22,14 @@ CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
 
 LDFLAGS	=	$(DEBUGFLAGS)
 
+ifeq ($(strip $(PS3DEV)),)
+  ifeq ($(strip $(DEVKITPS3)),)
+    export PS3DEV := /usr/local/ps3dev
+  else
+    export PS3DEV := $(DEVKITPS3)
+  endif
+endif
+
 ifneq (,$(findstring MINGW,$(UNAME)))
 	PLATFORM	:= win32
 	EXEEXT		:= .exe
@@ -48,9 +56,7 @@ ifneq (,$(findstring Linux,$(UNAME)))
 	OS := Linux
 endif
 
-
 LIBS		:=
-
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional

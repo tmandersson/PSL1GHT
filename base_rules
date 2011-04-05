@@ -1,3 +1,11 @@
+ifeq ($(strip $(PS3DEV)),)
+  ifeq ($(strip $(DEVKITPS3)),)
+    export PS3DEV := /usr/local/ps3dev
+  else
+    export PS3DEV := $(DEVKITPS3)
+  endif
+endif
+
 #---------------------------------------------------------------------------------
 # the prefix on the compiler executables
 #---------------------------------------------------------------------------------
@@ -42,7 +50,7 @@ endif
 %.o: %.cpp
 	@echo $(notdir $<)
 	@$(CXX) $(DEPSOPT) $(CXXFLAGS) -c $< -o $@ $(ERROR_FILTER)
-	
+
 #---------------------------------------------------------------------------------
 %.o: %.c
 	@echo $(notdir $<)

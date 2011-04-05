@@ -10,6 +10,14 @@ CFLAGS		+=	$(INCLUDES)
 CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
 LDFLAGS		=	$(DEBUGFLAGS)
 
+ifeq ($(strip $(PS3DEV)),)
+  ifeq ($(strip $(DEVKITPS3)),)
+    export PS3DEV := /usr/local/ps3dev
+  else
+    export PS3DEV := $(DEVKITPS3)
+  endif
+endif
+
 ifneq (,$(findstring MINGW,$(UNAME)))
 	PLATFORM	:= win32
 	POSTFIX		:= .exe

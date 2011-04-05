@@ -3,9 +3,6 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(PS3DEV)),)
-$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
-endif
 
 ifeq ($(strip $(PSL1GHT)),)
 $(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
@@ -14,6 +11,10 @@ endif
 include	$(PSL1GHT)/ppu_rules
 
 BUILD		:=	build
+
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
+endif
 
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(PLATFORM)),)

@@ -3,11 +3,16 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(PS3DEV)),)
-$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
-endif
 
 UNAME	:=	$(shell uname -s)
+
+ifeq ($(strip $(PS3DEV)),)
+  ifeq ($(strip $(DEVKITPS3)),)
+    export PS3DEV := /usr/local/ps3dev
+  else
+    export PS3DEV := $(DEVKITPS3)
+  endif
+endif
 
 ifneq (,$(findstring MINGW,$(UNAME)))
 	POSTFIX	:= .exe

@@ -1,6 +1,6 @@
-export PATH	:=	$(DEVKITPS3)/bin:$(DEVKITPS3)/ppu/bin:$(PATH)
+export PATH	:=	$(PS3DEV)/bin:$(PS3DEV)/ppu/bin:$(PATH)
 
-export PORTLIBS	:=	$(DEVKITPRO)/portlibs/ppu
+export PORTLIBS	:=	$(PS3DEV)/portlibs/ppu
 
 export LIBPSL1GHT_INC	:=	-I$(PSL1GHT)/ppu/include -I$(PSL1GHT)/ppu/include/simdmath
 export LIBPSL1GHT_LIB	:=	-L$(PSL1GHT)/ppu/lib
@@ -9,7 +9,7 @@ PREFIX	:=	ppu-
 
 MACHDEP =  -mhard-float -fmodulo-sched -ffunction-sections -fdata-sections
 
-include $(DEVKITPS3)/base_rules
+include $(PS3DEV)/base_rules
 
 PKG			:=	pkg.py
 SFO			:=	sfo.py
@@ -36,7 +36,7 @@ PACKAGE_FINALIZE := package_finalize
 %.vpo: %.vcg
 	@echo $(notdir $<)
 	@$(CGCOMP) -v $^ $@
-	
+
 %.fpo: %.fcg
 	@echo $(notdir $<)
 	@$(CGCOMP) -f $^ $@

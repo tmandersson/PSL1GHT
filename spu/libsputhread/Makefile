@@ -3,15 +3,12 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
-endif
-
-include	$(DEVKITPS3)/spu_rules
+include	$(PS3DEV)/spu_rules
 
 BUILD		:=	build
 
@@ -47,7 +44,7 @@ VPATH :=	$(BASEDIR)
 #---------------------------------------------------------------------------------
 OBJS		:= \
 			spu_thread_group_exit.o spu_thread_group_yield.o spu_thread_exit.o
-			
+
 all: spu
 
 #---------------------------------------------------------------------------------
@@ -65,7 +62,7 @@ install: all
 	@cp -frv $(CURDIR)/lib/spu/*.a $(PSL1GHT)/spu/lib
 
 #---------------------------------------------------------------------------------
-$(LIBRARY).a: $(OBJS)	
+$(LIBRARY).a: $(OBJS)
 #---------------------------------------------------------------------------------
 
 .PHONY: lib spu install

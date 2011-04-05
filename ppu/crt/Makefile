@@ -3,11 +3,11 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
-include	$(DEVKITPS3)/ppu_rules
+include	$(PS3DEV)/ppu_rules
 
 BUILD		:=	build
 
@@ -42,7 +42,7 @@ VPATH :=	$(BASEDIR)
 #---------------------------------------------------------------------------------
 OBJS		:= \
 			crt0.o crt1.o lv2-crti.o lv2-crtn.o lv2-sprx.o
-			
+
 all: ppu
 
 #---------------------------------------------------------------------------------
@@ -55,9 +55,9 @@ ppu:
 #---------------------------------------------------------------------------------
 install: all
 #---------------------------------------------------------------------------------
-	@cp -frv $(CURDIR)/ppu/lv2-*.o $(DEVKITPS3)/ppu/ppu/lib
-	@cp -frv $(CURDIR)/lv2.ld $(DEVKITPS3)/ppu/ppu/lib
-	
+	@cp -frv $(CURDIR)/ppu/lv2-*.o $(PS3DEV)/ppu/ppu/lib
+	@cp -frv $(CURDIR)/lv2.ld $(PS3DEV)/ppu/ppu/lib
+
 .PHONY: crts ppu install
 
 #---------------------------------------------------------------------------------

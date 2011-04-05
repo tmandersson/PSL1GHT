@@ -17,7 +17,7 @@ clean:
 	@rm -rf build pkgcrypt.*
 
 install: all
-	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
+	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
 	@echo Installing ICON0.PNG sfo.xml pkgcrypt.* fself.py Struct.py sfo.py pkg.py
-	@install -m 644 ICON0.PNG sfo.xml pkgcrypt.* $(DEVKITPS3)/bin
-	@./install-scripts $(DEVKITPS3)/bin/ fself.py Struct.py sfo.py pkg.py
+	@install -m 644 ICON0.PNG sfo.xml pkgcrypt.* $(PS3DEV)/bin
+	@./install-scripts $(PS3DEV)/bin/ fself.py Struct.py sfo.py pkg.py

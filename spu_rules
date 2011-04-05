@@ -1,6 +1,6 @@
-export PATH	:=	$(DEVKITPS3)/bin:$(DEVKITPS3)/spu/bin:$(PATH)
+export PATH	:=	$(PS3DEV)/bin:$(PS3DEV)/spu/bin:$(PATH)
 
-export PORTLIBS	:=	$(DEVKITPRO)/portlibs/spu
+export PORTLIBS	:=	$(PS3DEV)/portlibs/spu
 
 export LIBPSL1GHT_INC	:=	-I$(PSL1GHT)/spu/include -I$(PSL1GHT)/spu/include/simdmath
 export LIBPSL1GHT_LIB	:=	-L$(PSL1GHT)/spu/lib
@@ -9,6 +9,6 @@ PREFIX	:=	spu-
 
 MACHDEP =
 
-include $(DEVKITPS3)/base_rules
+include $(PS3DEV)/base_rules
 
 #---------------------------------------------------------------------------------

@@ -3,12 +3,9 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
-endif
 
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
 .PHONY: samples
@@ -26,14 +23,14 @@ doc:
 	@doxygen doxygen.conf
 
 install-ctrl:
-	@[ -d $(DEVKITPS3) ] || mkdir -p $(DEVKITPS3)
-	@[ -f $(DEVKITPS3)/base_rules ] || cp -frv base_rules $(DEVKITPS3)
-	@[ -f $(DEVKITPS3)/ppu_rules ]  || cp -frv ppu_rules  $(DEVKITPS3)
-	@[ -f $(DEVKITPS3)/spu_rules ]  || cp -frv spu_rules  $(DEVKITPS3)
-	
+	@[ -d $(PS3DEV) ] || mkdir -p $(PS3DEV)
+	@[ -f $(PS3DEV)/base_rules ] || cp -frv base_rules $(PS3DEV)
+	@[ -f $(PS3DEV)/ppu_rules ]  || cp -frv ppu_rules  $(PS3DEV)
+	@[ -f $(PS3DEV)/spu_rules ]  || cp -frv spu_rules  $(PS3DEV)
+
 install-socat:
-	@$(MAKE) -C tools install-socat --no-print-directory	
-	
+	@$(MAKE) -C tools install-socat --no-print-directory
+
 install:
 	@$(MAKE) -C common install --no-print-directory
 	@$(MAKE) -C ppu install --no-print-directory

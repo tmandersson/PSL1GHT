@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
 #---------------------------------------------------------------------------------
@@ -114,8 +114,8 @@ clean:
 #---------------------------------------------------------------------------------
 install: $(BUILD)
 	@echo Installing $(TARGET)$(EXEEXT)
-	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
-	@install -m 755 $(OUTPUT) $(DEVKITPS3)/bin
+	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
+	@install -m 755 $(OUTPUT) $(PS3DEV)/bin
 
 #---------------------------------------------------------------------------------
 run:

@@ -3,8 +3,8 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
 UNAME	:=	$(shell uname -s)
@@ -33,9 +33,9 @@ all: $(TARGET)
 
 install: all
 	@echo Installing $(TARGET)
-	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
-	@install -m 755 $(TARGET) $(DEVKITPS3)/bin
-	
+	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
+	@install -m 755 $(TARGET) $(PS3DEV)/bin
+
 clean:
 	@echo clean ...
 	@rm -rf $(TARGET)
@@ -43,4 +43,4 @@ clean:
 $(TARGET): $(CFILES)
 			@echo building ... $(notdir $@)
 			@$(CC) $(CFLAGS) $(INCLUDES) $< -o $@ $(LDFLAGS)
-			
+

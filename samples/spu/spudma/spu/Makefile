@@ -3,11 +3,11 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
-include $(DEVKITPS3)/spu_rules
+include $(PS3DEV)/spu_rules
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output

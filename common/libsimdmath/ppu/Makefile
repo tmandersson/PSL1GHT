@@ -3,15 +3,11 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
-endif
-
-include	$(DEVKITPS3)/ppu_rules
+include	$(PS3DEV)/ppu_rules
 
 BUILD		:=	build
 
@@ -53,7 +49,7 @@ OBJS		:= \
 			fminf4.o fmodf4.o frexpf4.o hypotf4.o ilogbf4.o ldexpf4.o logf4.o log1pf4.o log2f4.o \
 			log10f4.o logbf4.o modff4.o negatef4.o negatei4.o powf4.o recipf4.o rsqrtf4.o sincosf4.o \
 			sinf4.o sqrtf4.o tanf4.o truncf4.o
-			
+
 all: ppu
 
 #---------------------------------------------------------------------------------
@@ -71,13 +67,13 @@ install-header:
 	@cp -frv $(CURDIR)/../common/simdmath.h $(PSL1GHT)/ppu/include/simdmath
 
 #---------------------------------------------------------------------------------
-install: all install-header 
+install: all install-header
 #---------------------------------------------------------------------------------
 	@[ -d $(PSL1GHT)/ppu/lib ] || mkdir -p $(PSL1GHT)/ppu/lib
 	@cp -frv $(CURDIR)/lib/ppu/*.a $(PSL1GHT)/ppu/lib
 
 #---------------------------------------------------------------------------------
-$(LIBRARY).a: $(OBJS)	
+$(LIBRARY).a: $(OBJS)
 #---------------------------------------------------------------------------------
 
 .PHONY: lib ppu clean install

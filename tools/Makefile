@@ -1,6 +1,6 @@
 .SUFFIXES:
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
 ifneq (,$(findstring MINGW,$(shell uname -s)))
@@ -24,8 +24,8 @@ all:
 	@$(MAKE) -C ps3py --no-print-directory
 
 install-socat:
-	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
-	@cp -frv $(CURDIR)/socat/$(host)/* $(DEVKITPS3)/bin
+	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
+	@cp -frv $(CURDIR)/socat/$(host)/* $(PS3DEV)/bin
 
 install:
 	@$(MAKE) -C geohot install --no-print-directory

@@ -1,11 +1,3 @@
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
-endif
-
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
-endif
-
 all:
 	@$(MAKE) -C libio --no-print-directory
 	@$(MAKE) -C liblv2 --no-print-directory

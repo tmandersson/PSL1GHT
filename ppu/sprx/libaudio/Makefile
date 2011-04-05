@@ -1,15 +1,12 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
-endif
-
-include	$(DEVKITPS3)/ppu_rules
+include	$(PS3DEV)/ppu_rules
 
 BUILD		:=	build
 SOURCES		:=	../common .
@@ -91,7 +88,7 @@ lib: $(LIBRARY).a
 libexport.o: libexport.c
 	@$(CC) $(DEPSOPT) -S -m32 $(INCLUDE) $< -o libexport.S
 	@$(CC) $(DEPSOPT) -c libexport.S -o $@
-	
+
 sprx.o: exports.o libexport.o
 		@$(LD) -r exports.o libexport.o -o $@
 #---------------------------------------------------------------------------------

@@ -108,8 +108,8 @@ clean:
 
 install: $(BUILD)
 	@echo Installing $(TARGET)$(EXEEXT)
-	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
-	@install -m 755  $(OUTPUT) $(DEVKITPS3)/bin
+	@[ -d $(PS3DEV)/bin ] || mkdir -p $(PS3DEV)/bin
+	@install -m 755  $(OUTPUT) $(PS3DEV)/bin
 
 #---------------------------------------------------------------------------------
 else

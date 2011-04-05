@@ -3,15 +3,11 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
-endif
-
-include	$(DEVKITPS3)/spu_rules
+include	$(PS3DEV)/spu_rules
 
 BUILD		:=	build
 
@@ -61,8 +57,8 @@ OBJS		:= \
 			isunorderedd2.o llrintd2.o roundf4.o rintf4.o irintf4.o iroundf4.o fmad2.o fmaxd2.o fmind2.o fdimd2.o \
 			nextafterd2.o fpclassifyf4.o fpclassifyd2.o nearbyintd2.o nextafterf4.o nearbyintf4.o llabsi2.o truncd2.o \
 			llabsi2.o truncd2.o roundd2.o rintd2.o negatell2.o divu4.o modfd2.o lldivu2.o ceild2.o floord2.o ldexpd2.o \
-			scalbnf4.o scalbllnd2.o lldivi2.o remquof4.o remquod2.o fmodd2.o remainderd2.o			
-			
+			scalbnf4.o scalbllnd2.o lldivi2.o remquof4.o remquod2.o fmodd2.o remainderd2.o
+
 all: spu
 
 #---------------------------------------------------------------------------------
@@ -86,7 +82,7 @@ install: all install-header
 	@cp -frv $(CURDIR)/lib/spu/*.a $(PSL1GHT)/spu/lib
 
 #---------------------------------------------------------------------------------
-$(LIBRARY).a: $(OBJS)	
+$(LIBRARY).a: $(OBJS)
 #---------------------------------------------------------------------------------
 
 .PHONY: lib spu clean install

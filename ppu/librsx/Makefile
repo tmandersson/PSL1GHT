@@ -3,15 +3,12 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+
+ifeq ($(strip $(PS3DEV)),)
+$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
-endif
-
-include	$(DEVKITPS3)/ppu_rules
+include	$(PS3DEV)/ppu_rules
 
 BUILD		:=	build
 
@@ -48,7 +45,7 @@ VPATH :=	$(BASEDIR)
 #---------------------------------------------------------------------------------
 OBJS		:= \
 			init.o buffer.o commands.o mm.o vertex_program.o fragment_program.o
-			
+
 all: ppu
 
 #---------------------------------------------------------------------------------
@@ -66,7 +63,7 @@ install: all
 	@cp -frv $(CURDIR)/lib/ppu/*.a $(PSL1GHT)/ppu/lib
 
 #---------------------------------------------------------------------------------
-$(LIBRARY).a: $(OBJS)	
+$(LIBRARY).a: $(OBJS)
 #---------------------------------------------------------------------------------
 
 .PHONY: lib ppu install

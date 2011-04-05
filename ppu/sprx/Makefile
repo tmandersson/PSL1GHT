@@ -19,7 +19,9 @@ all:
 	@$(MAKE) -C libsysfs --no-print-directory
 	@$(MAKE) -C libsysutil --no-print-directory
 	@$(MAKE) -C libsysmodule --no-print-directory
-	
+	@$(MAKE) -C libhttp --no-print-directory
+	@$(MAKE) -C libhttputil --no-print-directory
+
 install:
 	@$(MAKE) -C libio install --no-print-directory
 	@$(MAKE) -C liblv2 install --no-print-directory
@@ -33,7 +35,9 @@ install:
 	@$(MAKE) -C libsysfs install --no-print-directory
 	@$(MAKE) -C libsysutil install --no-print-directory
 	@$(MAKE) -C libsysmodule install --no-print-directory
-	
+	@$(MAKE) -C libhttp clean --no-print-directory
+	@$(MAKE) -C libhttputil clean --no-print-directory
+
 clean:
 	@$(MAKE) -C libio clean --no-print-directory
 	@$(MAKE) -C liblv2 clean --no-print-directory
@@ -47,5 +51,7 @@ clean:
 	@$(MAKE) -C libsysfs clean --no-print-directory
 	@$(MAKE) -C libsysutil clean --no-print-directory
 	@$(MAKE) -C libsysmodule clean --no-print-directory
-	
+	@$(MAKE) -C libhttp clean --no-print-directory
+	@$(MAKE) -C libhttputil clean --no-print-directory
+
 .PHONY: all clean install

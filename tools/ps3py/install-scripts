@@ -6,5 +6,5 @@ python=`"$find_python"`
 for file; do
   basefile=`basename "$file"`
   sed -e '1s!python.*!'"$python"'!' < "$file" > "$target"/"$basefile"
-  test -x "$file" || chmod +x "$target"/"$basefile"
+  test -x "$file" && chmod +x "$target"/"$basefile"
 done

@@ -1,4 +1,4 @@
-export PATH	:=	$(PS3DEV)/bin:$(PS3DEV)/spu/bin:$(PATH)
+export PATH	:=	$(PSL1GHT)/bin:$(PSL1GHT)/spu/bin:$(PATH)
 
 export PORTLIBS	:=	$(PS3DEV)/portlibs/spu
 
@@ -9,6 +9,6 @@ PREFIX	:=	spu-
 
 MACHDEP =
 
-include $(PS3DEV)/base_rules
+include $(PSL1GHT)/base_rules
 
 #---------------------------------------------------------------------------------

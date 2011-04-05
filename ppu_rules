@@ -1,4 +1,4 @@
-export PATH	:=	$(PS3DEV)/bin:$(PS3DEV)/ppu/bin:$(PATH)
+export PATH	:=	$(PSL1GHT)/bin:$(PSL1GHT)/ppu/bin:$(PATH)
 
 export PORTLIBS	:=	$(PS3DEV)/portlibs/ppu
 
@@ -9,7 +9,7 @@ PREFIX	:=	ppu-
 
 MACHDEP =  -mhard-float -fmodulo-sched -ffunction-sections -fdata-sections
 
-include $(PS3DEV)/base_rules
+include $(PSL1GHT)/base_rules
 
 PKG			:=	pkg.py
 SFO			:=	sfo.py

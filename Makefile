@@ -4,8 +4,8 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
-ifeq ($(strip $(PS3DEV)),)
-$(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
+ifeq ($(strip $(PSL1GHT)),)
+$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
 endif
 
 .PHONY: samples
@@ -23,10 +23,10 @@ doc:
 	@doxygen doxygen.conf
 
 install-ctrl:
-	@[ -d $(PS3DEV) ] || mkdir -p $(PS3DEV)
-	@[ -f $(PS3DEV)/base_rules ] || cp -frv base_rules $(PS3DEV)
-	@[ -f $(PS3DEV)/ppu_rules ]  || cp -frv ppu_rules  $(PS3DEV)
-	@[ -f $(PS3DEV)/spu_rules ]  || cp -frv spu_rules  $(PS3DEV)
+	@[ -d $(PSL1GHT) ] || mkdir -p $(PSL1GHT)
+	@[ -f $(PSL1GHT)/base_rules ] || cp -frv base_rules $(PSL1GHT)
+	@[ -f $(PSL1GHT)/ppu_rules ]  || cp -frv ppu_rules  $(PSL1GHT)
+	@[ -f $(PSL1GHT)/spu_rules ]  || cp -frv spu_rules  $(PSL1GHT)
 
 install-socat:
 	@$(MAKE) -C tools install-socat --no-print-directory

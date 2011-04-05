@@ -2,8 +2,8 @@ export PATH	:=	$(DEVKITPS3)/bin:$(DEVKITPS3)/spu/bin:$(PATH)
 
 export PORTLIBS	:=	$(DEVKITPRO)/portlibs/spu
 
-export LIBPSL1GHT_INC	:=	-I$(DEVKITPRO)/libpsl1ght/spu/include -I$(DEVKITPRO)/libpsl1ght/spu/include/simdmath
-export LIBPSL1GHT_LIB	:=	-L$(DEVKITPRO)/libpsl1ght/spu/lib
+export LIBPSL1GHT_INC	:=	-I$(PSL1GHT)/spu/include -I$(PSL1GHT)/spu/include/simdmath
+export LIBPSL1GHT_LIB	:=	-L$(PSL1GHT)/spu/lib
 
 PREFIX	:=	spu-
 

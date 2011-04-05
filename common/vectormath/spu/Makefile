@@ -14,9 +14,9 @@ endif
 all:
 	
 install:
-	@[ -d $(DEVKITPRO)/libpsl1ght/spu/include/vectormath ] || mkdir -p $(DEVKITPRO)/libpsl1ght/spu/include/vectormath
-	@cp -frv $(CURDIR)/c $(DEVKITPRO)/libpsl1ght/spu/include/vectormath
-	@cp -frv $(CURDIR)/cpp $(DEVKITPRO)/libpsl1ght/spu/include/vectormath
+	@[ -d $(PSL1GHT)/spu/include/vectormath ] || mkdir -p $(PSL1GHT)/spu/include/vectormath
+	@cp -frv $(CURDIR)/c $(PSL1GHT)/spu/include/vectormath
+	@cp -frv $(CURDIR)/cpp $(PSL1GHT)/spu/include/vectormath
 	
 clean:
 	

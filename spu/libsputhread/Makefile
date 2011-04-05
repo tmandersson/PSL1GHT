@@ -61,8 +61,8 @@ spu:
 #---------------------------------------------------------------------------------
 install: all
 #---------------------------------------------------------------------------------
-	@[ -d $(DEVKITPRO)/libpsl1ght/spu/lib ] || mkdir -p $(DEVKITPRO)/libpsl1ght/spu/lib
-	@cp -frv $(CURDIR)/lib/spu/*.a $(DEVKITPRO)/libpsl1ght/spu/lib
+	@[ -d $(PSL1GHT)/spu/lib ] || mkdir -p $(PSL1GHT)/spu/lib
+	@cp -frv $(CURDIR)/lib/spu/*.a $(PSL1GHT)/spu/lib
 
 #---------------------------------------------------------------------------------
 $(LIBRARY).a: $(OBJS)	

@@ -15,8 +15,8 @@ all:
 	@$(MAKE) -C libsputhread --no-print-directory
 	
 install-headers:
-	@[ -d $(DEVKITPRO)/libpsl1ght/spu ] || mkdir -p $(DEVKITPRO)/libpsl1ght/spu
-	@cp -frv include $(DEVKITPRO)/libpsl1ght/spu
+	@[ -d $(PSL1GHT)/spu ] || mkdir -p $(PSL1GHT)/spu
+	@cp -frv include $(PSL1GHT)/spu
 	
 install: install-headers
 	@$(MAKE) -C libsputhread install --no-print-directory

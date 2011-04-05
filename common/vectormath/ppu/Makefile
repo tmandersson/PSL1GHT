@@ -14,9 +14,9 @@ endif
 all:
 	
 install:
-	@[ -d $(DEVKITPRO)/libpsl1ght/ppu/include/vectormath ] || mkdir -p $(DEVKITPRO)/libpsl1ght/ppu/include/vectormath
-	@cp -frv $(CURDIR)/c $(DEVKITPRO)/libpsl1ght/ppu/include/vectormath
-	@cp -frv $(CURDIR)/cpp $(DEVKITPRO)/libpsl1ght/ppu/include/vectormath
+	@[ -d $(PSL1GHT)/ppu/include/vectormath ] || mkdir -p $(PSL1GHT)/ppu/include/vectormath
+	@cp -frv $(CURDIR)/c $(PSL1GHT)/ppu/include/vectormath
+	@cp -frv $(CURDIR)/cpp $(PSL1GHT)/ppu/include/vectormath
 	
 clean:
 	

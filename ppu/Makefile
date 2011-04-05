@@ -18,8 +18,8 @@ all:
 	@$(MAKE) -C librsx --no-print-directory
 	
 install-headers:
-	@[ -d $(DEVKITPRO)/libpsl1ght/ppu ] || mkdir -p $(DEVKITPRO)/libpsl1ght/ppu
-	@cp -frv include $(DEVKITPRO)/libpsl1ght/ppu
+	@[ -d $(PSL1GHT)/ppu ] || mkdir -p $(PSL1GHT)/ppu
+	@cp -frv include $(PSL1GHT)/ppu
 	
 install: install-headers
 	@$(MAKE) -C crt install --no-print-directory

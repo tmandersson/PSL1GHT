@@ -19,5 +19,5 @@ clean:
 install: all
 	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
 	@echo Installing ICON0.PNG sfo.xml pkgcrypt.* fself.py Struct.py sfo.py pkg.py
-	@install -m 755 ICON0.PNG sfo.xml pkgcrypt.* $(DEVKITPS3)/bin
+	@install -m 644 ICON0.PNG sfo.xml pkgcrypt.* $(DEVKITPS3)/bin
 	@./install-scripts $(DEVKITPS3)/bin/ fself.py Struct.py sfo.py pkg.py

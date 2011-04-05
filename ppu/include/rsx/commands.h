@@ -117,6 +117,7 @@ void rsxSetBlendFunc(gcmContextData *context,u16 sfcolor,u16 dfcolor,u16 sfalpha
 void rsxSetBlendEquation(gcmContextData *context,u16 color,u16 alpha);
 void rsxSetBlendColor(gcmContextData *context,u16 color0,u16 color1);
 void rsxSetBlendEnable(gcmContextData *context,u32 enable);
+void rsxSetTransformBranchBits(gcmContextData *context,u32 branchBits);
 
 #ifdef __cplusplus
 	}

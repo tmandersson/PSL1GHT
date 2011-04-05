@@ -20,7 +20,7 @@ all:
 	@$(MAKE) -C sprxlinker --no-print-directory
 	@$(MAKE) -C ps3load --no-print-directory
 	@$(MAKE) -C generic --no-print-directory
-	#@$(MAKE) -C cgcomp --no-print-directory
+	@$(MAKE) -C cgcomp --no-print-directory
 	@$(MAKE) -C ps3py --no-print-directory
 
 install-socat:
@@ -32,7 +32,7 @@ install:
 	@$(MAKE) -C sprxlinker install --no-print-directory
 	@$(MAKE) -C ps3load install --no-print-directory
 	@$(MAKE) -C generic install --no-print-directory
-	#@$(MAKE) -C cgcomp install --no-print-directory
+	@$(MAKE) -C cgcomp install --no-print-directory
 	@$(MAKE) -C ps3py install --no-print-directory
 
 clean:
@@ -40,7 +40,7 @@ clean:
 	@$(MAKE) -C sprxlinker clean --no-print-directory
 	@$(MAKE) -C ps3load clean --no-print-directory
 	@$(MAKE) -C generic clean --no-print-directory
-	#@$(MAKE) -C cgcomp clean --no-print-directory
+	@$(MAKE) -C cgcomp clean --no-print-directory
 	@$(MAKE) -C ps3py clean --no-print-directory
 
 .PHONY: all clean install install-socat

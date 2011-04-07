@@ -51,7 +51,7 @@ int main(int argc,char *argv[])
 
 	params.numChannels = AUDIO_PORT_2CH;
 	params.numBlocks = AUDIO_BLOCK_8;
-	params.attrib = 0x1000;
+	params.attrib = AUDIO_PORT_INITLEVEL;
 	params.level = 1.0f;
 	ret = audioPortOpen(&params,&portNum);
 	printf("audioPortOpen: %08x\n",ret);

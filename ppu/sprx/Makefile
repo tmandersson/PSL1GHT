@@ -11,6 +11,7 @@ all:
 	@$(MAKE) -C liblv2 --no-print-directory
 	@$(MAKE) -C liblv2dbg --no-print-directory
 	@$(MAKE) -C libnet --no-print-directory
+	@$(MAKE) -C libnetctl --no-print-directory
 	@$(MAKE) -C libgem --no-print-directory
 	@$(MAKE) -C libcamera --no-print-directory
 	@$(MAKE) -C libaudio --no-print-directory
@@ -22,12 +23,14 @@ all:
 	@$(MAKE) -C libsysfs --no-print-directory
 	@$(MAKE) -C libsysutil --no-print-directory
 	@$(MAKE) -C libsysmodule --no-print-directory
+	@$(MAKE) -C libvdec --no-print-directory
 	
 install:
 	@$(MAKE) -C libio install --no-print-directory
 	@$(MAKE) -C liblv2 install --no-print-directory
 	@$(MAKE) -C liblv2dbg install --no-print-directory
 	@$(MAKE) -C libnet install --no-print-directory
+	@$(MAKE) -C libnetctl install --no-print-directory
 	@$(MAKE) -C libgem install --no-print-directory
 	@$(MAKE) -C libcamera install --no-print-directory
 	@$(MAKE) -C libaudio install --no-print-directory
@@ -39,12 +42,14 @@ install:
 	@$(MAKE) -C libsysfs install --no-print-directory
 	@$(MAKE) -C libsysutil install --no-print-directory
 	@$(MAKE) -C libsysmodule install --no-print-directory
+	@$(MAKE) -C libvdec install --no-print-directory
 	
 clean:
 	@$(MAKE) -C libio clean --no-print-directory
 	@$(MAKE) -C liblv2 clean --no-print-directory
 	@$(MAKE) -C liblv2dbg clean --no-print-directory
 	@$(MAKE) -C libnet clean --no-print-directory
+	@$(MAKE) -C libnetctl clean --no-print-directory
 	@$(MAKE) -C libgem clean --no-print-directory
 	@$(MAKE) -C libcamera clean --no-print-directory
 	@$(MAKE) -C libaudio clean --no-print-directory
@@ -56,5 +61,6 @@ clean:
 	@$(MAKE) -C libsysfs clean --no-print-directory
 	@$(MAKE) -C libsysutil clean --no-print-directory
 	@$(MAKE) -C libsysmodule clean --no-print-directory
+	@$(MAKE) -C libvdec clean --no-print-directory
 	
 .PHONY: all clean install

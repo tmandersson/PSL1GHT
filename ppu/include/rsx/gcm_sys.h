@@ -34,9 +34,9 @@
 #define GCM_TF_TYPE_LINEAR						1
 #define GCM_TF_TYPE_SWIZZLE						2
 
-/*! \brief Texture is in RSX memory. */
+/*! \brief Memory buffer is located in RSX memory. */
 #define GCM_LOCATION_RSX						0
-/*! \brief Texture is in main memory. */
+/*! \brief Memory buffer is located in main memory. */
 #define GCM_LOCATION_CELL						1
 
 #define GCM_TF_TARGET_NONE						0
@@ -70,11 +70,16 @@
 #define GCM_GEQUAL								0x0206
 #define GCM_ALWAYS								0x0207
 
+/*! \brief culling of front face */
 #define GCM_CULL_FRONT							0x0404
+/*! \brief culling of back face */
 #define GCM_CULL_BACK							0x0405
+/*! \brief culling of front and back faces */
 #define GCM_CULL_ALL							0x0408
 
+/*! \brief front face is to be drawn clock wise */
 #define GCM_FRONTFACE_CW						0x0900
+/*! \brief front face is to be drawn counter clock wise */
 #define GCM_FRONTFACE_CCW						0x0901
 
 #define GCM_TYPE_POINTS							1			
@@ -250,9 +255,10 @@
 extern "C" {
 #endif
 
+/*! \brief RSX Context data structure. */
 typedef struct _gcmCtxData
 {
-	u32 begin;
+	u32 begin;	
 	u32 end;
 	u32 current;
 	u32 callback;
@@ -276,7 +282,7 @@ typedef struct _gcmCfg
 	s32 coreFreq;
 } gcmConfiguration;
 
-
+/*! \brief RSX Surface/Framebuffer data structure. */
 typedef struct _gcmSurface
 {
 	u8 type;
@@ -297,7 +303,7 @@ typedef struct _gcmSurface
 	u16 y;
 } gcmSurface;
 
-/*! \brief Texture data structure. */
+/*! \brief RSX Texture data structure. */
 typedef struct _gcmTexture
 {
 	/*! \brief Texture format.

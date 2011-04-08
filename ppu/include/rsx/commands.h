@@ -14,9 +14,29 @@ These are functions to enqueue commands into the RSX's command buffer.
 extern "C" {
 #endif
 
-
+/*! \brief Set drawing direction of front face.
+\param context Pointer to the context object.
+\param dir Drawing direction of front face. Possible values are:
+- \ref GCM_FRONTFACE_CW
+- \ref GCM_FRONTFACE_CCW
+*/
 void rsxSetFrontFace(gcmContextData *context,u32 dir);
+
+/*! \brief Set culling mode.
+\param context Pointer to context object.
+\param cull Type of cull mode. Possible values are:
+- \ref GCM_CULL_FRONT
+- \ref GCM_CULL_BACK
+- \ref GCM_CULL_ALL
+*/
 void rsxSetCullFace(gcmContextData *context,u32 cull);
+
+/*! \brief Enable face culling.
+\param context Pointer to the context object.
+\param enable Enable flag. Possible values are:
+ - \ref GCM_TRUE
+ - \ref GCM_FALSE
+ */
 void rsxSetCullFaceEnable(gcmContextData *context,u32 enable);
 void rsxSetDepthWriteEnable(gcmContextData *context,u32 enable);
 void rsxDrawVertexEnd(gcmContextData *context);
@@ -101,7 +121,22 @@ void rsxLoadTexture(gcmContextData *context,u8 index,const gcmTexture *texture);
 void rsxTextureControl(gcmContextData *context,u8 index,u32 enable,u16 minlod,u16 maxlod,u8 maxaniso);
 void rsxTextureFilter(gcmContextData *context,u8 index,u8 min,u8 mag,u8 conv);
 void rsxTextureWrapMode(gcmContextData *context,u8 index,u8 wraps,u8 wrapt,u8 wrapr,u8 unsignedRemap,u8 zfunc,u8 gamma);
+
+/*! \brief Load a compiled vertex shader program.
+\param context Pointer to the context object
+\param program Pointer to the vertex program configuration
+\param ucode Pointer to the shader micro code
+*/
 void rsxLoadVertexProgram(gcmContextData *context,rsxVertexProgram *program,const void *ucode);
+
+/*! \brief Load a compiled fragment shader program.
+\param context Pointer to the context object
+\param program Pointer to the fragment program configuration
+\param offset Memory offset of fragment program
+\param location Memory location type where the program relies. Possible values are:
+- \ref GCM_LOCATION_RSX
+- \ref GCM_LOCATION_CELL
+*/
 void rsxLoadFragmentProgramLocation(gcmContextData *context,rsxFragmentProgram *program,u32 offset,u32 location);
 void rsxZControl(gcmContextData *context,u8 cullNearFar,u8 zClampEnable,u8 cullIgnoreW);
 void rsxLoadVertexProgramBlock(gcmContextData *context,rsxVertexProgram *program,const void *ucode);

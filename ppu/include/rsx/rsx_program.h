@@ -26,20 +26,20 @@ extern "C" {
 /*! \brief Vertex program data structure. */
 typedef struct rsx_vp
 {
-	u16 magic;
-	u16 num_attrib;
-	u32 attrib_off;
+	u16 magic;			/*!< magic identifier */
+	u16 num_attrib;		/*!< number of used input attributes in the vertex program */
+	u32 attrib_off;		/*!< offset to the attribute name table */
 
-	u32 input_mask;
-	u32 output_mask;
+	u32 input_mask;		/*!< mask of input attributes in the vertex shader */
+	u32 output_mask;	/*!< mask of result attributes passed to the fragment shader */
 
-	u16 const_start;
-	u16 num_const;
-	u32 const_off;
+	u16 const_start;	/*!< start address in vertex shader's constant block memory */
+	u16 num_const;		/*!< number of used constants in the vertex program */
+	u32 const_off;		/*!< offset to the constant name table */
 
-	u16 start_insn;
-	u16 num_insn;
-	u32 ucode_off;
+	u16 start_insn;		/*!< start address to load the vertex program to */
+	u16 num_insn;		/*!< number of vertex shader instructions */
+	u32 ucode_off;		/*!< offset to the shader's micro code */
 } rsxVertexProgram;
 
 /*! \brief Fragment program data structure. */

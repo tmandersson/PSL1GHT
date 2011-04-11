@@ -94,7 +94,7 @@ The possible values are:
 /*! \brief unused. */
 	u8 padding[6];
 /*! \brief display mode. */
-	VideoDisplayMode displayMode;
+	videoDisplayMode displayMode;
 } videoState;
 
 /*! \brief Video configuration structure.

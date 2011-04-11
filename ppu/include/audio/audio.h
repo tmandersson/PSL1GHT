@@ -44,6 +44,7 @@ channel.
 
 #include <sys/event_queue.h>
 
+/*! \brief Number of samples in an audio block. */
 #define AUDIO_BLOCK_SAMPLES				256
 
 /*! \brief Audio port is ready to play. */
@@ -143,38 +144,38 @@ s32 audioQuit();
 
 /*! \brief Open audio port.
 \param param Pointer to and audio port parameter data structure.
-\param portnum Pointer to storage for the returned port id.
+\param portNum Pointer to storage for the returned port id.
 \return zero if no error, nonzero otherwise.
 */
 s32 audioPortOpen(audioPortParam *param,u32 *portNum);
 
 /*! \brief Start playing on audio port.
-\param portnum Port id as returned by \ref audioPortOpen.
+\param portNum Port id as returned by \ref audioPortOpen.
 \return zero if no error, nonzero otherwise.
 */
 s32 audioPortStart(u32 portNum);
 
 /*! \brief Stop playing on audio port.
-\param portnum Port id as returned by \ref audioPortOpen.
+\param portNum Port id as returned by \ref audioPortOpen.
 \return zero if no error, nonzero otherwise.
 */
 s32 audioPortStop(u32 portNum);
 
 /*! \brief Get config of opened audio port.
-\param portnum Port id as returned by \ref audioPortOpen.
+\param portNum Port id as returned by \ref audioPortOpen.
 \param config Pointer to the port config structure to be updated.
 \return zero if no error, nonzero otherwise.
 */
 s32 audioGetPortConfig(u32 portNum,audioPortConfig *config);
 
 /*! \brief Close an opened audio port.
-\param portnum Port id as returned by \ref audioPortOpen.
+\param portNum Port id as returned by \ref audioPortOpen.
 \return zero if no error, nonzero otherwise.
 */
 s32 audioPortClose(u32 portNum);
 
 /*! \brief Create a notify event queue for audio events.
-\param Pointer to the event queue object to be updated.
+\param eventQ Pointer to the event queue object to be updated.
 \param queueKey Pointer to storage for the returned queue key.
 \return zero if no error, nonzero otherwise.
 */

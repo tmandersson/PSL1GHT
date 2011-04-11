@@ -31,17 +31,55 @@ void rsxSetFrontFace(gcmContextData *context,u32 dir);
 */
 void rsxSetCullFace(gcmContextData *context,u32 cull);
 
-/*! \brief Enable face culling.
+/*! \brief Enable/Disable face culling.
 \param context Pointer to the context object.
 \param enable Enable flag. Possible values are:
  - \ref GCM_TRUE
  - \ref GCM_FALSE
  */
 void rsxSetCullFaceEnable(gcmContextData *context,u32 enable);
+
+/*! \brief Enable/Disable write to depth buffer.
+\param context Pointer to the context object.
+\param enable Enable flag. Possible values are:
+- \ref GCM_TRUE
+- \ref GCM_FALSE
+*/
 void rsxSetDepthWriteEnable(gcmContextData *context,u32 enable);
+
+/*! \brief Stop the render sequence.
+
+Stops the rendering for a primitive, started by \ref rsxDrawVertexBegin.
+\param context Pointer to the context object.
+*/
 void rsxDrawVertexEnd(gcmContextData *context);
+
+/*! \brief Set the shading model for the render sequence.
+\param context Pointer to the context object.
+\param shadeModel Type of shading model. Possible values are:
+- \ref GCM_SHADE_MODEL_FLAT
+- \ref GCM_SHADE_MODEL_SMOOTH
+*/
 void rsxSetShadeModel(gcmContextData *context,u32 shadeModel);
+
+/*! \brief Start the render sequence.
+
+Starts the rendering for a primitive.
+\param context Pointer to the context object.
+\param type Type of primitive to render. Possible values are:
+- \ref GCM_TYPE_POINTS
+- \ref GCM_TYPE_LINES
+- \ref GCM_TYPE_LINE_LOOP
+- \ref GCM_TYPE_LINE_STRIP
+- \ref GCM_TYPE_TRIANGLES
+- \ref GCM_TYPE_TRIANGLE_STRIP
+- \ref GCM_TYPE_TRIANGLE_FAN
+- \ref GCM_TYPE_QUADS
+- \ref GCM_TYPE_QUAD_STRIP
+- \ref GCM_TYPE_POLYGON
+*/
 void rsxDrawVertexBegin(gcmContextData *context,u32 type);
+
 void rsxDrawVertex2f(gcmContextData *context,u8 idx,f32 x,f32 y);
 void rsxDrawVertex3f(gcmContextData *context,u8 idx,f32 x,f32 y,f32 z);
 void rsxDrawVertex4f(gcmContextData *context,u8 idx,f32 x,f32 y,f32 z,f32 w);
@@ -57,6 +95,13 @@ void rsxSetNopCommand(gcmContextData *context,u32 count);
 void rsxSetClearColor(gcmContextData *context,u32 color);
 void rsxSetColorMask(gcmContextData *context,u32 mask);
 void rsxSetColorMaskMRT(gcmContextData *context,u32 mask);
+
+/*! \brief Setup the render surface.
+
+This function is used to setup the render target where RSX should render the frame into.
+\param context Pointer to the context object.
+\param surface Pointer to the surface object.
+*/
 void rsxSetSurface(gcmContextData *context,gcmSurface *surface);
 void rsxSetReferenceCommand(gcmContextData *context,u32 ref_value);
 

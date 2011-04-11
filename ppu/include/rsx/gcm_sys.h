@@ -19,6 +19,7 @@
 /*! \brief flip on horizontal sync, inaccurate mode */
 #define GCM_FLIP_HSYNC_AND_BREAK_EVERYTHING		3
 
+/*! \brief maximum count of multiple render targets */
 #define GCM_MAX_MRT_COUNT						4
 
 #define GCM_DMA_MEMORY_FRAME_BUFFER				(0xFEED0000)
@@ -28,10 +29,14 @@
 #define GCM_TF_COLOR_X8R8G8B8					5
 #define GCM_TF_COLOR_A8R8G8B8					8
 
+/*! \brief 16-bit depth buffer */
 #define GCM_TF_ZETA_Z16							1
+/*! \brief 24-bit depth buffer and 8-bit stencil buffer. */
 #define GCM_TF_ZETA_Z24S8						2
 
+/*! \brief Render target is linear */
 #define GCM_TF_TYPE_LINEAR						1
+/*! \brief Render target is swizzled */
 #define GCM_TF_TYPE_SWIZZLE						2
 
 /*! \brief Memory buffer is located in RSX memory. */
@@ -39,13 +44,20 @@
 /*! \brief Memory buffer is located in main memory. */
 #define GCM_LOCATION_CELL						1
 
+/*! \brief Do not use render target */
 #define GCM_TF_TARGET_NONE						0
+/*! \brief Render target 0 */
 #define GCM_TF_TARGET_0							1
+/*! \brief Render target 1 */
 #define GCM_TF_TARGET_1							2
+/*! \brief Render target 0 and 1 */
 #define GCM_TF_TARGET_MRT1						0x13
+/*! \brief Render target 0,1 and 2 */
 #define GCM_TF_TARGET_MRT2						0x17
+/*! \brief Render target 0,1,2 and 3 */
 #define GCM_TF_TARGET_MRT3						0x1f
 
+/*! \brief Do not use multiple samples. */
 #define GCM_TF_CENTER_1							0
 
 #define	GCM_COLOR_MASK_B						0x00000001
@@ -82,15 +94,25 @@
 /*! \brief front face is to be drawn counter clock wise */
 #define GCM_FRONTFACE_CCW						0x0901
 
+/*! \brief render POINTS primitive */
 #define GCM_TYPE_POINTS							1			
+/*! \brief render LINES primitive */
 #define GCM_TYPE_LINES							2			
+/*! \brief render LINE_LOOP primitive */
 #define GCM_TYPE_LINE_LOOP						3		
+/*! \brief render LINE_STRIP primitive */
 #define GCM_TYPE_LINE_STRIP						4		
+/*! \brief render TRIANGLES primitive */
 #define GCM_TYPE_TRIANGLES						5		
+/*! \brief render TRIANGLE_STRIP primitive */
 #define GCM_TYPE_TRIANGLE_STRIP					6	
+/*! \brief render TRIANGLE_FAN primitive */
 #define GCM_TYPE_TRIANGLE_FAN					7		
+/*! \brief render QUADS primitive */
 #define GCM_TYPE_QUADS							8			
+/*! \brief render QUAD_STRIP primitive */
 #define GCM_TYPE_QUAD_STRIP						9		
+/*! \brief render POLYGON primitive */
 #define GCM_TYPE_POLYGON						10			
 
 /*! \brief invalidate texture cache for fragment programs */
@@ -98,11 +120,11 @@
 /*! \brief invalidate texture cache for vertex programs */
 #define GCM_INVALIDATE_VERTEX_TEXTURE			2
 
-/*! texture is 1D. */
+/*! \brief texture is 1D. */
 #define GCM_TEXTURE_DIMS_1D						1
-/*! texture is 2D. */
+/*! \brief texture is 2D. */
 #define GCM_TEXTURE_DIMS_2D						2
-/*! texture is 3D. */
+/*! \brief texture is 3D. */
 #define GCM_TEXTURE_DIMS_3D						3
 
 #define GCM_TEXTURE_FORMAT_SWZ					0x00
@@ -223,7 +245,9 @@
 #define GCM_TRANSFER_SURFACE_FMT_A8R8G8B8		0xa
 #define GCM_TRANSFER_SURFACE_FMT_Y32			0xb
 
+/*! \brief Flat shading */
 #define GCM_SHADE_MODEL_FLAT					0x1D00
+/*! \brief Smooth shading */
 #define GCM_SHADE_MODEL_SMOOTH					0x1D01
 
 #define GCM_ZERO								0
@@ -282,24 +306,108 @@ typedef struct _gcmCfg
 	s32 coreFreq;
 } gcmConfiguration;
 
-/*! \brief RSX Surface/Framebuffer data structure. */
+/*! \brief RSX target surface data structure.
+
+This structure holds settings of the render target that is to be the render buffer.
+Set the buffer to use for rendering by passing this structure as the argument when calling \ref rsxSetSurface. */
 typedef struct _gcmSurface
 {
+	/*! \brief Type of render target.
+
+	Possible values are:
+	- \ref GCM_TF_TYPE_LINEAR
+	- \ref GCM_TF_TYPE_SWIZZLE
+	*/
 	u8 type;
+
+	/*! \brief Antialiasing format type.
+
+	Specifies the mode of multiple samples. Possible values are:
+	- \ref GCM_TF_CENTER_1
+	*/
 	u8 antiAlias;
+
+	/*! \brief Format of the color buffer.
+
+	Possible values are:
+	- \ref GCM_TF_COLOR_R5G5B5
+	*/
 	u8 colorFormat;
+
+	/*! \brief Target of the color buffer.
+
+	Specifies the render target to use as a surface. Possible values are:
+	- \ref GCM_TF_TARGET_NONE
+	- \ref GCM_TF_TARGET_0
+	- \ref GCM_TF_TARGET_1
+	- \ref GCM_TF_TARGET_MRT1
+	- \ref GCM_TF_TARGET_MRT2
+	- \ref GCM_TF_TARGET_MRT3
+	*/
 	u8 colorTarget;
+
+	/*! \brief Location of the color buffer.
+
+	When using multiple render targets, set as many locations as the number of color buffers enabled in <i>colorTarget</i>.
+	In this system, up to 4 color buffers can be specified for multiple render targets, and the location of each individual color buffer can be specified independently.
+	Possible values are:
+	- \ref GCM_LOCATION_RSX
+	- \ref GCM_LOCATION_CELL
+	*/
 	u8 colorLocation[GCM_MAX_MRT_COUNT];
+
+	/*! \brief Offset from the base address of the color buffer.
+
+	When using multiple render targets, set as many addresses as the number of color buffers specified in <i>colorTarget</i>.
+	Use \ref rsxAddressToOffset to convert the effective addresses into offset values when specifying the buffer offset. <i>colorOffset</i> should be aligned on a 64 bytes boundery.
+	*/
 	u32 colorOffset[GCM_MAX_MRT_COUNT];
+
+	/*! \brief Size of a color buffer line in bytes.
+
+	When using multiple render targets, specify as many pitch sizes as the number of color buffers specified in <i>colorTarget</i>.
+	The pitch size should be 64 when rendering in the swizzle format. For all others, the pitch size should be a multiple of 64.
+	*/
 	u32 colorPitch[GCM_MAX_MRT_COUNT];
+
+	/*! \brief Format of the depth buffer.
+
+	Possible values are:
+	- \ref GCM_TF_ZETA_Z16
+	- \ref GCM_TF_ZETA_Z24S8
+	*/
 	u8 depthFormat;
+
+	/*! \brief Location of the depth buffer.
+
+	Possible values are:
+	- \ref GCM_LOCATION_RSX
+	- \ref GCM_LOCATION_CELL
+	*/
 	u8 depthLocation;
+
+	/*! \brief unused padding bytes. most be 0. */
 	u8 _pad[2];
+
+	/*! \brief Offset from the base address of the depth buffer.
+
+	As in <i>colorOffset</i> use \ref rsxAddressToOffset to convert effective addresses into offset values. <i>depthOffset</i> should be aligned on a 64 bytes boundery.
+	*/
 	u32 depthOffset;
+
+	/*! \brief Size of a depth buffer line in bytes. */
 	u32 depthPitch;
+
+	/*! \brief Width of the render buffer (1 - 4096). */
 	u16 width;
+
+	/*! \brief Height of the render buffer (1 - 4096). */
 	u16 height;
+
+	/*! \brief Window offset in x direction (0 - 4095). */
 	u16 x;
+
+	/*! \brief Window offset in y direction (0 - 4095). */
 	u16 y;
 } gcmSurface;
 

@@ -175,13 +175,21 @@
 /*! \brief remap component to blue component */
 #define GCM_TEXTURE_REMAP_COLOR_B				3
 
+/*! \brief x1 sample */
 #define GCM_TEXTURE_MAX_ANISO_1					0
+/*! \brief x2 sample */
 #define GCM_TEXTURE_MAX_ANISO_2					1
+/*! \brief x4 sample */
 #define GCM_TEXTURE_MAX_ANISO_4					2
+/*! \brief x6 sample */
 #define GCM_TEXTURE_MAX_ANISO_6					3
+/*! \brief x8 sample */
 #define GCM_TEXTURE_MAX_ANISO_8					4
+/*! \brief x10 sample */
 #define GCM_TEXTURE_MAX_ANISO_10				5
+/*! \brief x12 sample */
 #define GCM_TEXTURE_MAX_ANISO_12				6
+/*! \brief x16 sample */
 #define GCM_TEXTURE_MAX_ANISO_16				7
 
 #define GCM_TEXTURE_NEAREST						1
@@ -279,31 +287,41 @@
 extern "C" {
 #endif
 
-/*! \brief RSX Context data structure. */
+/*! \brief RSX Context data structure.
+
+This structure is used for managing and controlling the command buffer.
+*/
 typedef struct _gcmCtxData
 {
-	u32 begin;	
-	u32 end;
-	u32 current;
-	u32 callback;
+	u32 begin;					/*!< \brief Start address of command buffer */
+	u32 end;					/*!< \brief End address of command buffer */
+	u32 current;				/*!< \brief Current address of command buffer */
+	u32 callback;				/*!< \brief Callback function that is called when <i>current</i> reaches <i>end</i> */
 } gcmContextData;
 
+/*! \brief RSX control data structure.
+
+This structure is used to control the command buffer.
+*/
 typedef struct _gcmCtrlRegister
 {
-	vu32 put;
-	vu32 get;
-	vu32 ref;
+	vu32 put;					/*!< \brief member for accessing the PUT register */
+	vu32 get;					/*!< \brief member for accessing the GET register */
+	vu32 ref;					/*!< \brief member for accessing the REF register. Initial value is 0xFFFFFFFF */
 } gcmControlRegister;
 
-/*! \brief RSX Configuration structure. */
+/*! \brief RSX Configuration structure.
+
+This structure holds system informations of RSX.
+*/
 typedef struct _gcmCfg
 {
-	u32 localAddress;
-	u32 ioAddress;
-	s32 localSize;
-	s32 ioSize;
-	s32 memoryFreq;
-	s32 coreFreq;
+	u32 localAddress;			/*!< \brief effective start address of RSX memory */
+	u32 ioAddress;				/*!< \brief effective start address of I/O mapped main memory to be used by RSX */
+	s32 localSize;				/*!< \brief maximum available size of RSX memory */
+	s32 ioSize;					/*!< \brief maximum available size of I/O mapped main memory to be used by RSX */
+	s32 memoryFreq;				/*!< \brief RSX memory clock frequency. */
+	s32 coreFreq;				/*!< \brief Core clock frequency of RSX */
 } gcmConfiguration;
 
 /*! \brief RSX target surface data structure.

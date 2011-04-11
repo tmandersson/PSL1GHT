@@ -127,6 +127,52 @@ void rsxSetWriteCommandLabel(gcmContextData *context,u8 index,u32 value);
 void rsxSetWriteBackendLabel(gcmContextData *context,u8 index,u32 value);
 
 void rsxSetViewportClip(gcmContextData *context,u8 sel,u16 width,u16 height);
+
+/*! \brief Set viewport.
+
+This function sets the viewport.<br/>
+The origin (0,0) of the normalized device coordinate points to the center of the screen.<br/> 
+Performing viewport conversion, where the upper left corner is the origin is as follows:
+\code
+	x = X;
+	y = Y;
+	width = WIDTH;
+	height = HEIGHT;
+	min = 0.0f;
+	max = 1.0f;
+	scale[0] = width * 0.5f;
+	scale[1] = height * 0.5f;
+	scale[2] = (max - min) * 0.5f;
+	offset[0] = x + width * 0.5f;
+	offset[1] = y + height * 0.5f;
+	offset[2] = (max + min) * 0.5f;
+\endcode
+<br/><br/>
+Performing viewport conversion, where the lower left corner is the origin is as follows (this is equivalent to glViewport):
+\code
+	x = X;
+	y = WINDOW_HEIGHT - Y - HEIGHT;
+	width = WIDTH;
+	height = HEIGHT;
+	min = 0.0f;
+	max = 1.0f;
+	scale[0] = width * 0.5f;
+	scale[1] = height * -0.5f;
+	scale[2] = (max - min) * 0.5f;
+	offset[0] = x + width * 0.5f;
+	offset[1] = y + height * 0.5f;
+	offset[2] = (max + min) * 0.5f;
+\endcode
+\param context Pointer to the context object.
+\param x Origin of the viewport rectangle in pixels (0 - 4095). Initial value is (0,0).
+\param y Origin of the viewport rectangle in pixels (0 - 4095). Initial value is (0,0).
+\param width Width of the viewport (0 - 4096). Initial value is 4096.
+\param height Height of the viewport (0 - 4096). Initial value is 4096.
+\param min Minimum Z clip value. Initial value is 0.0.
+\param max Maximum Z clip value. Initial value is 1.0.
+\param scale Scale values to be used for viewport conversion. Initial values are (2048.0,2048.0,0.5,0.0).
+\param offset Offset values to be used for viewport conversion. Initial values are (2048.0,2048.0,0.5,0.0).
+*/
 void rsxSetViewport(gcmContextData *context,u16 x,u16 y,u16 width,u16 height,f32 min,f32 max,const f32 scale[4],const f32 offset[4]);
 
 /*! \brief Invalidates a texture cache.
@@ -150,9 +196,9 @@ void rsxLoadTexture(gcmContextData *context,u8 index,const gcmTexture *texture);
 \param enable Enable flag. Possible values are:
  - \ref GCM_TRUE
  - \ref GCM_FALSE
-\param minlod min lod value
-\param maxlod max lod value
-\param maxaniso max aniso value. Possible values are:
+\param minlod minimum level of detail.
+\param maxlod maximum level of detail.
+\param maxaniso sample level of the anisotropic filter. Possible values are:
  - \ref GCM_TEXTURE_MAX_ANISO_1
  - \ref GCM_TEXTURE_MAX_ANISO_2
  - \ref GCM_TEXTURE_MAX_ANISO_4

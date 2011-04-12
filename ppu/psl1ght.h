@@ -1,9 +1,9 @@
 /*! \file psl1ght.h
  \brief dummy header file for the doxygen documentation.
 
-\mainpage psl1ght-v2 Documentation
+\mainpage psl1ght Documentation
 
-\author the psl1ght-v2 team
+\author the psl1ght team
 
 \section Main topics
 
@@ -12,9 +12,7 @@
  - The \ref rsxqk.
 
 \section Links
- - <a href="http://git-hacks.com/devkitpro-addons/devkitps3-psl1ght-v2">
-   psl1ght-v2 repository</a>.
- - <a href="http://git-hacks.com/devkitpro-addons">devkitpro-addons repository</a>.
+ - <a href="https://github.com/ps3dev/PSL1GHT">psl1ght repository</a>.
 
 */
 
@@ -24,14 +22,12 @@
 Set your environment variables this way:
 
 \code
-export DEVKITPRO=/some/where
-export DEVKITPS3=$DEVKITPRO/devkitps3
+export PSL1GHT=/some/where
 \endcode
 
-First, install <a href="http://git-hacks.com/devkitpro-addons/devkitps3-toolchain">
-devkitps3-toolchain</a>.
+First, install <a href="https://github.com/ps3dev/ps3toolchain">ps3toolchain</a>.
 
-Then from the main psl1ght-v2 directory, type
+Then from the main psl1ght directory, type
 
 \code
 make install

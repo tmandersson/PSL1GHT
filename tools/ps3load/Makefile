@@ -112,12 +112,10 @@ clean:
 	@rm -fr $(BUILD) $(OUTPUT)
 
 #---------------------------------------------------------------------------------
-install:
+install: $(BUILD)
+	@echo Installing $(TARGET)$(EXEEXT)
 	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
-	@cp -frv $(OUTPUT) $(DEVKITPS3)/bin
-
-#---------------------------------------------------------------------------------
-all: clean $(BUILD)
+	@install -m 755 $(OUTPUT) $(DEVKITPS3)/bin
 
 #---------------------------------------------------------------------------------
 run:

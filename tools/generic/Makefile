@@ -24,15 +24,15 @@ ifneq (,$(findstring Darwin,$(shell uname -s)))
 	CFLAGS += -mmacosx-version-min=10.4 -isysroot $(SDK) -Wl,-syslibroot,$(SDK) -arch i386 -arch ppc
 endif
 
-tools	:=	$(patsubst %.c,%$(exeext),$(wildcard *.c)) \
+TARGETS	:=	$(patsubst %.c,%$(exeext),$(wildcard *.c)) \
 		$(patsubst %.cpp,%$(exeext),$(wildcard *.cpp))
 
 
-all:	$(tools)
+all:	$(TARGETS)
 
 clean:
 	@echo clean ...
-	@rm -f $(tools)
+	@rm -f $(TARGETS)
 
 %$(exeext)	:: %.c
 	@$(CC) $< -o $@ $(CFLAGS)
@@ -40,6 +40,7 @@ clean:
 %$(exeext)	:: %.cpp
 	@$(CXX) $< -o $@ $(CFLAGS)
 
-install:
+install: all
+	@echo Installing $(TARGETS)
 	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
-	@cp -frv $(CURDIR)/$(tools) $(DEVKITPS3)/bin
+	@install -m 755 $(TARGETS) $(DEVKITPS3)/bin

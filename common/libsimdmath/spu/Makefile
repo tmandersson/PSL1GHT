@@ -80,7 +80,7 @@ install-header:
 	@cp -frv $(CURDIR)/../common/simdmath.h $(DEVKITPRO)/libpsl1ght/spu/include/simdmath
 
 #---------------------------------------------------------------------------------
-install: install-header
+install: all install-header
 #---------------------------------------------------------------------------------
 	@[ -d $(DEVKITPRO)/libpsl1ght/spu/lib ] || mkdir -p $(DEVKITPRO)/libpsl1ght/spu/lib
 	@cp -frv $(CURDIR)/lib/spu/*.a $(DEVKITPRO)/libpsl1ght/spu/lib
@@ -89,7 +89,7 @@ install: install-header
 $(LIBRARY).a: $(OBJS)	
 #---------------------------------------------------------------------------------
 
-.PHONY: lib spu install
+.PHONY: lib spu clean install
 
 #---------------------------------------------------------------------------------
 lib: $(LIBRARY).a
@@ -98,8 +98,9 @@ lib: $(LIBRARY).a
 #---------------------------------------------------------------------------------
 clean:
 #---------------------------------------------------------------------------------
-	rm -fr spu
-	rm -fr $(DEPS)
-	rm -fr $(LIBS)
+	@echo clean ...
+	@rm -fr spu
+	@rm -fr $(DEPS)
+	@rm -fr $(LIBS)
 
 -include $(DEPSDIR)/*.d

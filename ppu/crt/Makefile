@@ -53,7 +53,7 @@ ppu:
 	@$(MAKE) PLATFORM=ppu crts -C ppu -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
-install:
+install: all
 #---------------------------------------------------------------------------------
 	@cp -frv $(CURDIR)/ppu/lv2-*.o $(DEVKITPS3)/ppu/ppu/lib
 	@cp -frv $(CURDIR)/lv2.ld $(DEVKITPS3)/ppu/ppu/lib
@@ -68,7 +68,8 @@ crts: $(OBJS)
 #---------------------------------------------------------------------------------
 clean:
 #---------------------------------------------------------------------------------
-	rm -fr ppu
-	rm -fr $(DEPS)
+	@echo clean ...
+	@rm -fr ppu
+	@rm -fr $(DEPS)
 
 -include $(DEPSDIR)/*.d

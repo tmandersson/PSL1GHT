@@ -13,8 +13,11 @@ pkgcrypt.so: crypt.c setup.py
 	@cp build/lib.*/pkgcrypt.* .
 
 clean:
-	rm -rf build pkgcrypt.*
+	@echo clean	...
+	@rm -rf build pkgcrypt.*
 
-install:
-	@cp -frv ICON0.PNG sfo.xml pkgcrypt.* $(DEVKITPS3)/bin/
+install: all
+	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
+	@echo Installing ICON0.PNG sfo.xml pkgcrypt.* fself.py Struct.py sfo.py pkg.py
+	@install -m 755 ICON0.PNG sfo.xml pkgcrypt.* $(DEVKITPS3)/bin
 	@./install-scripts $(DEVKITPS3)/bin/ fself.py Struct.py sfo.py pkg.py

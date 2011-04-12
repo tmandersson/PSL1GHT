@@ -101,16 +101,21 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
 					$(LIBPSL1GHT_LIB)
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean bin
 
 #---------------------------------------------------------------------------------
-$(BUILD):
+$(BUILD): bin
 	@[ -d $@ ] || mkdir -p $@
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
+#---------------------------------------------------------------------------------
+bin:
+	@$(MAKE) --no-print-directory -C spu
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
+	@$(MAKE) --no-print-directory -C spu clean
 	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self
 
 #---------------------------------------------------------------------------------

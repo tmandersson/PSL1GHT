@@ -31,12 +31,14 @@ INCLUDES	:= $(foreach dir,$(INCLUDE),-I$(dir))
 
 all: $(TARGET)
 
-install:
+install: all
+	@echo Installing $(TARGET)
 	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
-	@cp -frv $(TARGET) $(DEVKITPS3)/bin
+	@install -m 755 $(TARGET) $(DEVKITPS3)/bin
 	
 clean:
-	rm -rf $(TARGET)
+	@echo clean ...
+	@rm -rf $(TARGET)
 	
 $(TARGET):	$(CFILES)
 			@echo building ... $(notdir $@)

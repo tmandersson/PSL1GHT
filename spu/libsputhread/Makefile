@@ -59,7 +59,7 @@ spu:
 	@$(MAKE) PLATFORM=spu lib -C spu -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
-install:
+install: all
 #---------------------------------------------------------------------------------
 	@[ -d $(DEVKITPRO)/libpsl1ght/spu/lib ] || mkdir -p $(DEVKITPRO)/libpsl1ght/spu/lib
 	@cp -frv $(CURDIR)/lib/spu/*.a $(DEVKITPRO)/libpsl1ght/spu/lib
@@ -77,8 +77,9 @@ lib: $(LIBRARY).a
 #---------------------------------------------------------------------------------
 clean:
 #---------------------------------------------------------------------------------
-	rm -fr spu
-	rm -fr $(DEPS)
-	rm -fr $(LIBS)
+	@echo clean ...
+	@rm -rf spu
+	@rm -rf $(DEPS)
+	@rm -rf $(LIBS)
 
 -include $(DEPSDIR)/*.d

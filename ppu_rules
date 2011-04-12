@@ -11,11 +11,20 @@ MACHDEP =  -mhard-float -fmodulo-sched -ffunction-sections -fdata-sections
 
 include $(DEVKITPS3)/base_rules
 
-PKG		:=	pkg.py
-SFO		:=	sfo.py
-SPRX	:=	sprxlinker$(POSTFIX)
-FSELF	:=	fself.py
-CGCOMP	:=	cgcomp$(POSTFIX)
+PKG			:=	pkg.py
+SFO			:=	sfo.py
+SFOXML		:=	sfo.xml
+
+SPRX		:=	sprxlinker$(POSTFIX)
+CGCOMP		:=	cgcomp$(POSTFIX)
+
+FSELF		:=	fself.py
+FSELF_NPDRM	:=	$(FSELF) -n
+
+#FW 3.55 Tools
+SELF		:=	make_self
+SELF_NPDRM	:=	make_self_npdrm
+PACKAGE_FINALIZE := package_finalize
 
 #---------------------------------------------------------------------------------
 %.self: %.elf
@@ -34,4 +43,3 @@ CGCOMP	:=	cgcomp$(POSTFIX)
 
 %.pkg: %.self
 	@echo building pkg ... $(notdir $@)
-	

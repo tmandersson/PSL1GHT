@@ -74,7 +74,7 @@ ppu:
 	@$(MAKE) PLATFORM=ppu lib -C ppu -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
-install:
+install: all
 #---------------------------------------------------------------------------------
 	@[ -d $(DEVKITPRO)/libpsl1ght/ppu/lib ] || mkdir -p $(DEVKITPRO)/libpsl1ght/ppu/lib
 	@cp -frv $(CURDIR)/lib/ppu/*.a $(DEVKITPRO)/libpsl1ght/ppu/lib
@@ -98,8 +98,9 @@ sprx.o: exports.o libexport.o
 #---------------------------------------------------------------------------------
 clean:
 #---------------------------------------------------------------------------------
-	rm -fr ppu
-	rm -fr $(DEPS)
-	rm -fr $(LIBS)
+	@echo clean ...
+	@rm -rf ppu
+	@rm -rf $(DEPS)
+	@rm -rf $(LIBS)
 
 -include $(DEPSDIR)/*.d

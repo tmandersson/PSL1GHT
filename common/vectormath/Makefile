@@ -14,9 +14,10 @@ endif
 all:
 	
 install:
-	@make -C ppu install --no-print-directory
-	@make -C spu install --no-print-directory
+	@$(MAKE) -C ppu install --no-print-directory
+	@$(MAKE) -C spu install --no-print-directory
 	
 clean:
+	@echo clean ...
 	
 .PHONY: all clean install

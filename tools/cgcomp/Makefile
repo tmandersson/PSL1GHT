@@ -20,8 +20,9 @@ CFLAGS	:=	$(DEBUGFLAGS) -Wall -O2
 CFLAGS	+=	$(INCLUDES)
 CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
 
-
 LDFLAGS	=	$(DEBUGFLAGS)
+
+EXTLIBDIR	:=	extlib/
 
 ifneq (,$(findstring MINGW,$(UNAME)))
 	PLATFORM	:= win32
@@ -29,14 +30,14 @@ ifneq (,$(findstring MINGW,$(UNAME)))
 	CFLAGS		+= -mno-cygwin
 	LDFLAGS		+= -mno-cygwin -s
 	OS	:=	win32
-	EXTRAINSTALL := extlib/cg.dll 
+	EXTRAINSTALL := cg.dll 
 endif
 
 ifneq (,$(findstring CYGWIN,$(UNAME)))
 	LDFLAGS		+= -s
 	EXEEXT		:= .exe
 	OS	:=	win32
-	EXTRAINSTALL := extlib/cg.dll 
+	EXTRAINSTALL := cg.dll 
 endif
 
 ifneq (,$(findstring Darwin,$(UNAME)))
@@ -44,13 +45,13 @@ ifneq (,$(findstring Darwin,$(UNAME)))
 	OSXCXXFLAGS	:=	$(OSXCFLAGS)
 	CXXFLAGS	+=	-fvisibility=hidden
 	LDFLAGS += -mmacosx-version-min=10.4 -arch i386 -arch ppc -Wl,-syslibroot,$(SDK)
-	EXTRAINSTALL := extlib/cg.dylib
+	EXTRAINSTALL := cg.dylib
 endif
 
 ifneq (,$(findstring Linux,$(UNAME)))
 	LDFLAGS += -ldl -lpthread
 	OS := Linux
-	EXTRAINSTALL := extlib/libCg.so
+	EXTRAINSTALL := libCg.so
 endif
 	
 
@@ -104,16 +105,17 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)$(EXEEXT)
 #---------------------------------------------------------------------------------
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
 	@rm -fr $(BUILD) $(OUTPUT)
 
-install:
+install: $(BUILD)
+	@echo Installing $(TARGET)$(EXEEXT) $(EXTRAINSTALL)
 	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
-	@cp -frv $(OUTPUT) $(EXTRAINSTALL) $(DEVKITPS3)/bin
+	@install -m 755  $(OUTPUT) $(EXTLIBDIR)$(EXTRAINSTALL) $(DEVKITPS3)/bin
 		
 #---------------------------------------------------------------------------------
 else

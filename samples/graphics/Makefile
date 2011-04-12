@@ -12,15 +12,12 @@ $(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
 endif
 
 all:
-	@$(MAKE) -C libsimdmath --no-print-directory
-	@$(MAKE) -C vectormath --no-print-directory
-	
-install:
-	@$(MAKE) -C libsimdmath install --no-print-directory
-	@$(MAKE) -C vectormath install --no-print-directory
+	@$(MAKE) -C rsxtest --no-print-directory
+	@$(MAKE) -C rsxtest_spu bin --no-print-directory
+	@$(MAKE) -C rsxtest_spu --no-print-directory
 	
 clean:
-	@$(MAKE) -C libsimdmath clean --no-print-directory
-	@$(MAKE) -C vectormath clean --no-print-directory
+	@$(MAKE) -C rsxtest clean --no-print-directory
+	@$(MAKE) -C rsxtest_spu clean --no-print-directory
 	
 .PHONY: all clean install

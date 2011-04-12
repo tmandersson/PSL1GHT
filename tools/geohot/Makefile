@@ -41,18 +41,21 @@ TARGETS	:=	make_self$(POSTFIX) make_self_npdrm$(POSTFIX) package_finalize$(POSTF
 all: $(TARGETS)
 
 make_self$(POSTFIX): make_self.c
-	$(CC) $< $(CFLAGS) $(LDFLAGS) -o $@
+	@$(CC) $< $(CFLAGS) $(LDFLAGS) -o $@
 
 make_self_npdrm$(POSTFIX): make_self.c
-	$(CC) $< $(CFLAGS) $(LDFLAGS) -DNPDRM -o $@
+	@$(CC) $< $(CFLAGS) $(LDFLAGS) -DNPDRM -o $@
 
 package_finalize$(POSTFIX): package_finalize.c
-	$(CC) $< $(CFLAGS) $(LDFLAGS) -o $@
+	@$(CC) $< $(CFLAGS) $(LDFLAGS) -o $@
 
 install: $(TARGETS)
-	@install -m 755 $(TARGETS) $(DEVKITPS3)/bin/
+	@echo Installing $(TARGETS)
+	@[ -d $(DEVKITPS3)/bin ] || mkdir -p $(DEVKITPS3)/bin
+	@install -m 755 $(TARGETS) $(DEVKITPS3)/bin
 
 clean:
+	@echo clean ...
 	@rm -f $(TARGETS)
 
 .PHONY: install clean

@@ -13,6 +13,7 @@ all:
 	@$(MAKE) -C libsysmodule --no-print-directory
 	@$(MAKE) -C libhttp --no-print-directory
 	@$(MAKE) -C libhttputil --no-print-directory
+	@$(MAKE) -C libvdec --no-print-directory
 
 install:
 	@$(MAKE) -C libio install --no-print-directory
@@ -29,6 +30,7 @@ install:
 	@$(MAKE) -C libsysmodule install --no-print-directory
 	@$(MAKE) -C libhttp clean --no-print-directory
 	@$(MAKE) -C libhttputil clean --no-print-directory
+	@$(MAKE) -C libvdec clean --no-print-directory
 
 clean:
 	@$(MAKE) -C libio clean --no-print-directory
@@ -45,5 +47,6 @@ clean:
 	@$(MAKE) -C libsysmodule clean --no-print-directory
 	@$(MAKE) -C libhttp clean --no-print-directory
 	@$(MAKE) -C libhttputil clean --no-print-directory
+	@$(MAKE) -C libvdec clean --no-print-directory
 
 .PHONY: all clean install

@@ -27,7 +27,10 @@ typedef enum
 
 	SYSMODULE_USBD = 0x1c,
 
-	SYSMODULE_CAM = 0x23
+	SYSMODULE_CAM = 0x23,
+
+	SYSMODULE_VDEC_MPEG2 = 0x24,
+	SYSMODULE_VDEC_H264 = 0x25
 } sysModuleId;
 
 s32 sysModuleLoad(sysModuleId id);

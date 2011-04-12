@@ -1,15 +1,7 @@
-#---------------------------------------------------------------------------------
-# Clear the implicit built in rules
-#---------------------------------------------------------------------------------
-.SUFFIXES:
-#---------------------------------------------------------------------------------
+TARGETS := msgdialog threadtest
 
 all:
-	@$(MAKE) -C threadtest --no-print-directory
-	@$(MAKE) -C msgdialog --no-print-directory
+	@for TARGET in $(TARGETS); do $(MAKE) -C $$TARGET; done
 
 clean:
-	@$(MAKE) -C threadtest clean --no-print-directory
-	@$(MAKE) -C msgdialog clean --no-print-directory
-
-.PHONY: all clean
+	@for TARGET in $(TARGETS); do $(MAKE) -C $$TARGET clean; done

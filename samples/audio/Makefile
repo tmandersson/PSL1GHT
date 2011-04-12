@@ -1,13 +1,7 @@
-#---------------------------------------------------------------------------------
-# Clear the implicit built in rules
-#---------------------------------------------------------------------------------
-.SUFFIXES:
-#---------------------------------------------------------------------------------
+TARGETS := audiosync
 
 all:
-	@$(MAKE) -C audiosync --no-print-directory
+	@for TARGET in $(TARGETS); do $(MAKE) -C $$TARGET; done
 
 clean:
-	@$(MAKE) -C audiosync clean --no-print-directory
-
-.PHONY: all clean
+	@for TARGET in $(TARGETS); do $(MAKE) -C $$TARGET clean; done

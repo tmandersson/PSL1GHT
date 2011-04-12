@@ -1,4 +1,4 @@
-TARGETS := audio graphics network spu sys
+TARGETS := jpgtest pngtest rsxTest rsxTestVP
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) -C $$TARGET; done

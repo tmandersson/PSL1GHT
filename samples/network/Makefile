@@ -1,13 +1,7 @@
-#---------------------------------------------------------------------------------
-# Clear the implicit built in rules
-#---------------------------------------------------------------------------------
-.SUFFIXES:
-#---------------------------------------------------------------------------------
+TARGETS := ps3load
 
 all:
-	@$(MAKE) -C ps3load --no-print-directory
+	@for TARGET in $(TARGETS); do $(MAKE) -C $$TARGET; done
 
 clean:
-	@$(MAKE) -C ps3load clean --no-print-directory
-
-.PHONY: all clean
+	@for TARGET in $(TARGETS); do $(MAKE) -C $$TARGET clean; done

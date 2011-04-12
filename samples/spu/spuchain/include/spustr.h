@@ -1,9 +1,17 @@
-typedef struct {
-	uint32_t id;		/* spu thread id */
-	uint32_t rank;		/* rank in SPU thread group (0..count-1) */
-	uint32_t count;		/* number of threads in group */
-	uint32_t sync;		/* sync value for response */
-	uint32_t response;	/* response value */
-	uint32_t array_ea;	/* effective address of data array */
-	uint32_t dummy[2];	/* unused data for 16-byte multible size */
+#ifndef __SPUSTR_H__
+#define __SPUSTR_H__
+
+#include <stdint.h>
+
+typedef struct _spustr
+{
+	uint32_t id;
+	uint32_t rank;
+	uint32_t count;
+	uint32_t sync;
+	uint32_t response;
+	uint32_t array_ea;
+	uint32_t dummy[2];
 } spustr_t;
+
+#endif

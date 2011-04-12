@@ -1,49 +1,44 @@
-#include <psl1ght/lv2.h>
-#include <psl1ght/lv2/spu.h>
-#include <lv2/spu.h>
-
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "spu.bin.h"
+#include <sys/spu.h>
 
-int main(int argc, const char* argv[])
+#include "spu_bin.h"
+
+int main(int argc,char *argv[])
 {
-	u32 spu = 0;
+	u32 spu_id = 0;
 	sysSpuImage image;
 
-	printf("Initializing 6 SPUs... ");
-	printf("%08x\n", lv2SpuInitialize(6, 5));
-	printf("Initializing raw SPU... ");
-	printf("%08x\n", lv2SpuRawCreate(&spu, NULL));
+	printf("sputest starting....\n");
 
-	printf("Loading ELF image... ");
-	printf("%08x\n", sysSpuImageImport(&image, spu_bin, 0));
+	printf("Initializing 6 SPUs...\n");
+	sysSpuInitialize(6,5);
 
-/*	image.type = SYS_SPU_IMAGE_TYPE_USER;
-	image.entryPoint = entry;
-	image.segments = (u32)(u64)segments;
-	image.segmentCount = segmentcount; */
+	printf("Initializing raw SPU...\n");
+	sysSpuRawCreate(&spu_id,NULL);
 
-	printf("Loading image into SPU... ");
-	printf("%08x\n", sysSpuRawImageLoad(spu, &image));
+	printf("Importing spu image...\n");
+	sysSpuImageImport(&image,spu_bin,SPU_IMAGE_PROTECT);
 
-	printf("Running SPU...\n");
-	lv2SpuRawWriteProblemStorage(spu, SPU_RunCntl, 1);
+	printf("Loading spu image into SPU %d...\n",spu_id);
+	sysSpuRawImageLoad(spu_id,&image);
+
+	printf("Starting SPU %d...\n",spu_id);
+	sysSpuRawWriteProblemStorage(spu_id,SPU_RunCtrl,1);
 
 	printf("Waiting for SPU to return...\n");
-	while (!(lv2SpuRawReadProblemStorage(spu, SPU_MBox_Status) & 1)) {
-		asm volatile("eieio" ::);
-	}
+	while (!(sysSpuRawReadProblemStorage(spu_id,SPU_MBox_Status) & 1));
 
-	printf("SPU mailbox return value: %08x\n", lv2SpuRawReadProblemStorage(spu, SPU_Out_MBox));
+	printf("SPU Mailbox return value: %08x\n",sysSpuRawReadProblemStorage(spu_id,SPU_Out_MBox));
 
-	printf("Destroying SPU... ");
-	printf("%08x\n", lv2SpuRawDestroy(spu));
+	printf("Destroying SPU %d...\n",spu_id);
+	sysSpuRawDestroy(spu_id);
 
-	printf("Closing image... ");
-	printf("%08x\n", sysSpuImageClose(&image));
+	printf("Closing SPU image...\n");
+	sysSpuImageClose(&image);
 
 	return 0;
 }

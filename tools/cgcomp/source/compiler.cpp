@@ -32,9 +32,9 @@ CCompiler::CCompiler()
 	m_rTemps = 0;
 	m_nNumRegs = 1;
 	m_rTempsDiscard = 0;
+	m_nCurInstruction = 0;
 	m_pInstructions = NULL;
 	m_pConstData = NULL;
-	m_pCurInstruction = NULL;
 	m_rTemp = NULL;
 	m_rConst = NULL;
 }
@@ -91,6 +91,9 @@ void CCompiler::Prepare(CParser *pParser)
 void CCompiler::Compile(CParser *pParser)
 {
 	struct nvfx_src tmp;
+	struct nvfx_relocation reloc;
+	std::vector<u32> insns_pos;
+	std::list<struct nvfx_relocation> label_reloc;
 	int i,nICount = pParser->GetInstructionCount();
 	struct nvfx_src none = nvfx_src(nvfx_reg(NVFXSR_NONE,0));
 	struct nvfx_insn tmp_insn,*insns = pParser->GetInstructions();
@@ -98,11 +101,43 @@ void CCompiler::Compile(CParser *pParser)
 	Prepare(pParser);
 
 	for(i=0;i<nICount;i++) {
+		u32 idx = (u32)insns_pos.size();
 		struct nvfx_insn *insn = &insns[i];
 
+		insns_pos.push_back(m_nInstructions);
 		switch(insn->op) {
+			case OPCODE_NOP:
+				tmp_insn = arith(0,none.reg,0,none,none,none);
+				emit_insn(gen_op(NOP,VEC),&tmp_insn);
+				break;
+			case OPCODE_ABS:
+				tmp_insn = arith_ctor(insn,insn->dst,abs(insn->src[0]),none,none);
+				emit_insn(gen_op(MOV,VEC),&tmp_insn);
+				break;
 			case OPCODE_ADD:
 				emit_insn(gen_op(ADD,VEC),insn);
+				break;
+			case OPCODE_ARA:
+				break;
+			case OPCODE_ARL:
+				break;
+			case OPCODE_ARR:
+				break;
+			case OPCODE_BRA:
+				reloc.location = m_nInstructions;
+				reloc.target = insn->dst.index;
+				label_reloc.push_back(reloc);
+
+				tmp_insn = arith(0,none.reg,0,none,none,none);
+				emit_insn(gen_op(BRA,SCA),&tmp_insn);
+				break;
+			case OPCODE_CAL:
+				reloc.location = m_nInstructions;
+				reloc.target = insn->dst.index;
+				label_reloc.push_back(reloc);
+
+				tmp_insn = arith(0,none.reg,0,none,none,none);
+				emit_insn(gen_op(CAL,SCA),&tmp_insn);
 				break;
 			case OPCODE_COS:
 				emit_insn(gen_op(COS,SCA),insn);
@@ -112,6 +147,48 @@ void CCompiler::Compile(CParser *pParser)
 				break;
 			case OPCODE_DP4:
 				emit_insn(gen_op(DP4,VEC),insn);
+				break;
+			case OPCODE_DPH:
+				emit_insn(gen_op(DPH,VEC),insn);
+				break;
+			case OPCODE_DST:
+				emit_insn(gen_op(DST,VEC),insn);
+				break;
+			case OPCODE_EX2:
+				emit_insn(gen_op(EX2,SCA),insn);
+				break;
+			case OPCODE_EXP:
+				emit_insn(gen_op(EXP,SCA),insn);
+				break;
+			case OPCODE_FLR:
+				emit_insn(gen_op(FLR,VEC),insn);
+				break;
+			case OPCODE_FRC:
+				emit_insn(gen_op(FRC,VEC),insn);
+				break;
+			case OPCODE_LG2:
+				emit_insn(gen_op(LG2,SCA),insn);
+				break;
+			case OPCODE_LIT:
+				emit_insn(gen_op(LIT,SCA),insn);
+				break;
+			case OPCODE_LOG:
+				emit_insn(gen_op(LOG,SCA),insn);
+				break;
+			case OPCODE_MAD:
+				emit_insn(gen_op(MAD,VEC),insn);
+				break;
+			case OPCODE_MAX:
+				emit_insn(gen_op(MAX,VEC),insn);
+				break;
+			case OPCODE_MIN:
+				emit_insn(gen_op(MIN,VEC),insn);
+				break;
+			case OPCODE_MOV:
+				emit_insn(gen_op(MOV,VEC),insn);
+				break;
+			case OPCODE_MUL:
+				emit_insn(gen_op(MUL,VEC),insn);
 				break;
 			case OPCODE_POW:
 				tmp = nvfx_src(temp());
@@ -125,31 +202,68 @@ void CCompiler::Compile(CParser *pParser)
 				tmp_insn = arith_ctor(insn, insn->dst, none, none, swz(tmp, X, X, X, X));
 				emit_insn(gen_op(EX2,SCA),&tmp_insn);
 				break;
+			case OPCODE_RCC:
+				emit_insn(gen_op(RCC,SCA),insn);
+				break;
+			case OPCODE_RCP:
+				emit_insn(gen_op(RCP,SCA),insn);
+				break;
 			case OPCODE_RSQ:
 				emit_insn(gen_op(RSQ,SCA),insn);
 				break;
-			case OPCODE_MAD:
-				emit_insn(gen_op(MAD,VEC),insn);
+			case OPCODE_SEQ:
+				emit_insn(gen_op(SEQ,VEC),insn);
 				break;
-			case OPCODE_MAX:
-				emit_insn(gen_op(MAX,VEC),insn);
+			case OPCODE_SFL:
+				emit_insn(gen_op(SFL,VEC),insn);
 				break;
-			case OPCODE_MOV:
-				emit_insn(gen_op(MOV,VEC),insn);
+			case OPCODE_SGE:
+				emit_insn(gen_op(SGE,VEC),insn);
 				break;
-			case OPCODE_MUL:
-				emit_insn(gen_op(MUL,VEC),insn);
+			case OPCODE_SGT:
+				emit_insn(gen_op(SGT,VEC),insn);
+				break;
+			case OPCODE_SIN:
+				emit_insn(gen_op(SIN,SCA),insn);
+				break;
+			case OPCODE_SLE:
+				emit_insn(gen_op(SLE,VEC),insn);
+				break;
+			case OPCODE_SLT:
+				emit_insn(gen_op(SLT,VEC),insn);
+				break;
+			case OPCODE_SNE:
+				emit_insn(gen_op(SNE,VEC),insn);
+				break;
+			case OPCODE_SSG:
+				emit_insn(gen_op(SSG,VEC),insn);
+				break;
+			case OPCODE_STR:
+				emit_insn(gen_op(STR,VEC),insn);
+				break;
+			case OPCODE_SUB:
+				tmp_insn = arith_ctor(insn,insn->dst,insn->src[0],none,neg(insn->src[2]));
+				emit_insn(gen_op(ADD,VEC),&tmp_insn);
 				break;
 			case OPCODE_END:
-				if(m_nInstructions) m_pInstructions[m_nInstructions - 1].data[3] |= NVFX_VP_INST_LAST;
+				if(m_nInstructions) m_pInstructions[m_nCurInstruction].data[3] |= NVFX_VP_INST_LAST;
 				else {
 					tmp_insn = arith(0,none.reg,0,none,none,none);
 					emit_insn(gen_op(NOP,VEC),&tmp_insn);
-					m_pInstructions[m_nInstructions - 1].data[3] |= NVFX_VP_INST_LAST;
+					m_pInstructions[m_nCurInstruction].data[3] |= NVFX_VP_INST_LAST;
 				}
 				break;
 		}
 		release_temps();
+	}
+
+	for(std::list<struct nvfx_relocation>::iterator it = label_reloc.begin();it!=label_reloc.end();it++) {
+		struct nvfx_relocation hw_reloc;
+
+		hw_reloc.location = it->location;
+		hw_reloc.target = insns_pos[it->target];
+
+		m_lBranchRelocation.push_back(hw_reloc);
 	}
 }
 
@@ -159,12 +273,12 @@ void CCompiler::emit_insn(u8 opcode,struct nvfx_insn *insn)
 	u32 slot = opcode>>7;
 	u32 op = opcode&0x7f;
 
-	m_pInstructions = (struct vertex_program_exec*)realloc(m_pInstructions,++m_nInstructions*sizeof(struct vertex_program_exec));
-	m_pCurInstruction = &m_pInstructions[m_nInstructions - 1];
+	m_nCurInstruction = m_nInstructions++;
+	m_pInstructions = (struct vertex_program_exec*)realloc(m_pInstructions,m_nInstructions*sizeof(struct vertex_program_exec));
 
-	memset(m_pCurInstruction,0,sizeof(struct vertex_program_exec));
+	memset(&m_pInstructions[m_nCurInstruction],0,sizeof(struct vertex_program_exec));
 
-	hw = m_pCurInstruction->data;
+	hw = m_pInstructions[m_nCurInstruction].data;
 
 	emit_dst(hw,slot,insn);
 	emit_src(hw,0,&insn->src[0]);
@@ -289,7 +403,7 @@ void CCompiler::emit_src(u32 *hw, u8 pos, struct nvfx_src *src)
 		case NVFXSR_CONST:
 			sr |= (NVFX_VP(SRC_REG_TYPE_CONST) <<
 				   NVFX_VP(SRC_REG_TYPE_SHIFT));
-			reloc.location = m_nInstructions - 1;
+			reloc.location = m_nCurInstruction;
 			reloc.target = src->reg.index;
 			m_lConstRelocation.push_back(reloc);
 			break;

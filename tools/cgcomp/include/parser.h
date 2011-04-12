@@ -3,6 +3,7 @@
 
 #include <list>
 #include <stack>
+#include <vector>
 #include <string>
 #include <sstream>
 
@@ -29,7 +30,7 @@
 #define MAX_NV_FRAGMENT_PROGRAM_WRITE_ONLYS    2
 /*@}*/
 
-enum eparams { PARAM_FLOAT = 0,PARAM_FLOAT2,PARAM_FLOAT3,PARAM_FLOAT4,PARAM_FLOAT4x4,PARAM_SAMPLER1D,PARAM_SAMPLER2D,PARAM_SAMPLER3D,PARAM_SAMPLERCUBE,PARAM_SAMPLERRECT };
+enum eparams { PARAM_FLOAT = 0,PARAM_FLOAT2,PARAM_FLOAT3,PARAM_FLOAT4,PARAM_FLOAT4x4,PARAM_SAMPLER1D,PARAM_SAMPLER2D,PARAM_SAMPLER3D,PARAM_SAMPLERCUBE,PARAM_SAMPLERRECT, PARAM_NULL = 0xff };
 
 typedef struct _jmpdst
 {
@@ -49,10 +50,21 @@ typedef struct _param
 	u8 is_const;
 	u8 is_internal;
 	u8 type;
-	u32 index;
+	s32 index;
 	f32 (*values)[4];
-	u32 count;
-	u32 user;
+	s32 count;
+	s32 user;
+
+	_param()
+	{
+		is_const = 0;
+		is_internal = 0;
+		type = PARAM_NULL;
+		index = -1;
+		count = -1;
+		user = -1;
+		values = NULL;
+	}
 } param;
 
 typedef struct _ioset
@@ -83,6 +95,7 @@ protected:
 	const char* ConvertCond(const char *token,struct nvfx_insn *insn);
 	const char* ParseMaskedDstRegExt(const char *token,struct nvfx_insn *insn);
 	const char* ParseCond(const char *token,struct nvfx_insn *insn);
+	const char* ParseRegSwizzle(const char *token,struct nvfx_src *reg);
 
 	s32 GetParamType(const char *param_str);
 	virtual s32 ConvertInputReg(const char *token) = 0;

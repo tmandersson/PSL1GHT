@@ -66,7 +66,7 @@ typedef double						f64;
 #define stricmp			_stricmp
 #endif
 
-#if defined(__MSVC__)
+#if defined(_MSC_VER)
 #define strcasecmp		stricmp
 #define strncasecmp		strnicmp
 #elif defined(__GNUC__)
@@ -101,6 +101,10 @@ typedef struct rsx_fp
 	u32 num_regs;
 	u32 fp_control;
 
+	u16 texcoords;
+	u16 texcoord2D;
+	u16 texcoord3D;
+
 	u16 _pad0;
 
 	u16 num_const;
@@ -127,7 +131,7 @@ typedef struct rsx_const
 
 } rsxProgramConst;
 
-typedef struct rsx_co_table
+typedef struct rsx_constoffset_table
 {
 	u32 num;
 	u32 offset[];

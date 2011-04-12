@@ -28,6 +28,7 @@ public:
 	int GetInstructionCount() const { return m_nInstructions; }
 	struct vertex_program_exec* GetInstructions() const { return m_pInstructions;}
 	std::list<struct nvfx_relocation> GetConstRelocations() const { return m_lConstRelocation; }
+	std::list<struct nvfx_relocation> GetBranchRelocations() const { return m_lBranchRelocation; }
 
 private:
 	void Prepare(CParser *pParser);
@@ -46,8 +47,8 @@ private:
 	int m_nOutputMask;
 
 	int m_nInstructions;
+	int m_nCurInstruction;
 	struct vertex_program_exec *m_pInstructions;
-	struct vertex_program_exec *m_pCurInstruction;
 
 	int m_nConsts;
 	struct vertex_program_data *m_pConstData;
@@ -59,6 +60,7 @@ private:
 	struct nvfx_reg *m_rConst;
 
 	std::list<struct nvfx_relocation> m_lConstRelocation;
+	std::list<struct nvfx_relocation> m_lBranchRelocation;
 };
 
 #endif

@@ -38,7 +38,7 @@ struct _options
 	true,
 	false
 };
- 
+
 #define CG_SOURCE				4112
 #define CG_COMPILED_PROGRAM		4106
 #define CG_PROFILE_VP30			6148
@@ -98,8 +98,6 @@ void usage()
 	printf("cgcomp [options] input output\n");
 	printf("\t-f Input is fragment program\n");
 	printf("\t-v Input is vertex program\n");
-	printf("\t-e Entry function name for program\n");
-	printf("\t-a Assemble only, no compile\n");
 }
 
 void readoptions(struct _options *options,int argc,char *argv[])
@@ -123,14 +121,14 @@ void readoptions(struct _options *options,int argc,char *argv[])
 	options->dst_file = argv[i+1];
 }
 
-char* readFile(const char *filename)
+char* readfile(const char *filename)
 {
 	char *prg = NULL;
 	unsigned int len = 0;
 	FILE *f = fopen(filename,"rb");
 
 	if(f==NULL) {
-		fprintf(stderr,"Unable to open input file %s\n",filename);
+		fprintf(stderr,"Unable to open input file \'%s\'\n",filename);
 		return NULL;
 	}
 
@@ -153,18 +151,19 @@ char* readFile(const char *filename)
 int compileVP()
 {
 	char *prg;
+	void *context;
+	void *program;
 
 	if(Options.gen_asm==true) {
-		prg = readFile(Options.src_file);
+		prg = readfile(Options.src_file);
 	} else {
-		void *context = cgCreateContext();
-		void *program = cgCreateProgramFromFile(context,CG_SOURCE,Options.src_file,CG_PROFILE_VP40,Options.entry,NULL);
+		context = cgCreateContext();
+		program = cgCreateProgramFromFile(context,CG_SOURCE,Options.src_file,CG_PROFILE_VP40,Options.entry,NULL);
 		if(program==NULL) {
 			const char *error = cgGetLastListing(context);
 			fprintf(stderr,"%s\n",error);
 			return EXIT_FAILURE;
 		}
-
 		prg = (char*)cgGetProgramString(program,CG_COMPILED_PROGRAM);
 	}
 
@@ -174,6 +173,25 @@ int compileVP()
 
 		parser.Parse(prg);
 		compiler.Compile(&parser);
+
+		struct vertex_program_exec *vpi = compiler.GetInstructions();
+		std::list<struct nvfx_relocation> branch_reloc = compiler.GetBranchRelocations();
+		for(std::list<struct nvfx_relocation>::iterator it = branch_reloc.begin();it!=branch_reloc.end();it++) {
+			struct vertex_program_exec *vpe = &vpi[it->location];
+
+			vpe->data[3] &= ~NV40_VP_INST_IADDRL_MASK;
+			vpe->data[3] |= (it->target&7) << NV40_VP_INST_IADDRL_SHIFT;
+
+			vpe->data[2] &= ~NV40_VP_INST_IADDRH_MASK;
+			vpe->data[2] |= ((it->target >> 3)&0x3f) << NV40_VP_INST_IADDRH_SHIFT;
+		}
+
+		std::list<struct nvfx_relocation> const_reloc = compiler.GetConstRelocations();
+		for(std::list<struct nvfx_relocation>::iterator it = const_reloc.begin();it!=const_reloc.end();it++) {
+			struct vertex_program_exec *vpe = &vpi[it->location];
+			vpe->data[1] &= ~NVFX_VP(INST_CONST_SRC_MASK);
+			vpe->data[1] |= (it->target) << NVFX_VP(INST_CONST_SRC_SHIFT);
+		}
 
 		int n,i;
 		u16 magic = ('V'<<8)|'P';
@@ -212,14 +230,6 @@ int compileVP()
 			vertexprogram[lastoff++] = 0;
 
 		rsxProgramConst *consts = (rsxProgramConst*)(vertexprogram + lastoff);
-
-		struct vertex_program_exec *vpi = compiler.GetInstructions();
-		std::list<struct nvfx_relocation> const_reloc = compiler.GetConstRelocations();
-		for(std::list<struct nvfx_relocation>::iterator it = const_reloc.begin();it!=const_reloc.end();it++) {
-			struct vertex_program_exec *vpe = &vpi[it->location];
-			vpe->data[1] &= ~NVFX_VP(INST_CONST_SRC_MASK);
-			vpe->data[1] |= (it->target) << NVFX_VP(INST_CONST_SRC_SHIFT);
-		}
 
 		vp->const_off = SWAP32(lastoff);
 
@@ -290,18 +300,19 @@ int compileVP()
 int compileFP()
 {
 	char *prg;
+	void *context;
+	void *program;
 
 	if(Options.gen_asm==true) {
-		prg = readFile(Options.src_file);
+		prg = readfile(Options.src_file);
 	} else {
-		void *context = cgCreateContext();
-		void *program = cgCreateProgramFromFile(context,CG_SOURCE,Options.src_file,CG_PROFILE_FP40,Options.entry,NULL);
+		context = cgCreateContext();
+		program = cgCreateProgramFromFile(context,CG_SOURCE,Options.src_file,CG_PROFILE_FP40,Options.entry,NULL);
 		if(program==NULL) {
 			const char *error = cgGetLastListing(context);
 			fprintf(stderr,"%s\n",error);
 			return EXIT_FAILURE;
 		}
-
 		prg = (char*)cgGetProgramString(program,CG_COMPILED_PROGRAM);
 	}
 
@@ -322,6 +333,9 @@ int compileFP()
 		fp->magic = SWAP16(magic);
 		fp->num_regs = SWAP32(compiler.GetNumRegs());
 		fp->fp_control = SWAP32(compiler.GetFPControl());
+		fp->texcoords = SWAP16(compiler.GetTexcoords());
+		fp->texcoord2D = SWAP16(compiler.GetTexcoord2D());
+		fp->texcoord3D = SWAP16(compiler.GetTexcoord3D());
 
 		while(lastoff&3)
 			fragmentprogram[lastoff++] = 0;
@@ -348,10 +362,10 @@ int compileFP()
 		std::list<struct fragment_program_data> const_relocs = compiler.GetConstRelocations();
 		for(std::list<param>::iterator it = params.begin();it!=params.end();it++) {
 			if(it->is_const && !it->is_internal) {
-				for(i=0;i<(s32)it->count;i++) {
+				for(i=0;i<it->count;i++) {
 					s32 k = 0;
 					rsxConstOffsetTable *const_table = (rsxConstOffsetTable*)(fragmentprogram + lastoff);
-					
+
 					const_table->num = SWAP32(0);
 					for(std::list<struct fragment_program_data>::iterator d=const_relocs.begin();d!=const_relocs.end();d++) {
 						if(d->index==(it->index + i)) {
@@ -375,14 +389,14 @@ int compileFP()
 		for(std::list<param>::iterator it = params.begin();it!=params.end();it++) {
 			if(it->is_const && !it->is_internal) {
 				it->user = lastoff + (n*sizeof(rsxProgramConst));
+
 				consts[n].count = it->count;
 				consts[n].type = it->type;
 				consts[n].is_internal = it->is_internal;
 				consts[n].name_off = SWAP32(0);
 
-				for(i=0;i<(s32)it->count;i++) {
+				for(i=0;i<it->count;i++) {
 					s32 table_off = -1;
-
 					for(std::list<struct fragment_program_data>::iterator d=const_relocs.begin();d!=const_relocs.end();d++) {
 						if(d->index==(it->index + i)) {
 							table_off = d->user;
@@ -453,7 +467,7 @@ int main(int argc,char *argv[])
 
 	if(Options.gen_asm!=true && !InitCompiler()) {
         fprintf(stderr, "Unable to load Cg, aborting.\n");
-        fprintf(stderr, "Please install Cg toolkit and/or set the path (i.e. LD_LIBRARY_PATH) to the shared library accordingly.\n");
+		fprintf(stderr, "Please install Cg toolkit and/or set the path (i.e. LD_LIBRARY_PATH) to the shared library accordingly.\n");
         return EXIT_FAILURE;
     }
 

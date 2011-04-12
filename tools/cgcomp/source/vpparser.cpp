@@ -39,10 +39,11 @@ struct _opcode
 	{ "MOV", OPCODE_MOV,{ 0,-1,-1},1,false },
 	{ "MUL", OPCODE_MUL,{ 0, 1,-1},2,false },
 	{ "POPA",OPCODE_POPA,{-1,-1,-1},0,false },
-	{ "PUSHA",OPCODE_PUSHA,{-1,-1,-1},0,false },
 	{ "POW", OPCODE_POW,{ 0, 1,-1},2,false },
+	{ "PUSHA",OPCODE_PUSHA,{-1,-1,-1},0,false },
 	{ "RCC", OPCODE_RCC,{ 2,-1,-1},1,false },
 	{ "RCP", OPCODE_RCP,{ 2,-1,-1},1,false },
+	{ "RET", OPCODE_RET,{ 2,-1,-1},1,false },
 	{ "RSQ", OPCODE_RSQ,{ 2,-1,-1},1,false },
 	{ "SEQ", OPCODE_SEQ,{ 0, 1,-1},2,false },
 	{ "SFL", OPCODE_SFL,{ 0, 1,-1},2,false },
@@ -54,7 +55,13 @@ struct _opcode
 	{ "SNE", OPCODE_SNE,{ 0, 1,-1},2,false },
 	{ "SSG", OPCODE_SSG,{ 0, 1,-1},2,false },
 	{ "STR", OPCODE_STR,{ 0, 1,-1},2,false },
+	{ "SUB", OPCODE_SUB,{ 0, 2,-1},2,false },
+	{ "SWZ", OPCODE_SWZ,{ 0, 2,-1},2,false },
+	{ "TEX", OPCODE_TEX,{ 0, 1,-1},2,false },
+	{ "TXB", OPCODE_TXB,{ 0, 1,-1},2,false },
 	{ "TXL", OPCODE_TXL,{ 0, 1,-1},2,false },
+	{ "TXP", OPCODE_TXP,{ 0, 1,-1},2,false },
+	{ "XPD", OPCODE_XPD,{ 0, 1,-1},2,false },
 	// end
 	{ "END", OPCODE_END,{},0,false}
 };
@@ -70,7 +77,22 @@ static ioset vp_inputs[] =
 	{ "vertex.color", 3 },
 	{ "vertex.fogcoord", 5 },
 	{ "vertex.texcoord", 8 },
-	{ "vertex.attrib", 16 }
+	{ "vertex.attrib", 16 },
+	{ "OPOS", 0 },
+	{ "POSITION", 0 },
+	{ "WHGT", 1 },
+	{ "NRML", 2 },
+	{ "COL0", 3 },
+	{ "COL1", 4 },
+	{ "FOGC", 5 },
+	{ "TEX0", 8 },
+	{ "TEX1", 9 },
+	{ "TEX2", 10 },
+	{ "TEX3", 11 },
+	{ "TEX4", 12 },
+	{ "TEX5", 13 },
+	{ "TEX6", 14 },
+	{ "TEX7", 15 }
 };
 static const u32 VP_INPUTS_CNT = sizeof(vp_inputs)/sizeof(ioset);
 
@@ -90,6 +112,24 @@ static ioset vp_outputs[] =
 	{ "result.pointsize", 6 },
 	{ "result.texcoord", 7 },
 	{ "result.clip", 17 },
+	{ "HPOS", 0 },
+	{ "POSITION", 0 },
+	{ "COL0", 1 },
+	{ "COL1", 2 },
+	{ "BFC0", 3 },
+	{ "BFC1", 4 },
+	{ "FOGC", 5 },
+	{ "PSIZ", 6 },
+	{ "PSZ", 6 },
+	{ "TEX0", 7 },
+	{ "TEX1", 8 },
+	{ "TEX2", 9 },
+	{ "TEX3", 10 },
+	{ "TEX4", 11 },
+	{ "TEX5", 12 },
+	{ "TEX6", 13 },
+	{ "TEX7", 14 },
+	{ "TEMP", 15 }
 };
 static const u32 VP_OUTPUTS_CNT = sizeof(vp_outputs)/sizeof(ioset);
 
@@ -223,6 +263,24 @@ int CVPParser::Parse(const char *str)
 			}
 		}
 	}
+
+	for(std::list<jmpdst>::iterator r=m_lJmpDst.begin();r!=m_lJmpDst.end();r++) {
+		bool found = false;
+
+		for(std::list<jmpdst>::iterator i=m_lIdent.begin();i!=m_lIdent.end();i++) {
+			if(strcmp(r->ident,i->ident)==0) {
+				found = true;
+				m_pInstructions[r->location].dst = nvfx_reg(NVFXSR_RELOCATED,i->location);
+				break;
+			}
+		}
+
+		if(found==false) {
+			fprintf(stderr,"Identifier \'%s\' not found.\n",r->ident);
+			exit(EXIT_FAILURE);
+		}
+	}
+
 	return 0;
 }
 
@@ -330,33 +388,7 @@ void CVPParser::ParseSwizzledSrcReg(const char *token,struct nvfx_src *reg)
 		token = ParseParamReg(&token[2],reg);
 	}
 
-	if(token && *token!='\0') {
-		if(token[0]=='.') {
-			u32 k;
-
-			token++;
-
-			reg->swz[0] = reg->swz[1] = reg->swz[2] = reg->swz[3] = 0;
-			for(k=0;token[k] && k<4;k++) {
-				if(token[k]=='x')
-					reg->swz[k] = NVFX_SWZ_X;
-				else if(token[k]=='y')
-					reg->swz[k] = NVFX_SWZ_Y;
-				else if(token[k]=='z')
-					reg->swz[k] = NVFX_SWZ_Z;
-				else if(token[k]=='w')
-					reg->swz[k] = NVFX_SWZ_W;
-			}
-		
-			if(k && k<4) {
-				u8 lastswz = reg->swz[k - 1];
-				while(k<4) {
-					reg->swz[k] = lastswz;
-					k++;
-				}
-			}
-		}
-	}
+	token = ParseRegSwizzle(token,reg);
 }
 
 

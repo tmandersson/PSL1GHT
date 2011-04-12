@@ -11,7 +11,7 @@ struct fragment_program_exec
 struct fragment_program_data
 {
 	u32 offset;
-	u32 index;
+	s32 index;
 	s32 user;
 };
 
@@ -25,6 +25,10 @@ public:
 
 	int GetNumRegs() const { return m_nNumRegs; }
 	int GetFPControl() const { return m_nFPControl; }
+	int GetTexcoords() const { return m_nTexcoords; }
+	int GetTexcoord2D() const { return m_nTexcoord2D; }
+	int GetTexcoord3D() const { return m_nTexcoord3D; }
+
 	int GetInstructionCount() const {return m_nInstructions;}
 	std::list<struct fragment_program_data> GetConstRelocations() const { return m_lConstData; }
 	struct fragment_program_exec* GetInstructions() const { return m_pInstructions; }
@@ -37,7 +41,10 @@ private:
 	void emit_src(s32 pos,struct nvfx_src *src,bool *have_const);
 	void emit_brk(struct nvfx_insn *insn);
 	void emit_rep(struct nvfx_insn *insn);
+	void emit_if(struct nvfx_insn *insn);
 	void fixup_rep();
+	void fixup_if();
+	void fixup_else();
 
 	void grow_insns(int count);
 
@@ -46,7 +53,7 @@ private:
 
 	inline param GetImmData(int index)
 	{
-		u32 i;
+		s32 i;
 		std::list<param>::iterator it = m_lParameters.begin();
 		for(;it!=m_lParameters.end();it++) {
 			for(i=0;i<it->count;i++) {
@@ -61,7 +68,7 @@ private:
 
 	inline param GetInputAttrib(int index)
 	{
-		u32 i;
+		s32 i;
 		std::list<param>::iterator it = m_lParameters.begin();
 		for(;it!=m_lParameters.end();it++) {
 			for(i=0;i<it->count;i++) {
@@ -77,6 +84,9 @@ private:
 	int m_nNumRegs;
 	int m_nFPControl;
 	int m_nSamplers;
+	int m_nTexcoords;
+	int m_nTexcoord2D;
+	int m_nTexcoord3D;
 	int m_nInstructions;
 	int m_nCurInstruction;
 	struct fragment_program_exec *m_pInstructions;
@@ -89,6 +99,7 @@ private:
 	std::list<param> m_lParameters;
 	std::list<struct fragment_program_data> m_lConstData;
 	std::stack<int> m_repStack;
+	std::stack<int> m_ifStack;
 };
 
 #endif

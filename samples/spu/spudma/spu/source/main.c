@@ -1,9 +1,9 @@
 #include <spu_intrinsics.h>
 #include <spu_mfcio.h>
 
-#define TAG 1
+#include <sys/spu_thread.h>
 
-extern void spu_thread_exit(uint32_t);
+#define TAG 1
 
 /* wait for dma transfer to be finished */
 static void wait_for_completion(void) {
@@ -42,3 +42,4 @@ int main(uint64_t ea, uint64_t outptr, uint64_t arg3, uint64_t arg4)
 	spu_thread_exit(0);
 	return 0;
 }
+

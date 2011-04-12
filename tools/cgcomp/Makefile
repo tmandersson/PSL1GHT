@@ -8,7 +8,7 @@ TARGET		:=	cgcomp
 BUILD		:=	build
 SOURCES		:=	source
 INCLUDE		:=	include
-LIBDIRS		:=
+LIBDIRS		:=	
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -29,12 +29,14 @@ ifneq (,$(findstring MINGW,$(UNAME)))
 	CFLAGS		+= -mno-cygwin
 	LDFLAGS		+= -mno-cygwin -s
 	OS	:=	win32
+	EXTRAINSTALL := extlib/cg.dll 
 endif
 
 ifneq (,$(findstring CYGWIN,$(UNAME)))
 	LDFLAGS		+= -s
 	EXEEXT		:= .exe
 	OS	:=	win32
+	EXTRAINSTALL := extlib/cg.dll 
 endif
 
 ifneq (,$(findstring Darwin,$(UNAME)))
@@ -42,13 +44,15 @@ ifneq (,$(findstring Darwin,$(UNAME)))
 	OSXCXXFLAGS	:=	$(OSXCFLAGS)
 	CXXFLAGS	+=	-fvisibility=hidden
 	LDFLAGS += -mmacosx-version-min=10.4 -arch i386 -arch ppc -Wl,-syslibroot,$(SDK)
+	EXTRAINSTALL := extlib/cg.dylib
 endif
 
 ifneq (,$(findstring Linux,$(UNAME)))
 	LDFLAGS += -ldl
 	OS := Linux
+	EXTRAINSTALL := extlib/libCg.so
 endif
-
+	
 
 LIBS		:=
 
@@ -94,24 +98,23 @@ export INCLUDES	:=	$(foreach dir,$(INCLUDE),-I$(CURDIR)/$(dir)) \
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir)/lib)
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
-
+export OUTPUT	:=	$(CURDIR)/$(TARGET)$(EXEEXT)
 .PHONY: $(BUILD) clean
 
 #---------------------------------------------------------------------------------
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
-	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
 clean:
-	@echo clean...
-	@rm -fr $(BUILD) $(OUTPUT)$(EXEEXT)
+	@echo clean ...
+	@rm -fr $(BUILD) $(OUTPUT)
 
 install:
 	@[ -d $(PSL1GHT)/host/bin ] || mkdir -p $(PSL1GHT)/host/bin
-	@cp -frv $(OUTPUT) $(PSL1GHT)/host/bin > /dev/null
-
+	@cp -frv $(OUTPUT) $(EXTRAINSTALL) $(PSL1GHT)/host/bin
+		
 #---------------------------------------------------------------------------------
 else
 
@@ -122,7 +125,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 $(OUTPUT): $(DFILES) $(OFILES)
 	@echo linking ... $(notdir $@)
-	@$(LD) $(LDFLAGS) $^ $(LIBPATHS) $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(LIBPATHS) $(LIBS) -o $@
 
 #---------------------------------------------------------------------------------
 # Compile Targets for C/C++
@@ -131,14 +134,14 @@ $(OUTPUT): $(DFILES) $(OFILES)
 #---------------------------------------------------------------------------------
 %.o : %.cpp
 	@echo $(notdir $<)
-	@$(CXX) -E -MMD $(CXXFLAGS) $< > /dev/null
-	@$(CXX) $(OSXCXXFLAGS) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) -E -MMD $(CXXFLAGS) $< > /dev/null
+	$(CXX) $(OSXCXXFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 #---------------------------------------------------------------------------------
 %.o : %.c
 	@echo $(notdir $<)
-	@$(CC) -E -MMD $(CFLAGS) $< > /dev/null
-	@$(CC) $(OSXCFLAGS) $(CFLAGS) -o $@ -c $<
+	$(CC) -E -MMD $(CFLAGS) $< > /dev/null
+	$(CC) $(OSXCFLAGS) $(CFLAGS) -o $@ -c $<
 
 
 

@@ -194,7 +194,7 @@ const char* CParser::ParseTempReg(const char *token,s32 *reg)
 {
 	const char *p;
 
-	if(token[0]!='R')
+	if(token[0]!='R' && token[0]!='H')
 		return NULL;
 
 	if(!isdigit(token[1]))
@@ -247,6 +247,39 @@ const char* CParser::ParseCond(const char *token,struct nvfx_insn *insn)
 			}
 		}
 		token += k;
+	}
+	return token;
+}
+
+const char* CParser::ParseRegSwizzle(const char *token,struct nvfx_src *reg)
+{
+	if(token && *token!='\0') {
+		if(token[0]=='.') {
+			u32 k;
+
+			token++;
+
+			reg->swz[0] = reg->swz[1] = reg->swz[2] = reg->swz[3] = 0;
+			for(k=0;*token!='\0' && k<4;k++) {
+				if(token[k]=='x')
+					reg->swz[k] = NVFX_SWZ_X;
+				else if(token[k]=='y')
+					reg->swz[k] = NVFX_SWZ_Y;
+				else if(token[k]=='z')
+					reg->swz[k] = NVFX_SWZ_Z;
+				else if(token[k]=='w')
+					reg->swz[k] = NVFX_SWZ_W;
+
+				token++;
+			}
+			if(k && k<4) {
+				u8 lastswz = reg->swz[k - 1];
+				while(k<4) {
+					reg->swz[k] = lastswz;
+					k++;
+				}
+			}
+		}
 	}
 	return token;
 }

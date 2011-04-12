@@ -42,17 +42,29 @@ struct _opcode
 	u32 outputs;
 	u32 suffixes;
 } fp_opcodes[] = {
+   { "ABS", OPCODE_ABS, INPUT_1V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "ADD", OPCODE_ADD, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "BRK", OPCODE_BRK, INPUT_CC, OUTPUT_NONE, 0                   },
+   { "CAL", OPCODE_CAL, INPUT_CC, OUTPUT_NONE, 0				   },
+   { "CMP", OPCODE_CMP, INPUT_3V, OUTPUT_V,                _C | _S },
    { "COS", OPCODE_COS, INPUT_1S, OUTPUT_S, _R | _H |      _C | _S },
    { "DDX", OPCODE_DDX, INPUT_1V, OUTPUT_V, _R | _H |      _C | _S },
    { "DDY", OPCODE_DDY, INPUT_1V, OUTPUT_V, _R | _H |      _C | _S },
+   { "DIV", OPCODE_DIV, INPUT_1V_S, OUTPUT_V, _R | _H |    _C | _S },
+   { "DP2", OPCODE_DP2, INPUT_2V, OUTPUT_S, _R | _H | _X | _C | _S },
+   { "DP2A", OPCODE_DP2A, INPUT_3V, OUTPUT_S, _R | _H | _X | _C | _S },
    { "DP3", OPCODE_DP3, INPUT_2V, OUTPUT_S, _R | _H | _X | _C | _S },
    { "DP4", OPCODE_DP4, INPUT_2V, OUTPUT_S, _R | _H | _X | _C | _S },
-   { "DST", OPCODE_DP4, INPUT_2V, OUTPUT_V, _R | _H |      _C | _S },
-   { "EX2", OPCODE_DP4, INPUT_1S, OUTPUT_S, _R | _H |      _C | _S },
+   { "DPH", OPCODE_DPH, INPUT_2V, OUTPUT_S, _R | _H | _X | _C | _S },
+   { "DST", OPCODE_DST, INPUT_2V, OUTPUT_V, _R | _H |      _C | _S },
+   { "ELSE", OPCODE_ELSE, INPUT_NONE, OUTPUT_NONE, 0               },
+   { "ENDIF", OPCODE_ENDIF, INPUT_NONE, OUTPUT_NONE, 0             },
+   { "ENDLOOP", OPCODE_ENDLOOP, INPUT_NONE, OUTPUT_NONE, 0         },
+   { "ENDREP", OPCODE_ENDREP, INPUT_NONE, OUTPUT_NONE, 0           },
+   { "EX2", OPCODE_EX2, INPUT_1S, OUTPUT_S, _R | _H |      _C | _S },
    { "FLR", OPCODE_FLR, INPUT_1V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "FRC", OPCODE_FRC, INPUT_1V, OUTPUT_V, _R | _H | _X | _C | _S },
+   { "IF", OPCODE_IF, INPUT_CC, OUTPUT_NONE, 0                     },
    { "KIL", OPCODE_KIL_NV, INPUT_CC, OUTPUT_NONE, 0                },
    { "LG2", OPCODE_LG2, INPUT_1S, OUTPUT_S, _R | _H |      _C | _S },
    { "LIT", OPCODE_LIT, INPUT_1V, OUTPUT_V, _R | _H |      _C | _S },
@@ -62,14 +74,18 @@ struct _opcode
    { "MIN", OPCODE_MIN, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "MOV", OPCODE_MOV, INPUT_1V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "MUL", OPCODE_MUL, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
+   { "NRM", OPCODE_NRM3, INPUT_1V, OUTPUT_V, _R | _H |     _C | _S },
    { "PK2H",  OPCODE_PK2H,  INPUT_1V, OUTPUT_S, 0                  },
    { "PK2US", OPCODE_PK2US, INPUT_1V, OUTPUT_S, 0                  },
    { "PK4B",  OPCODE_PK4B,  INPUT_1V, OUTPUT_S, 0                  },
    { "PK4UB", OPCODE_PK4UB, INPUT_1V, OUTPUT_S, 0                  },
    { "POW", OPCODE_POW, INPUT_2S, OUTPUT_S, _R | _H |      _C | _S },
    { "RCP", OPCODE_RCP, INPUT_1S, OUTPUT_S, _R | _H |      _C | _S },
+   { "REP", OPCODE_BGNREP, INPUT_1V, OUTPUT_NONE, 0                },
+   { "RET", OPCODE_RET, INPUT_CC, OUTPUT_NONE, 0                   },
    { "RFL", OPCODE_RFL, INPUT_2V, OUTPUT_V, _R | _H |      _C | _S },
    { "RSQ", OPCODE_RSQ, INPUT_1S, OUTPUT_S, _R | _H |      _C | _S },
+   { "SCS", OPCODE_SCS, INPUT_1S, OUTPUT_S, _R | _H |      _C | _S },
    { "SEQ", OPCODE_SEQ, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "SFL", OPCODE_SFL, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "SGE", OPCODE_SGE, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
@@ -80,17 +96,18 @@ struct _opcode
    { "SNE", OPCODE_SNE, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "STR", OPCODE_STR, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
    { "SUB", OPCODE_SUB, INPUT_2V, OUTPUT_V, _R | _H | _X | _C | _S },
+   { "SWZ", OPCODE_SWZ, INPUT_1V, OUTPUT_V, _R | _H |      _C | _S },
    { "TEX", OPCODE_TEX, INPUT_1V_T, OUTPUT_V,              _C | _S },
+   { "TXB", OPCODE_TXB, INPUT_1V_T, OUTPUT_V,              _C | _S },
    { "TXD", OPCODE_TXD, INPUT_3V_T, OUTPUT_V,              _C | _S },
+   { "TXL", OPCODE_TXL, INPUT_1V_T, OUTPUT_V,              _C | _S },
    { "TXP", OPCODE_TXP_NV, INPUT_1V_T, OUTPUT_V,           _C | _S },
    { "UP2H",  OPCODE_UP2H,  INPUT_1S, OUTPUT_V,            _C | _S },
    { "UP2US", OPCODE_UP2US, INPUT_1S, OUTPUT_V,            _C | _S },
    { "UP4B",  OPCODE_UP4B,  INPUT_1S, OUTPUT_V,            _C | _S },
    { "UP4UB", OPCODE_UP4UB, INPUT_1S, OUTPUT_V,            _C | _S },
    { "X2D", OPCODE_X2D, INPUT_3V, OUTPUT_V, _R | _H |      _C | _S },
-   { "PRINT", OPCODE_PRINT, INPUT_1V_S, OUTPUT_NONE, 0             },
-   { "REP", OPCODE_BGNREP, INPUT_1V, OUTPUT_NONE, 0                },
-   { "ENDREP", OPCODE_ENDREP, INPUT_NONE, OUTPUT_NONE, 0           },
+   { "XPD", OPCODE_X2D, INPUT_2V, OUTPUT_V, _R | _H |      _C | _S },
    //
    { "END", OPCODE_END,0,0,0 },
    { NULL, (enum nvfx_opcode) -1, 0, 0, 0 }
@@ -103,7 +120,19 @@ static ioset fp_inputs[] =
 	{ "fragment.color.primary", 1},
 	{ "fragment.color", 1 },
 	{ "fragment.fogcoord", 3},
-	{ "fragment.texcoord", 4}
+	{ "fragment.texcoord", 4},
+	{ "WPOS", 0 },
+	{ "COL0", 1 },
+	{ "COL1", 2 },
+	{ "FOGC", 3 },
+	{ "TEX0", 4 },
+	{ "TEX1", 5 },
+	{ "TEX2", 6 },
+	{ "TEX3", 7 },
+	{ "TEX4", 8 },
+	{ "TEX5", 9 },
+	{ "TEX6", 10 },
+	{ "TEX7", 11 }
 };
 static const u32 FP_INPUTS_CNT = sizeof(fp_inputs)/sizeof(ioset);
 
@@ -495,17 +524,15 @@ void CFPParser::ParseMaskedDstReg(const char *token,struct nvfx_insn *insn)
 	if(strncmp(token,"RC",2)==0 ||
 	   strncmp(token,"HC",2)==0)
 	{
-		token += 2;
-
 		insn->dst.type = NVFXSR_NONE;
-		insn->dst.index = 63;
 		insn->dst.is_fp16 = (token[0]=='H');
-	} else if(token[0]=='R' || token[0]=='H') {
-		token = ParseTempReg(token,&idx);
+		insn->dst.index = 0x3f;
 
+		token += 2;
+	} else if(token[0]=='R' || token[0]=='H') {
 		insn->dst.type = NVFXSR_TEMP;
-		insn->dst.index = idx;
 		insn->dst.is_fp16 = (token[0]=='H');
+		token = ParseTempReg(token,&insn->dst.index);
 	} else if(token[0]=='o' && token[1]=='[') {
 		token = ParseOutputReg(&token[2],&idx);
 		token++;
@@ -567,33 +594,7 @@ void CFPParser::ParseVectorSrc(const char *token,struct nvfx_src *reg)
 		token = p;
 	}
 
-	if(token && *token!='\0') {
-		if(token[0]=='.') {
-			u32 k;
-
-			token++;
-
-			reg->swz[0] = reg->swz[1] = reg->swz[2] = reg->swz[3] = 0;
-			for(k=0;token[k] && k<4;k++) {
-				if(token[k]=='x')
-					reg->swz[k] = NVFX_SWZ_X;
-				else if(token[k]=='y')
-					reg->swz[k] = NVFX_SWZ_Y;
-				else if(token[k]=='z')
-					reg->swz[k] = NVFX_SWZ_Z;
-				else if(token[k]=='w')
-					reg->swz[k] = NVFX_SWZ_W;
-			}
-			if(k && k<4) {
-				u8 lastswz = reg->swz[k - 1];
-				while(k<4) {
-					reg->swz[k] = lastswz;
-					k++;
-				}
-			}
-		}
-	}
-
+	token = ParseRegSwizzle(token,reg);
 }
 
 void CFPParser::ParseScalarSrc(const char *token,struct nvfx_src *reg)
@@ -641,38 +642,12 @@ void CFPParser::ParseScalarSrc(const char *token,struct nvfx_src *reg)
 		token = p;
 	}
 
-
-	if(token && *token!='\0') {
-		if(token[0]=='.') {
-			u32 k;
-
-			token++;
-
-			reg->swz[0] = reg->swz[1] = reg->swz[2] = reg->swz[3] = 0;
-			for(k=0;token[k] && k<4;k++) {
-				if(token[k]=='x')
-					reg->swz[k] = NVFX_SWZ_X;
-				else if(token[k]=='y')
-					reg->swz[k] = NVFX_SWZ_Y;
-				else if(token[k]=='z')
-					reg->swz[k] = NVFX_SWZ_Z;
-				else if(token[k]=='w')
-					reg->swz[k] = NVFX_SWZ_W;
-			}
-			if(k && k<4) {
-				u8 lastswz = reg->swz[k - 1];
-				while(k<4) {
-					reg->swz[k] = lastswz;
-					k++;
-				}
-			}
-		}
-	}
+	token = ParseRegSwizzle(token,reg);
 }
 
 int CFPParser::GetConstRegType(int index)
 {
-	u32 i;
+	s32 i;
 	std::list<param>::iterator it = m_lParameters.begin();
 
 	for(;it!=m_lParameters.end();it++) {

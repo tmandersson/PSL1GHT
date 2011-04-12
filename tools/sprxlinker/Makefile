@@ -1,26 +1,43 @@
-TARGET		:= sprxlinker
+#---------------------------------------------------------------------------------
+# Clear the implicit built in rules
+#---------------------------------------------------------------------------------
+.SUFFIXES:
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(PSL1GHT)),)
+$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
+endif
+
+UNAME	:=	$(shell uname -s)
+
+ifneq (,$(findstring MINGW,$(UNAME)))
+	POSTFIX	:= .exe
+endif
+
+ifneq (,$(findstring CYGWIN,$(UNAME)))
+	POSTFIX	:= .exe
+endif
+
+TARGET		:= sprxlinker$(POSTFIX)
 SOURCE		:= .
 INCLUDE		:= .
 
-CFLAGS		:= -O2 -Wall --std=gnu99 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 \
-				-I/opt/local/include # MacPorts
-LDFLAGS		:= -lelf \
-				-L/opt/local/lib # MacPorts
+CFLAGS		:= -O2 -Wall --std=gnu99
+LDFLAGS		:= -lelf
 
-CC		:= gcc
+CC			:= gcc
 
 CFILES		:= $(foreach dir,$(SOURCE),$(wildcard $(dir)/*.c))
-
-CFLAGS		+= $(foreach dir,$(INCLUDE),-I$(dir))
+INCLUDES	:= $(foreach dir,$(INCLUDE),-I$(dir))
 
 all: $(TARGET)
 
+install:
+	@[ -d $(PSL1GHT)/host/bin ] || mkdir -p $(PSL1GHT)/host/bin
+	@cp -frv $(TARGET) $(PSL1GHT)/host/bin
+	
 clean:
-	@echo clean...
-	@rm -rf $(TARGET) *.exe
-
-install: all
-	@cp -f $(TARGET) $(PSL1GHT)/host/bin/
-
-$(TARGET): $(CFILES)
-	@$(CC) $< $(LDFLAGS) $(CFLAGS) -o $@
+	rm -rf $(TARGET)
+	
+$(TARGET):	$(CFILES)
+			$(CC) $(CFLAGS) $(INCLUDES) $< -o $@ $(LDFLAGS)
+			

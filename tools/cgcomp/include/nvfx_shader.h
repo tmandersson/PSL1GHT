@@ -439,6 +439,7 @@ enum nvfx_opcode
    OPCODE_COS,       /*            X       2       X         X   */
    OPCODE_DDX,       /*                            X         X   */
    OPCODE_DDY,       /*                            X         X   */
+   OPCODE_DIV,       /*                            X             */
    OPCODE_DP2,       /*                            2         X   */
    OPCODE_DP2A,      /*                            2             */
    OPCODE_DP3,       /*   X        X       X       X         X   */
@@ -524,7 +525,7 @@ enum nvfx_opcode
 struct nvfx_reg
 {
 	s8 type;
-	u32 index;
+	s32 index;
 	u8 is_fp16;
 };
 

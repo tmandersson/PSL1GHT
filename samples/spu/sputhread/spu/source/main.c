@@ -1,9 +1,9 @@
 #include <spu_intrinsics.h>
 #include <spu_mfcio.h>
 
-#define TAG 1
+#include <sys/spu_thread.h>
 
-extern void spu_thread_exit(uint32_t);
+#define TAG 1
 
 /* wait for dma transfer to be finished */
 static void wait_for_completion(void) {
@@ -13,9 +13,9 @@ static void wait_for_completion(void) {
 
 static void send_response(uint64_t sync_ea, uint64_t response_ea, uint32_t x) {
 	/* sync variable (memory alignment is required by dma) */
-	static uint32_t sync __attribute__((aligned(16))) = 1;
+	static uint32_t sync __attribute__((aligned(128))) = 1;
 	/* sync variable (memory alignment is required by dma) */
-	static uint32_t response __attribute__((aligned(16)));
+	static uint32_t response __attribute__((aligned(128)));
 	response = x;
 	/* send response to ppu variable */
 	mfc_put(&response, response_ea, 4, TAG, 0, 0);
@@ -35,3 +35,4 @@ int main(uint64_t sync_ea, uint64_t response_ea, uint64_t arg3, uint64_t arg4) {
 	spu_thread_exit(0);
 	return 0;
 }
+

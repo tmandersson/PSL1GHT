@@ -24,7 +24,7 @@
 typedef struct _oparam
 {
 	std::string alias;
-	u32 index;
+	s32 index;
 } oparam;
 
 typedef enum

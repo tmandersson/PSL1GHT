@@ -26,6 +26,9 @@ CCompilerFP::CCompilerFP()
 	m_nNumRegs = 2;
 	m_nSamplers = 0;
 	m_nFPControl = 0;
+	m_nTexcoords = 0;
+	m_nTexcoord2D = 0;
+	m_nTexcoord3D = 0;
 	m_nInstructions = 0;
 	m_rTempsDiscard = 0;
 	m_nCurInstruction = 0;
@@ -196,6 +199,15 @@ void CCompilerFP::Compile(CParser *pParser)
 			case OPCODE_ENDREP:
 				fixup_rep();
 				break;
+			case OPCODE_IF:
+				emit_if(insn);
+				break;
+			case OPCODE_ENDIF:
+				fixup_if();
+				break;
+			case OPCODE_ELSE:
+				fixup_else();
+				break;
 			case OPCODE_END:
 				if(m_nInstructions) m_pInstructions[m_nCurInstruction].data[0] |= NVFX_FP_OP_PROGRAM_END;
 				else {
@@ -255,11 +267,10 @@ void CCompilerFP::emit_insn(u8 op,struct nvfx_insn *insn)
 
 void CCompilerFP::emit_dst(struct nvfx_reg *dst,bool *have_const)
 {
-	s32 index,add;
+	s32 index;
 	u32 *hw = m_pInstructions[m_nCurInstruction].data;
 
 	index = dst->index;
-	add = (dst->is_fp16 ? 1 : 2);
 	switch(dst->type) {
 		case NVFXSR_TEMP:
 			if(m_nNumRegs<(s32)(index + 1))
@@ -268,7 +279,7 @@ void CCompilerFP::emit_dst(struct nvfx_reg *dst,bool *have_const)
 		case NVFXSR_OUTPUT:
 			if(dst->index==1)
 				m_nFPControl |= 0xe;
-			else/* if(dst->is_fp16)*/
+			else
 				hw[0] |= NVFX_FP_OP_OUT_REG_HALF;
 			break;
 		case NVFXSR_NONE:
@@ -290,9 +301,19 @@ void CCompilerFP::emit_src(s32 pos,struct nvfx_src *src,bool *have_const)
 		case NVFXSR_INPUT:
 			sr |= (NVFX_FP_REG_TYPE_INPUT << NVFX_FP_REG_TYPE_SHIFT);
 			hw[0] |= (src->reg.index << NVFX_FP_OP_INPUT_SRC_SHIFT);
+
+			if(src->reg.index>=NVFX_FP_OP_INPUT_SRC_TC(0) && src->reg.index<=NVFX_FP_OP_INPUT_SRC_TC(8)) {
+				param fpi = GetInputAttrib(src->reg.index);
+
+				if((int)fpi.index!=-1) {
+					if(fpi.type>PARAM_FLOAT2)
+						m_nTexcoord3D |= (1 << (src->reg.index - NVFX_FP_OP_INPUT_SRC_TC0));
+					else
+						m_nTexcoord2D |= (1 << (src->reg.index - NVFX_FP_OP_INPUT_SRC_TC0));
+				}
+				m_nTexcoords |= (1 << (src->reg.index - NVFX_FP_OP_INPUT_SRC_TC0));
+			}
 			break;
-		case NVFXSR_OUTPUT:
-			sr |= NVFX_FP_REG_SRC_HALF;
 		case NVFXSR_TEMP:
 			sr |= (NVFX_FP_REG_TYPE_TEMP << NVFX_FP_REG_TYPE_SHIFT);
 			sr |= (src->reg.index << NVFX_FP_REG_SRC_SHIFT);
@@ -305,7 +326,8 @@ void CCompilerFP::emit_src(s32 pos,struct nvfx_src *src,bool *have_const)
 			}
 			{
 				param fpd = GetImmData(src->reg.index);
-				memcpy(&m_pInstructions[m_nCurInstruction + 1],fpd.values,4*sizeof(f32));
+				if(fpd.values!=NULL) memcpy(&m_pInstructions[m_nCurInstruction + 1],fpd.values,4*sizeof(f32));
+
 				sr |= (NVFX_FP_REG_TYPE_CONST << NVFX_FP_REG_TYPE_SHIFT);
 			}
 			break;
@@ -329,7 +351,14 @@ void CCompilerFP::emit_src(s32 pos,struct nvfx_src *src,bool *have_const)
 		case NVFXSR_NONE:
 			sr |= (NVFX_FP_REG_TYPE_TEMP << NVFX_FP_REG_TYPE_SHIFT);
 			break;
+		case NVFXSR_OUTPUT:
+			fprintf(stderr,"Output register used as input.\n");
+			exit(EXIT_FAILURE);
+			return;
 	}
+
+	if(src->reg.is_fp16)
+		sr |= NVFX_FP_REG_SRC_HALF;
 
 	if(src->negate)
 		sr |= NVFX_FP_REG_NEGATE;
@@ -345,27 +374,6 @@ void CCompilerFP::emit_src(s32 pos,struct nvfx_src *src,bool *have_const)
 	hw[pos + 1] |= sr;
 }
 
-void CCompilerFP::emit_brk(struct nvfx_insn *insn)
-{
-	u32 *hw;
-
-	m_nCurInstruction = m_nInstructions;
-	grow_insns(1);
-	memset(&m_pInstructions[m_nCurInstruction],0,sizeof(struct fragment_program_exec));
-
-	hw = m_pInstructions[m_nCurInstruction].data;
-
-	hw[0] |= (NV40_FP_OP_BRA_OPCODE_BRK << NVFX_FP_OP_OPCODE_SHIFT);
-	hw[0] |= NV40_FP_OP_OUT_NONE;
-	hw[2] |= NV40_FP_OP_OPCODE_IS_BRANCH;
-
-	hw[1] |= (insn->cc_cond << NVFX_FP_OP_COND_SHIFT);
-	hw[1] |= ((insn->cc_swz[0] << NVFX_FP_OP_COND_SWZ_X_SHIFT) |
-			  (insn->cc_swz[1] << NVFX_FP_OP_COND_SWZ_Y_SHIFT) |
-			  (insn->cc_swz[2] << NVFX_FP_OP_COND_SWZ_Z_SHIFT) |
-			  (insn->cc_swz[3] << NVFX_FP_OP_COND_SWZ_W_SHIFT));
-}
-
 void CCompilerFP::emit_rep(struct nvfx_insn *insn)
 {
 	u32 *hw;
@@ -376,24 +384,23 @@ void CCompilerFP::emit_rep(struct nvfx_insn *insn)
 	memset(&m_pInstructions[m_nCurInstruction],0,sizeof(struct fragment_program_exec));
 
 	hw = m_pInstructions[m_nCurInstruction].data;
+
 	param fpd = GetImmData(insn->src[0].reg.index);
 
 	if (insn->src[0].reg.type != NVFXSR_IMM ||
-		(*fpd.values)[0] < 0.0 || (*fpd.values)[0] > 255.0) {
+	    (*fpd.values)[0] < 0.0 || (*fpd.values)[0] > 255.0) {
 		fprintf(stderr,"Input to REP must be immediate number 0-255\n");
 		exit(EXIT_FAILURE);
 	}
 
 	count = (int)(*fpd.values)[0];
-
 	hw[0] |= (NV40_FP_OP_BRA_OPCODE_REP << NVFX_FP_OP_OPCODE_SHIFT);
 	hw[0] |= NV40_FP_OP_OUT_NONE;
 	hw[0] |= NVFX_FP_PRECISION_FP16 <<  NVFX_FP_OP_PRECISION_SHIFT;
 	hw[2] |= NV40_FP_OP_OPCODE_IS_BRANCH;
-	hw[2] |= (count<<NV40_FP_OP_REP_COUNT1_SHIFT)|
-			 (count<<NV40_FP_OP_REP_COUNT2_SHIFT)|
+	hw[2] |= (count<<NV40_FP_OP_REP_COUNT1_SHIFT) |
+		     (count<<NV40_FP_OP_REP_COUNT2_SHIFT) |
 			 (count<<NV40_FP_OP_REP_COUNT3_SHIFT);
-
 	hw[1] |= (insn->cc_cond << NVFX_FP_OP_COND_SHIFT);
 	hw[1] |= ((insn->cc_swz[0] << NVFX_FP_OP_COND_SWZ_X_SHIFT) |
 		      (insn->cc_swz[1] << NVFX_FP_OP_COND_SWZ_Y_SHIFT) |
@@ -412,6 +419,70 @@ void CCompilerFP::fixup_rep()
 	hw[3] |= m_nInstructions * 4;
 
 	m_repStack.pop();
+}
+
+void CCompilerFP::fixup_if()
+{
+	u32 *hw;
+
+	hw = m_pInstructions[m_ifStack.top()].data;
+
+	if(!hw[2]) hw[2] = (NV40_FP_OP_OPCODE_IS_BRANCH | (m_nInstructions*4));
+	hw[3] = (m_nInstructions*4);
+
+	m_ifStack.pop();
+}
+
+void CCompilerFP::fixup_else()
+{
+	u32 *hw;
+
+	hw = m_pInstructions[m_ifStack.top()].data;
+	hw[2] = (NV40_FP_OP_OPCODE_IS_BRANCH | (m_nInstructions*4));
+}
+
+void CCompilerFP::emit_brk(struct nvfx_insn *insn)
+{
+	u32 *hw;
+
+	m_nCurInstruction = m_nInstructions;
+	grow_insns(1);
+	memset(&m_pInstructions[m_nCurInstruction],0,sizeof(struct fragment_program_exec));
+
+	hw = m_pInstructions[m_nCurInstruction].data;
+
+	hw[0] |= (NV40_FP_OP_BRA_OPCODE_BRK << NVFX_FP_OP_OPCODE_SHIFT);
+	hw[0] |= NV40_FP_OP_OUT_NONE;
+	hw[2] |= NV40_FP_OP_OPCODE_IS_BRANCH;
+
+	hw[1] |= (insn->cc_cond << NVFX_FP_OP_COND_SHIFT);
+	hw[1] |= ((insn->cc_swz[0] << NVFX_FP_OP_COND_SWZ_X_SHIFT) |
+		      (insn->cc_swz[1] << NVFX_FP_OP_COND_SWZ_Y_SHIFT) |
+			  (insn->cc_swz[2] << NVFX_FP_OP_COND_SWZ_Z_SHIFT) |
+			  (insn->cc_swz[3] << NVFX_FP_OP_COND_SWZ_W_SHIFT));
+}
+
+void CCompilerFP::emit_if(struct nvfx_insn *insn)
+{
+	u32 *hw;
+
+	m_nCurInstruction = m_nInstructions;
+	grow_insns(1);
+	memset(&m_pInstructions[m_nCurInstruction],0,sizeof(struct fragment_program_exec));
+
+	hw = m_pInstructions[m_nCurInstruction].data;
+
+	hw[0] |= (NV40_FP_OP_BRA_OPCODE_IF << NVFX_FP_OP_OPCODE_SHIFT);
+	hw[0] |= NV40_FP_OP_OUT_NONE;
+	hw[0] |= (NVFX_FP_PRECISION_FP16 <<  NVFX_FP_OP_PRECISION_SHIFT);
+
+	hw[1] |= (insn->cc_cond << NVFX_FP_OP_COND_SHIFT);
+	hw[1] |= ((insn->cc_swz[0] << NVFX_FP_OP_COND_SWZ_X_SHIFT) |
+		      (insn->cc_swz[1] << NVFX_FP_OP_COND_SWZ_Y_SHIFT) |
+			  (insn->cc_swz[2] << NVFX_FP_OP_COND_SWZ_Z_SHIFT) |
+			  (insn->cc_swz[3] << NVFX_FP_OP_COND_SWZ_W_SHIFT));
+
+	m_ifStack.push(m_nCurInstruction);
 }
 
 struct nvfx_reg CCompilerFP::temp()

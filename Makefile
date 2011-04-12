@@ -1,37 +1,37 @@
-TARGETS	:=	crt libpsl1ght libreality sprx tools
+#---------------------------------------------------------------------------------
+# Clear the implicit built in rules
+#---------------------------------------------------------------------------------
+.SUFFIXES:
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(PSL1GHT)),)
+$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
+endif
 
 all:
-	@for dir in $(TARGETS); do \
-		echo; \
-		echo Entering Directory $$dir; \
-		$(MAKE) --no-print-directory -C $$dir; \
-		echo Leaving Directory $$dir; \
-	done
+	@make -C common --no-print-directory
+	@make -C ppu --no-print-directory
+	@make -C spu --no-print-directory
+	@make -C tools --no-print-directory
+	
+install-ctrl:
+	@[ -d $(PSL1GHT)/host ] || mkdir -p $(PSL1GHT)/host
+	@cp -frv base_rules $(PSL1GHT)/host
+	@cp -frv ppu_rules $(PSL1GHT)/host
+	@cp -frv spu_rules $(PSL1GHT)/host
 
+install-socat:
+	@make -C tools install-socat --no-print-directory	
+	
+install:
+	@make -C common install --no-print-directory
+	@make -C ppu install --no-print-directory
+	@make -C spu install --no-print-directory
+	@make -C tools install --no-print-directory
+	
 clean:
-	@for dir in $(TARGETS); do \
-		echo Cleaning $$dir; \
-		$(MAKE) --no-print-directory -C $$dir clean; \
-	done
-
-install: install-headers install-rules
-	@mkdir -p $(PSL1GHT)/host/bin
-	@for dir in $(TARGETS); do \
-		echo Installing $$dir; \
-		$(MAKE) --no-print-directory -C $$dir install; \
-	done
-
-install-headers:
-	@mkdir -p $(PSL1GHT)/target/include
-	@cp -r include/* $(PSL1GHT)/target/include/
-
-install-rules:
-	@mkdir -p $(PSL1GHT)/host
-	@cp rules/base.mk rules/ppu.mk rules/spu.mk $(PSL1GHT)/host/
-	@ln -sf $(PSL1GHT)/host/ppu.mk $(PSL1GHT)/Makefile.base
-	@mkdir -p $(PS3DEV)/host/ppu/ppu/lib
-	@#cp rules/lv2.ld $(PS3DEV)/host/ppu/ppu/lib/
-	@#sed -e 's\$$PSL1GHT\$(PSL1GHT)\' -e 's\$$PS3DEV\$(PS3DEV)\' rules/lv2.ld > $(PS3DEV)/host/ppu/ppu/lib/lv2.ld
-	@sed "s:\$$PSL1GHT:$(PSL1GHT):;s:\$$PS3DEV:$(PS3DEV):" rules/lv2.ld > $(PS3DEV)/host/ppu/ppu/lib/lv2.ld
-
-.PHONY: all clean install install-headers
+	@make -C common clean --no-print-directory
+	@make -C ppu clean --no-print-directory
+	@make -C spu clean --no-print-directory
+	@make -C tools clean --no-print-directory
+	
+.PHONY: all clean install

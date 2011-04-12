@@ -2,7 +2,6 @@
 #define __PPU_LV2_H__
 
 #include <ppu-types.h>
-#include <ppc-asm.h>
 
 #define LV2_INLINE static inline __attribute__((unused))
 #define LV2_SYSCALL LV2_INLINE s32
@@ -47,7 +46,7 @@ LV2_INLINE u64 lv2syscall0(u64 syscall __lv2syscallarg0)
 {
 	__lv2syscallregs(syscall);
 	register u64 p1 asm("3") = 0;
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam1("=r")
@@ -61,7 +60,7 @@ LV2_INLINE u64 lv2syscall1(u64 syscall __lv2syscallarg1)
 {
 	__lv2syscallregs(syscall);
 	__lv2syscallreg(1,"3");
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam1("=r")
@@ -76,7 +75,7 @@ LV2_INLINE u64 lv2syscall2(u64 syscall __lv2syscallarg2)
 	__lv2syscallregs(syscall);
 	__lv2syscallreg(1,"3");
 	__lv2syscallreg(2,"4");
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam2("=r")
@@ -92,7 +91,7 @@ LV2_INLINE u64 lv2syscall3(u64 syscall __lv2syscallarg3)
 	__lv2syscallreg(1,"3");
 	__lv2syscallreg(2,"4");
 	__lv2syscallreg(3,"5");
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam3("=r")
@@ -109,7 +108,7 @@ LV2_INLINE u64 lv2syscall4(u64 syscall __lv2syscallarg4)
 	__lv2syscallreg(2,"4");
 	__lv2syscallreg(3,"5");
 	__lv2syscallreg(4,"6");
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam4("=r")
@@ -127,7 +126,7 @@ LV2_INLINE u64 lv2syscall5(u64 syscall __lv2syscallarg5)
 	__lv2syscallreg(3,"5");
 	__lv2syscallreg(4,"6");
 	__lv2syscallreg(5,"7");
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam5("=r")
@@ -146,7 +145,7 @@ LV2_INLINE u64 lv2syscall6(u64 syscall __lv2syscallarg6)
 	__lv2syscallreg(4,"6");
 	__lv2syscallreg(5,"7");
 	__lv2syscallreg(6,"8");
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam6("=r")
@@ -166,7 +165,7 @@ LV2_INLINE u64 lv2syscall7(u64 syscall __lv2syscallarg7)
 	__lv2syscallreg(5,"7");
 	__lv2syscallreg(6,"8");
 	__lv2syscallreg(7,"9");
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam7("=r")
@@ -187,7 +186,7 @@ LV2_INLINE u64 lv2syscall8(u64 syscall __lv2syscallarg8)
 	__lv2syscallreg(6,"8");
 	__lv2syscallreg(7,"9");
 	__lv2syscallreg(8,"10");
-	
+
 	__asm__ __volatile__ (
 		"sc"
 		: __lv2syscallparam8("=r")

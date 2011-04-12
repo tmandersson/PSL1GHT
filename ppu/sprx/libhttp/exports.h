@@ -1,13 +1,16 @@
-EXPORT(httpCreateTransaction,			0x052a80d9);
-EXPORT(httpClientGetTotalPoolSize, 		0x070f1020);
-EXPORT(httpRequestGetHeader, 			0x0b9fea5f);
-EXPORT(httpCookieImportWithClientId, 	0x0d846d63);
-EXPORT(httpSetProxy, 					0x0d896b97);
-EXPORT(httpClientGetAllHeaders, 		0x0d9c65be);
-EXPORT(httpTransactionGetUri, 			0x0ef17399);
-EXPORT(httpResponseGetStatusCode, 		0x10d0d7fc);
-EXPORT(httpClientGetRecvBufferSize, 	0x130150ea);
-EXPORT(httpClientSetSslCallback, 		0x1395d8d1);
+#ifndef __EXPORTS_H__
+#define __EXPORTS_H__
+
+EXPORT(httpCreateTransaction, 0x052a80d9);
+EXPORT(httpClientGetTotalPoolSize, 0x070f1020);
+EXPORT(httpRequestGetHeader, 0x0b9fea5f);
+EXPORT(httpCookieImportWithClientId, 0x0d846d63);
+EXPORT(httpSetProxy, 0x0d896b97);
+EXPORT(httpClientGetAllHeaders, 0x0d9c65be);
+EXPORT(httpTransactionGetUri, 0x0ef17399);
+EXPORT(httpResponseGetStatusCode, 0x10d0d7fc);
+EXPORT(httpClientGetRecvBufferSize, 0x130150ea);
+EXPORT(httpClientSetSslCallback, 0x1395d8d1);
 EXPORT(httpClientSetCookieRecvCallback, 0x13fe767b);
 EXPORT(httpClientGetConnTimeout, 0x14bfc765);
 EXPORT(httpRequestDeleteHeader, 0x16214411);
@@ -33,7 +36,7 @@ EXPORT(httpRequestGetAllHeaders, 0x42205fe0);
 EXPORT(httpClientSetCookieStatus, 0x434419c8);
 EXPORT(httpResponseGetContentLength, 0x464ff889);
 EXPORT(httpClientGetPerHostKeepAliveMax, 0x46bcc9ff);
-EXPORT(httpClientSetRedirectCallback, 0x473cd9f1);
+EXPORT(httpClientSetRedirectCallbackEx, 0x473cd9f1);
 EXPORT(httpClientAddHeader, 0x4b33942a);
 EXPORT(httpClientGetProxy, 0x4d40cf98);
 EXPORT(httpClientSetCookieSendCallback, 0x4d915204);
@@ -49,7 +52,7 @@ EXPORT(httpClientDeleteHeader, 0x617eec02);
 EXPORT(httpEndCookie, 0x61b2bade);
 EXPORT(httpRecvResponse, 0x61c90691);
 EXPORT(httpClientSetSslVersion, 0x65691795);
-EXPORT(httpClientSetAuthenticationCallback, 0x660d42a9);
+EXPORT(httpClientSetAuthenticationCallbackEx, 0x660d42a9);
 EXPORT(httpClientGetResponseBufferMax, 0x6884cdb7);
 EXPORT(httpResponseGetStatusLine, 0x6a81b5e4);
 EXPORT(httpClientSetAuthenticationCacheStatus, 0x6eed4999);
@@ -72,7 +75,7 @@ EXPORT(httpSessionCookieFlush, 0xad6a2e5b);
 EXPORT(httpClientPollConnections, 0xadc0a4b2);
 EXPORT(httpClientSetResponseBufferMax, 0xadd66b5c);
 EXPORT(httpRequestSetContentLength, 0xaf73a64e);
-EXPORT(httpClientSetTransactionStateCallback, 0xb6feb84b);
+EXPORT(httpClientSetTransactionStateCallbackEx, 0xb6feb84b);
 EXPORT(httpClientGetRecvTimeout, 0xba78e51f);
 EXPORT(httpResponseGetAllHeaders, 0xbea17389);
 EXPORT(httpClientSetRecvBufferSize, 0xbf6e3659);
@@ -95,3 +98,5 @@ EXPORT(httpClientGetUserAgent, 0xee05b0c1);
 EXPORT(httpCookieExportWithClientId, 0xf972c733);
 EXPORT(httpClientGetAuthenticationCacheStatus, 0xfce39343);
 EXPORT(httpClientGetPerHostPoolSize, 0xffc74003);
+
+#endif

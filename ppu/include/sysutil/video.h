@@ -34,7 +34,7 @@ typedef struct _videoresolution
 {
 	u16 width;		/*!< \brief Screen width in pixels. */
 	u16 height;		/*!< \brief Screen height in pixels. */
-} VideoResolution;
+} videoResolution;
 
 /*! \brief Video display mode.
 */
@@ -68,7 +68,7 @@ The possible values are:
 /*! \brief Refresh rates.
 \todo more explanations needed. */
 	u16 refreshRates;
-} VideoDisplayMode;
+} videoDisplayMode;
 
 /*! \brief Video state stucture.
 */
@@ -94,8 +94,8 @@ The possible values are:
 /*! \brief unused. */
 	u8 padding[6];
 /*! \brief display mode. */
-	VideoDisplayMode displayMode;
-} VideoState;
+	videoDisplayMode displayMode;
+} videoState;
 
 /*! \brief Video configuration structure.
 */
@@ -134,7 +134,7 @@ The possible values are:
 /*! \brief offset in bytes between the beginnings of consecutive lines.
 */
 	u32 pitch;
-} VideoConfiguration;
+} videoConfiguration;
 
 /*! \brief Get video state
 
@@ -145,7 +145,7 @@ For the default display, just use 0 for \p videoOut and \p deviceIndex.
 \return zero if no error, nonzero otherwise.
 \todo verify the parameters signification.
 */
-int videoGetState(int videoOut,int deviceIndex,VideoState *state);
+int videoGetState(int videoOut,int deviceIndex,videoState *state);
 
 /*! \brief Get video resolution from resolution id.
 \param resolutionId The input resolution id. The possible values are:
@@ -156,7 +156,7 @@ int videoGetState(int videoOut,int deviceIndex,VideoState *state);
 \param resolution Pointer to the video resolution structure to be updated.
 \return zero if no error, nonzero otherwise.
 */
-int videoGetResolution(int resolutionId,VideoResolution *resolution);
+int videoGetResolution(int resolutionId,videoResolution *resolution);
 
 /*! \brief Configure the video output.
 \param videoOut Video output id.
@@ -166,7 +166,7 @@ int videoGetResolution(int resolutionId,VideoResolution *resolution);
 \return zero if no error, nonzero otherwise.
 \todo verify the parameters signification.
 */
-int videoConfigure(int videoOut,VideoConfiguration *config,void *option,int blocking);
+int videoConfigure(int videoOut,videoConfiguration *config,void *option,int blocking);
 
 #ifdef __cplusplus
 	}

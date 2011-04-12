@@ -1,3 +1,6 @@
+#ifndef __EXPORTS_H__
+#define __EXPORTS_H__
+
 EXPORT(httpUtilBuildHeader, 0x04accebf);
 EXPORT(httpUtilBuildRequestLine, 0x1c6e4dbb);
 EXPORT(httpUtilUnescapeUri, 0x2763fd66);
@@ -18,3 +21,5 @@ EXPORT(httpUtilParseProxy, 0xa3457869);
 EXPORT(httpUtilSweepPath, 0xaabeb869);
 EXPORT(httpUtilParseHeader, 0xe1fb0ebd);
 EXPORT(httpUtilCopyUri, 0xf05df789);
+
+#endif

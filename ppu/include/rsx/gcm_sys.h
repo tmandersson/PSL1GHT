@@ -19,6 +19,7 @@
 /*! \brief flip on horizontal sync, inaccurate mode */
 #define GCM_FLIP_HSYNC_AND_BREAK_EVERYTHING		3
 
+/*! \brief maximum count of multiple render targets */
 #define GCM_MAX_MRT_COUNT						4
 
 #define GCM_DMA_MEMORY_FRAME_BUFFER				(0xFEED0000)
@@ -28,24 +29,35 @@
 #define GCM_TF_COLOR_X8R8G8B8					5
 #define GCM_TF_COLOR_A8R8G8B8					8
 
+/*! \brief 16-bit depth buffer */
 #define GCM_TF_ZETA_Z16							1
+/*! \brief 24-bit depth buffer and 8-bit stencil buffer. */
 #define GCM_TF_ZETA_Z24S8						2
 
+/*! \brief Render target is linear */
 #define GCM_TF_TYPE_LINEAR						1
+/*! \brief Render target is swizzled */
 #define GCM_TF_TYPE_SWIZZLE						2
 
-/*! \brief Texture is in RSX memory. */
+/*! \brief Memory buffer is located in RSX memory. */
 #define GCM_LOCATION_RSX						0
-/*! \brief Texture is in main memory. */
+/*! \brief Memory buffer is located in main memory. */
 #define GCM_LOCATION_CELL						1
 
+/*! \brief Do not use render target */
 #define GCM_TF_TARGET_NONE						0
+/*! \brief Render target 0 */
 #define GCM_TF_TARGET_0							1
+/*! \brief Render target 1 */
 #define GCM_TF_TARGET_1							2
+/*! \brief Render target 0 and 1 */
 #define GCM_TF_TARGET_MRT1						0x13
+/*! \brief Render target 0,1 and 2 */
 #define GCM_TF_TARGET_MRT2						0x17
+/*! \brief Render target 0,1,2 and 3 */
 #define GCM_TF_TARGET_MRT3						0x1f
 
+/*! \brief Do not use multiple samples. */
 #define GCM_TF_CENTER_1							0
 
 #define	GCM_COLOR_MASK_B						0x00000001
@@ -70,22 +82,37 @@
 #define GCM_GEQUAL								0x0206
 #define GCM_ALWAYS								0x0207
 
+/*! \brief culling of front face */
 #define GCM_CULL_FRONT							0x0404
+/*! \brief culling of back face */
 #define GCM_CULL_BACK							0x0405
+/*! \brief culling of front and back faces */
 #define GCM_CULL_ALL							0x0408
 
+/*! \brief front face is to be drawn clock wise */
 #define GCM_FRONTFACE_CW						0x0900
+/*! \brief front face is to be drawn counter clock wise */
 #define GCM_FRONTFACE_CCW						0x0901
 
+/*! \brief render POINTS primitive */
 #define GCM_TYPE_POINTS							1			
+/*! \brief render LINES primitive */
 #define GCM_TYPE_LINES							2			
+/*! \brief render LINE_LOOP primitive */
 #define GCM_TYPE_LINE_LOOP						3		
+/*! \brief render LINE_STRIP primitive */
 #define GCM_TYPE_LINE_STRIP						4		
+/*! \brief render TRIANGLES primitive */
 #define GCM_TYPE_TRIANGLES						5		
+/*! \brief render TRIANGLE_STRIP primitive */
 #define GCM_TYPE_TRIANGLE_STRIP					6	
+/*! \brief render TRIANGLE_FAN primitive */
 #define GCM_TYPE_TRIANGLE_FAN					7		
+/*! \brief render QUADS primitive */
 #define GCM_TYPE_QUADS							8			
+/*! \brief render QUAD_STRIP primitive */
 #define GCM_TYPE_QUAD_STRIP						9		
+/*! \brief render POLYGON primitive */
 #define GCM_TYPE_POLYGON						10			
 
 /*! \brief invalidate texture cache for fragment programs */
@@ -93,11 +120,11 @@
 /*! \brief invalidate texture cache for vertex programs */
 #define GCM_INVALIDATE_VERTEX_TEXTURE			2
 
-/*! texture is 1D. */
+/*! \brief texture is 1D. */
 #define GCM_TEXTURE_DIMS_1D						1
-/*! texture is 2D. */
+/*! \brief texture is 2D. */
 #define GCM_TEXTURE_DIMS_2D						2
-/*! texture is 3D. */
+/*! \brief texture is 3D. */
 #define GCM_TEXTURE_DIMS_3D						3
 
 #define GCM_TEXTURE_FORMAT_SWZ					0x00
@@ -148,13 +175,21 @@
 /*! \brief remap component to blue component */
 #define GCM_TEXTURE_REMAP_COLOR_B				3
 
+/*! \brief x1 sample */
 #define GCM_TEXTURE_MAX_ANISO_1					0
+/*! \brief x2 sample */
 #define GCM_TEXTURE_MAX_ANISO_2					1
+/*! \brief x4 sample */
 #define GCM_TEXTURE_MAX_ANISO_4					2
+/*! \brief x6 sample */
 #define GCM_TEXTURE_MAX_ANISO_6					3
+/*! \brief x8 sample */
 #define GCM_TEXTURE_MAX_ANISO_8					4
+/*! \brief x10 sample */
 #define GCM_TEXTURE_MAX_ANISO_10				5
+/*! \brief x12 sample */
 #define GCM_TEXTURE_MAX_ANISO_12				6
+/*! \brief x16 sample */
 #define GCM_TEXTURE_MAX_ANISO_16				7
 
 #define GCM_TEXTURE_NEAREST						1
@@ -218,7 +253,9 @@
 #define GCM_TRANSFER_SURFACE_FMT_A8R8G8B8		0xa
 #define GCM_TRANSFER_SURFACE_FMT_Y32			0xb
 
+/*! \brief Flat shading */
 #define GCM_SHADE_MODEL_FLAT					0x1D00
+/*! \brief Smooth shading */
 #define GCM_SHADE_MODEL_SMOOTH					0x1D01
 
 #define GCM_ZERO								0
@@ -250,54 +287,149 @@
 extern "C" {
 #endif
 
+/*! \brief RSX Context data structure.
+
+This structure is used for managing and controlling the command buffer.
+*/
 typedef struct _gcmCtxData
 {
-	u32 begin;
-	u32 end;
-	u32 current;
-	u32 callback;
+	u32 begin;					/*!< \brief Start address of command buffer */
+	u32 end;					/*!< \brief End address of command buffer */
+	u32 current;				/*!< \brief Current address of command buffer */
+	u32 callback;				/*!< \brief Callback function that is called when <i>current</i> reaches <i>end</i> */
 } gcmContextData;
 
+/*! \brief RSX control data structure.
+
+This structure is used to control the command buffer.
+*/
 typedef struct _gcmCtrlRegister
 {
-	vu32 put;
-	vu32 get;
-	vu32 ref;
+	vu32 put;					/*!< \brief member for accessing the PUT register */
+	vu32 get;					/*!< \brief member for accessing the GET register */
+	vu32 ref;					/*!< \brief member for accessing the REF register. Initial value is 0xFFFFFFFF */
 } gcmControlRegister;
 
-/*! \brief RSX Configuration structure. */
+/*! \brief RSX Configuration structure.
+
+This structure holds system informations of RSX.
+*/
 typedef struct _gcmCfg
 {
-	u32 localAddress;
-	u32 ioAddress;
-	s32 localSize;
-	s32 ioSize;
-	s32 memoryFreq;
-	s32 coreFreq;
+	u32 localAddress;			/*!< \brief effective start address of RSX memory */
+	u32 ioAddress;				/*!< \brief effective start address of I/O mapped main memory to be used by RSX */
+	s32 localSize;				/*!< \brief maximum available size of RSX memory */
+	s32 ioSize;					/*!< \brief maximum available size of I/O mapped main memory to be used by RSX */
+	s32 memoryFreq;				/*!< \brief RSX memory clock frequency. */
+	s32 coreFreq;				/*!< \brief Core clock frequency of RSX */
 } gcmConfiguration;
 
+/*! \brief RSX target surface data structure.
 
+This structure holds settings of the render target that is to be the render buffer.
+Set the buffer to use for rendering by passing this structure as the argument when calling \ref rsxSetSurface. */
 typedef struct _gcmSurface
 {
+	/*! \brief Type of render target.
+
+	Possible values are:
+	- \ref GCM_TF_TYPE_LINEAR
+	- \ref GCM_TF_TYPE_SWIZZLE
+	*/
 	u8 type;
+
+	/*! \brief Antialiasing format type.
+
+	Specifies the mode of multiple samples. Possible values are:
+	- \ref GCM_TF_CENTER_1
+	*/
 	u8 antiAlias;
+
+	/*! \brief Format of the color buffer.
+
+	Possible values are:
+	- \ref GCM_TF_COLOR_R5G5B5
+	*/
 	u8 colorFormat;
+
+	/*! \brief Target of the color buffer.
+
+	Specifies the render target to use as a surface. Possible values are:
+	- \ref GCM_TF_TARGET_NONE
+	- \ref GCM_TF_TARGET_0
+	- \ref GCM_TF_TARGET_1
+	- \ref GCM_TF_TARGET_MRT1
+	- \ref GCM_TF_TARGET_MRT2
+	- \ref GCM_TF_TARGET_MRT3
+	*/
 	u8 colorTarget;
+
+	/*! \brief Location of the color buffer.
+
+	When using multiple render targets, set as many locations as the number of color buffers enabled in <i>colorTarget</i>.
+	In this system, up to 4 color buffers can be specified for multiple render targets, and the location of each individual color buffer can be specified independently.
+	Possible values are:
+	- \ref GCM_LOCATION_RSX
+	- \ref GCM_LOCATION_CELL
+	*/
 	u8 colorLocation[GCM_MAX_MRT_COUNT];
+
+	/*! \brief Offset from the base address of the color buffer.
+
+	When using multiple render targets, set as many addresses as the number of color buffers specified in <i>colorTarget</i>.
+	Use \ref rsxAddressToOffset to convert the effective addresses into offset values when specifying the buffer offset. <i>colorOffset</i> should be aligned on a 64 bytes boundery.
+	*/
 	u32 colorOffset[GCM_MAX_MRT_COUNT];
+
+	/*! \brief Size of a color buffer line in bytes.
+
+	When using multiple render targets, specify as many pitch sizes as the number of color buffers specified in <i>colorTarget</i>.
+	The pitch size should be 64 when rendering in the swizzle format. For all others, the pitch size should be a multiple of 64.
+	*/
 	u32 colorPitch[GCM_MAX_MRT_COUNT];
+
+	/*! \brief Format of the depth buffer.
+
+	Possible values are:
+	- \ref GCM_TF_ZETA_Z16
+	- \ref GCM_TF_ZETA_Z24S8
+	*/
 	u8 depthFormat;
+
+	/*! \brief Location of the depth buffer.
+
+	Possible values are:
+	- \ref GCM_LOCATION_RSX
+	- \ref GCM_LOCATION_CELL
+	*/
 	u8 depthLocation;
+
+	/*! \brief unused padding bytes. most be 0. */
 	u8 _pad[2];
+
+	/*! \brief Offset from the base address of the depth buffer.
+
+	As in <i>colorOffset</i> use \ref rsxAddressToOffset to convert effective addresses into offset values. <i>depthOffset</i> should be aligned on a 64 bytes boundery.
+	*/
 	u32 depthOffset;
+
+	/*! \brief Size of a depth buffer line in bytes. */
 	u32 depthPitch;
+
+	/*! \brief Width of the render buffer (1 - 4096). */
 	u16 width;
+
+	/*! \brief Height of the render buffer (1 - 4096). */
 	u16 height;
+
+	/*! \brief Window offset in x direction (0 - 4095). */
 	u16 x;
+
+	/*! \brief Window offset in y direction (0 - 4095). */
 	u16 y;
 } gcmSurface;
 
-/*! \brief Texture data structure. */
+/*! \brief RSX Texture data structure. */
 typedef struct _gcmTexture
 {
 	/*! \brief Texture format.

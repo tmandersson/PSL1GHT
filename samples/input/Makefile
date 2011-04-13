@@ -1,4 +1,4 @@
-TARGETS := # cairoTest jpgtest pngtest rsxTest rsxTestVP videoTest
+TARGETS := # camera gemtest kbtest padtest
 
 all:
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET; done

@@ -129,6 +129,9 @@ to the Cell Broadband Engine documentation.
 #define SPU_THREAD_EVENT_USER					0x01
 #define SPU_THREAD_EVENT_DMA					0x02
 
+#define SPU_THREAD_EVENT_USER_KEY				0xFFFFFFFF53505501ULL
+#define SPU_THREAD_EVENT_DMA_KEY				0xFFFFFFFF53505502ULL
+
 //! Configure signal notification register 1 to overwrite mode
 #define SPU_SIGNAL1_OVERWRITE					0x00
 //! Configure signal notification register 1 to OR mode

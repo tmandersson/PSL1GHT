@@ -2,6 +2,6 @@
 
 void spu_thread_group_exit(int status)
 {
-	spu_writech(SPU_WrOutMbox,result);
-	si_stop(0x101);
+	spu_writech(SPU_WrOutMbox,status);
+	spu_stop(0x101);
 }

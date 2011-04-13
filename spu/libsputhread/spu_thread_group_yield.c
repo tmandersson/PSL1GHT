@@ -2,5 +2,5 @@
 
 void spu_thread_group_yield(void)
 {
-	si_stop(0x100);
+	spu_stop(0x100);
 }

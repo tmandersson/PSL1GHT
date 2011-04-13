@@ -7,12 +7,60 @@
 
 #include <ppu-lv2.h>
 
+/*! \brief Event queue type PPU */
+#define SYS_EVENT_QUEUE_PPU						0x01
+/*! \brief Event queue type SPU */
+#define SYS_EVENT_QUEUE_SPU						0x02
+
+/*! \brief Synchronize event queue FIFO */
+#define SYS_EVENT_QUEUE_FIFO					0x01
+/*! \brief Synchronize event queue PRIO */
+#define SYS_EVENT_QUEUE_PRIO					0x02
+/*! \brief Synchronize event queue PRIO_INHERIT */
+#define SYS_EVENT_QUEUE_PRIO_INHERIT			0x03
+
+/*! \brief Event port type LOCAL */
+#define SYS_EVENT_PORT_LOCAL					0x01
+
+/*! \brief Used to auto create a port name */
+#define SYS_EVENT_PORT_NO_NAME					0x00
+
 #ifdef __cplusplus
 	extern "C" {
 #endif
 
 /*! \brief Event queue id */
 typedef u32 sys_event_queue_t;
+
+/*! \brief Event port id */
+typedef u32 sys_event_port_t;
+
+/*! \brief IPC key id */
+typedef u64 sys_ipc_key_t;
+
+/*! \brief Data structure for create attributes for an event queue */
+typedef struct sys_event_queue_attr
+{
+	/*! \brief Synchronization attribute.
+
+	Possible values:
+	- \ref SYS_EVENT_QUEUE_FIFO
+	- \ref SYS_EVENT_QUEUE_PRIO
+	- \ref SYS_EVENT_QUEUE_PRIO_INHERIT
+	*/
+	u32 attr_protocol;
+
+	/*! \brief Event queue type.
+
+	Possible values:
+	- \ref SYS_EVENT_QUEUE_PPU
+	- \ref SYS_EVENT_QUEUE_SPU
+	*/
+	s32 type;
+
+	/*! \brief Name identifier. */
+	char name[8];
+} sys_event_queue_attr_t;
 
 /*! \brief Data structure for received event data. */
 typedef struct sys_event
@@ -22,6 +70,18 @@ typedef struct sys_event
 	u64 data_2;			/*!< \brief data field 2 */
 	u64 data_3;			/*!< \brief data field 3 */
 } sys_event_t;
+
+/*! \brief Create an event queue.
+\param eventQ Pointer to receive the event queue id.
+\param attrib Pointer to attribute structure.
+\param key Key to be used with this event queue.
+\param size Initial size of the event queue.
+\return zero if no error, nonzero otherwise.
+*/
+LV2_SYSCALL sysEventQueueCreate(sys_event_queue_t *eventQ,sys_event_queue_attr_t *attrib,sys_ipc_key_t key,s32 size)
+{
+	return lv2syscall4(128,(u64)eventQ,(u64)attrib,key,size);
+}
 
 /*! \brief Destroy an event queue.
 \param eventQ The event queue id.
@@ -57,6 +117,64 @@ This function removes all pending events in the queue, making it empty.
 LV2_SYSCALL sysEventQueueDrain(sys_event_queue_t eventQ)
 {
 	return lv2syscall1(133,eventQ);
+}
+
+/*! \brief Create an event port.
+
+This function creates an event port for sending events thru a connected event queue.
+\param portId Pointer to receive the event port id.
+\param portType Type of the port to create. 
+
+Possible values:
+- \ref SYS_EVENT_PORT_LOCAL
+\param name User defined name or \ref SYS_EVENT_PORT_NO_NAME.
+\return zero if no error, nonzero otherwise.
+*/
+LV2_SYSCALL sysEventPortCreate(sys_event_port_t *portId,int portType,u64 name)
+{
+	return lv2syscall3(134,(u64)portId,portType,name);
+}
+
+/*! \brief Destroys an event port.
+\param portId Event port id of the event port to be destroyed.
+\return zero if no error, nonzero otherwise.
+*/
+LV2_SYSCALL sysEventPortDestroy(sys_event_port_t portId)
+{
+	return lv2syscall1(135,portId);
+}
+
+/*! \brief Send an event.
+
+This function sends an event to the event queue that is connected with the specified event port. Three additional 64-bit data can be sent with the event.
+\param portId Event port id.
+\param data0 Additional data.
+\param data1 Additional data.
+\param data2 Additional data.
+\return zero if no error, nonzero otherwise.
+*/
+LV2_SYSCALL sysEventPortSend(sys_event_port_t portId,u64 data0,u64 data1,u64 data2)
+{
+	return lv2syscall4(138,portId,data0,data1,data2);
+}
+
+/*! \brief Connect an event port to an event queue in the same process.
+\param portId The event port id.
+\param eventQ The event queue id.
+\return zero if no error, nonzero otherwise.
+*/
+LV2_SYSCALL sysEventPortConnectLocal(sys_event_port_t portId,sys_event_queue_t eventQ)
+{
+	return lv2syscall2(136,portId,eventQ);
+}
+
+/*! \brief Disconnect an event port from an event queue.
+\param portId The event port id.
+\return zero if no error, nonzero otherwise.
+*/
+LV2_SYSCALL sysEventPortDisconnect(sys_event_port_t portId)
+{
+	lv2syscall1(137,portId);
 }
 
 #ifdef __cplusplus

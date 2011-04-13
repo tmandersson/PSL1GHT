@@ -3,15 +3,12 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
+
+ifeq ($(strip $(PSL1GHT)),)
+$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
 endif
 
-ifeq ($(strip $(DEVKITPS3)),)
-$(error "Please set DEVKITPS3 in your environment. export DEVKITPS3=<path>")
-endif
-
-include	$(DEVKITPS3)/spu_rules
+include	$(PSL1GHT)/spu_rules
 
 BUILD		:=	build
 
@@ -49,7 +46,7 @@ OBJS		:= \
 			spu_thread_group_exit.o spu_thread_group_yield.o spu_thread_exit.o \
 			spu_thread_send_event.o spu_thread_receive_event.o spu_thread_throw_event.o \
 			spu_thread_tryreceive_event.o
-			
+
 all: spu
 
 #---------------------------------------------------------------------------------
@@ -63,11 +60,11 @@ spu:
 #---------------------------------------------------------------------------------
 install: all
 #---------------------------------------------------------------------------------
-	@[ -d $(DEVKITPRO)/libpsl1ght/spu/lib ] || mkdir -p $(DEVKITPRO)/libpsl1ght/spu/lib
-	@cp -frv $(CURDIR)/lib/spu/*.a $(DEVKITPRO)/libpsl1ght/spu/lib
+	@[ -d $(PSL1GHT)/spu/lib ] || mkdir -p $(PSL1GHT)/spu/lib
+	@cp -frv $(CURDIR)/lib/spu/*.a $(PSL1GHT)/spu/lib
 
 #---------------------------------------------------------------------------------
-$(LIBRARY).a: $(OBJS)	
+$(LIBRARY).a: $(OBJS)
 #---------------------------------------------------------------------------------
 
 .PHONY: lib spu install

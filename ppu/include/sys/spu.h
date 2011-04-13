@@ -126,6 +126,9 @@ to the Cell Broadband Engine documentation.
 #define SPU_THREAD_ATTR_ASYNC_INT_ENABLE		0x01
 #define SPU_THREAD_ATTR_DEC_SYNC_TB_ENABLE		0x02
 
+#define SPU_THREAD_EVENT_USER					0x01
+#define SPU_THREAD_EVENT_DMA					0x02
+
 //! Configure signal notification register 1 to overwrite mode
 #define SPU_SIGNAL1_OVERWRITE					0x00
 //! Configure signal notification register 1 to OR mode

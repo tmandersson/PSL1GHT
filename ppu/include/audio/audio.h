@@ -179,21 +179,21 @@ s32 audioPortClose(u32 portNum);
 \param queueKey Pointer to storage for the returned queue key.
 \return zero if no error, nonzero otherwise.
 */
-s32 audioCreateNotifyEventQueue(sys_event_queue_t *eventQ,u64 *queueKey);
+s32 audioCreateNotifyEventQueue(sys_event_queue_t *eventQ,sys_ipc_key_t *queueKey);
 
 /*! \brief Set the current event queue for audio events.
 \param queueKey The queue key value (musthave been created using
    \ref audioCreateNotifyEventQueue).
 \return zero if no error, nonzero otherwise.
 */
-s32 audioSetNotifyEventQueue(u64 queueKey);
+s32 audioSetNotifyEventQueue(sys_ipc_key_t queueKey);
 
 /*! \brief Disconnect the current event queue from the audio subsystem.
 \param queueKey The queue key value (must have been created using
    \ref audioCreateNotifyEventQueue).
 \return zero if no error, nonzero otherwise.
 */
-s32 audioRemoveNotifyEventQueue(u64 queueKey);
+s32 audioRemoveNotifyEventQueue(sys_ipc_key_t queueKey);
 
 #ifdef __cplusplus
 	}

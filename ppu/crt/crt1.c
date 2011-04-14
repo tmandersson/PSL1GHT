@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <ppu-types.h>
 #include <sys/reent.h>
+#include <sys/time.h>
 #include <sys/dirent.h>
 #include <sys/syscalls.h>
 
@@ -34,6 +35,8 @@ extern int __librt_rmdir_r(struct _reent *r,const char *dirname);
 extern int __librt_usleep_r(struct _reent *r,useconds_t usec);
 extern unsigned int __librt_sleep_r(struct _reent *r,unsigned int seconds);
 extern clock_t __librt_times_r(struct _reent *r,struct tms *buf);
+extern int __librt_gettod_r(struct _reent *r,struct timeval *ptimeval,void *ptimezone);
+extern int __librt_settod_r(struct _reent *r,const struct timeval *ptimeval,const struct timezone *ptimezone);
 extern mode_t __librt_umask_r(struct _reent *r,mode_t cmask);
 
 extern int __librt_sys_lwmutex_create_r(struct _reent *r,sys_lwmutex_t *lwmutex,const sys_lwmutex_attr_t *attr);
@@ -74,6 +77,8 @@ static void __syscalls_init(void)
 
 	__syscalls.sleep_r = __librt_sleep_r;
 	__syscalls.usleep_r = __librt_usleep_r;
+	__syscalls.gettod_r = __librt_gettod_r;
+	__syscalls.settod_r = __librt_settod_r;
 	__syscalls.times_r = __librt_times_r;
 	__syscalls.umask_r = __librt_umask_r;
 

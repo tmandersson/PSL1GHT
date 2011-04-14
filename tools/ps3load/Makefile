@@ -34,11 +34,7 @@ endif
 
 ifneq (,$(findstring MINGW,$(UNAME)))
 	EXEEXT		:= .exe
-	PLATFORM_LIBS	:=	-static -lws2_32
-endif
-
-ifneq (,$(findstring Linux,$(shell uname -s)))
-	LDFLAGS += -static
+	PLATFORM_LIBS	:=	-lws2_32
 endif
 
 ifneq (,$(findstring Darwin,$(shell uname -s)))

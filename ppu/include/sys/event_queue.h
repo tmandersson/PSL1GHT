@@ -25,6 +25,9 @@
 /*! \brief Used to auto create a port name */
 #define SYS_EVENT_PORT_NO_NAME					0x00
 
+/*! \brief Used to auto create a event queue key. */
+#define SYS_EVENT_QUEUE_KEY_LOCAL				0x00
+
 #ifdef __cplusplus
 	extern "C" {
 #endif

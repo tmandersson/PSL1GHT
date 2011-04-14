@@ -11,8 +11,11 @@
 
 #include <ppu-types.h>
 
+/*! \brief Copy segment type */
 #define SPU_SEGMENT_TYPE_COPY				0x01
+/*! \brief Fill segment type */
 #define SPU_SEGMENT_TYPE_FILL				0x02
+/*! \brief Info segment type */
 #define SPU_SEGMENT_TYPE_INFO				0x04
 
 #define SPU_IMAGE_TYPE_USER					0x00
@@ -25,24 +28,38 @@
 extern "C" {
 #endif
 
+//! SPU segment data structure.
 typedef struct _sys_spu_segment
 {
+	/*! segment type.
+
+	Possible values:
+	- \ref SPU_SEGMENT_TYPE_COPY
+	- \ref SPU_SEGMENT_TYPE_FILL
+	- \ref SPU_SEGMENT_TYPE_INFO
+	*/
 	u32 type;
-	u32 lsStart;
-	u32 size;
+	u32 lsStart;		//!< start address in local store
+	u32 size;			//!< segment size in bytes
+	//! bla
 	union {
+		/*! \brief start address in main memory to be copied if \ref type
+		is \ref SPU_SEGMENT_TYPE_COPY */
 		u32 paStart;
+		/*! \brief fill value if \ref type is \ref SPU_SEGMENT_TYPE_FILL */
 		u32 value;
 	};
 } sysSpuSegment;
 
+//! SPU image data structure.
 typedef struct _sys_spu_image
 {
-	u32 type;
-	u32 entryPoint;
-	u32 segments;
-	u32 segmentCount;
+	u32 type;			//!< type
+	u32 entryPoint;		//!< entry point
+	u32 segments;		//!< address of segments
+	u32 segmentCount;	//!< number of segments
 } sysSpuImage;
+
 
 s32 sysSpuElfGetInformation(const void *elf,u32 *entryPoint,u32 *segmentCount);
 s32 sysSpuElfGetSegments(const void *elf,sysSpuSegment *segments,u32 segmentCount);

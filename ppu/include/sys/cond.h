@@ -5,8 +5,8 @@
 #ifndef __SYS_COND_H__
 #define __SYS_COND_H__
 
-#include <mutex.h>
 #include <lv2/cond.h>
+#include <sys/mutex.h>
 
 /*! \brief Pshared attribute for condition variables. */
 #define SYS_COND_ATTR_PSHARED			0x0200
@@ -80,7 +80,7 @@ LV2_SYSCALL sysCondSignal(sys_cond_t cond)
 */
 LV2_SYSCALL sysCondBroadcast(sys_cond_t cond)
 {
-	return lv2syscall1(109,cond)
+	return lv2syscall1(109,cond);
 }
 
 #ifdef __cplusplus

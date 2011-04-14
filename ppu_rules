@@ -37,17 +37,17 @@ PACKAGE_FINALIZE := package_finalize
 #---------------------------------------------------------------------------------
 %.self: %.elf
 	@echo output ... $(notdir $@)
-	@$(STRIP) $< -o $<
-	@$(SPRX) $<
-	@$(FSELF) $< $@
+	$(VERB) $(STRIP) $< -o $<
+	$(VERB) $(SPRX) $<
+	$(VERB) $(FSELF) $< $@
 
 %.vpo: %.vcg
 	@echo $(notdir $<)
-	@$(CGCOMP) -v $^ $@
+	$(VERB) $(CGCOMP) -v $^ $@
 
 %.fpo: %.fcg
 	@echo $(notdir $<)
-	@$(CGCOMP) -f $^ $@
+	$(VERB) $(CGCOMP) -f $^ $@
 
 %.pkg: %.self
 	@echo building pkg ... $(notdir $@)

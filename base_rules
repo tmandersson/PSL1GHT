@@ -6,6 +6,11 @@ ifeq ($(strip $(PS3DEV)),)
   endif
 endif
 
+# Allow for 'make VERBOSE=1' to see the recepie executions
+ifndef VERBOSE
+  VERB := @
+endif
+
 #---------------------------------------------------------------------------------
 # the prefix on the compiler executables
 #---------------------------------------------------------------------------------
@@ -39,37 +44,37 @@ endif
 #---------------------------------------------------------------------------------
 	@echo $(notdir $@)
 	@rm -f $@
-	@$(AR) -rc $@ $^
+	$(VERB) $(AR) -rc $@ $^
 
 #---------------------------------------------------------------------------------
 %.elf:
 	@echo linking ... $(notdir $@)
-	@$(LD)  $^ $(LDFLAGS) $(LIBPATHS) $(LIBS) -o $@
+	$(VERB) $(LD)  $^ $(LDFLAGS) $(LIBPATHS) $(LIBS) -o $@
 
 #---------------------------------------------------------------------------------
 %.o: %.cpp
 	@echo $(notdir $<)
-	@$(CXX) $(DEPSOPT) $(CXXFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	$(VERB) $(CXX) $(DEPSOPT) $(CXXFLAGS) -c $< -o $@ $(ERROR_FILTER)
 
 #---------------------------------------------------------------------------------
 %.o: %.c
 	@echo $(notdir $<)
-	@$(CC) $(DEPSOPT) $(CFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	$(VERB) $(CC) $(DEPSOPT) $(CFLAGS) -c $< -o $@ $(ERROR_FILTER)
 
 #---------------------------------------------------------------------------------
 %.o: %.m
 	@echo $(notdir $<)
-	@$(CC) $(DEPSOPT) $(OBJCFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	$(VERB) $(CC) $(DEPSOPT) $(OBJCFLAGS) -c $< -o $@ $(ERROR_FILTER)
 
 #---------------------------------------------------------------------------------
 %.o: %.s
 	@echo $(notdir $<)
-	@$(CC) $(DEPSOPT) -x assembler-with-cpp $(ASFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	$(VERB) $(CC) $(DEPSOPT) -x assembler-with-cpp $(ASFLAGS) -c $< -o $@ $(ERROR_FILTER)
 
 #---------------------------------------------------------------------------------
 %.o: %.S
 	@echo $(notdir $<)
-	@$(CC) $(DEPSOPT) -x assembler-with-cpp $(ASFLAGS) -c $< -o $@ $(ERROR_FILTER)
+	$(VERB) $(CC) $(DEPSOPT) -x assembler-with-cpp $(ASFLAGS) -c $< -o $@ $(ERROR_FILTER)
 
 #---------------------------------------------------------------------------------
 # canned command sequence for binary data

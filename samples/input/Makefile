@@ -1,7 +1,6 @@
-TARGETS := spuchain spudma sputest sputhread # spuparallel
+TARGETS := # camera gemtest kbtest padtest
 
 all:
-	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET bin; done
 	@for TARGET in $(TARGETS); do $(MAKE) --no-print-directory -C $$TARGET; done
 
 clean:

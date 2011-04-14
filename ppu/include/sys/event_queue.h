@@ -123,7 +123,7 @@ LV2_SYSCALL sysEventQueueDrain(sys_event_queue_t eventQ)
 
 This function creates an event port for sending events thru a connected event queue.
 \param portId Pointer to receive the event port id.
-\param portType Type of the port to create. 
+\param portType Type of the port to create.
 
 Possible values:
 - \ref SYS_EVENT_PORT_LOCAL
@@ -174,7 +174,7 @@ LV2_SYSCALL sysEventPortConnectLocal(sys_event_port_t portId,sys_event_queue_t e
 */
 LV2_SYSCALL sysEventPortDisconnect(sys_event_port_t portId)
 {
-	lv2syscall1(137,portId);
+	return lv2syscall1(137,portId);
 }
 
 #ifdef __cplusplus

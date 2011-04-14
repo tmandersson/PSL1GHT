@@ -34,7 +34,7 @@ endif
 
 ifneq (,$(findstring MINGW,$(UNAME)))
 	EXEEXT		:= .exe
-	PLATFORM_LIBS	:=	-lws2_32
+	PLATFORM_LIBS	:=	-static -lws2_32
 endif
 
 ifneq (,$(findstring Darwin,$(shell uname -s)))

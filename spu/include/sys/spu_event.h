@@ -12,6 +12,10 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
+#define EVENT_DATA0_MASK		0x00FFFFFF
+#define EVENT_PORT_SHIFT		24
+#define EVENT_PORT_MAX_NUM		63
+
 #ifdef __cplusplus
 extern "C" {
 #endif

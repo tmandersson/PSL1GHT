@@ -15,7 +15,7 @@
 	register u64 p6 asm("8");													\
 	register u64 p7 asm("9");													\
 	register u64 p8 asm("10");													\
-	register u64 scn asm("11") = syscall;										\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
@@ -25,7 +25,7 @@
 
 
 #define lv2syscall1(syscall,a1)													\
-	register u64 p1 asm("3") = a1;												\
+	register u64 p1 asm("3") = (a1);											\
 	register u64 p2 asm("4");													\
 	register u64 p3 asm("5");													\
 	register u64 p4 asm("6");													\
@@ -33,7 +33,7 @@
 	register u64 p6 asm("8");													\
 	register u64 p7 asm("9");													\
 	register u64 p8 asm("10");													\
-	register u64 scn asm("11") = syscall;										\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
@@ -43,15 +43,15 @@
 
 
 #define lv2syscall2(syscall,a1,a2)												\
-	register u64 p1 asm("3") = a1;												\
-	register u64 p2 asm("4") = a2;												\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
 	register u64 p3 asm("5");													\
 	register u64 p4 asm("6");													\
 	register u64 p5 asm("7");													\
 	register u64 p6 asm("8");													\
 	register u64 p7 asm("9");													\
 	register u64 p8 asm("10");													\
-	register u64 scn asm("11") = syscall;										\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
@@ -61,15 +61,15 @@
 
 
 #define lv2syscall3(syscall,a1,a2,a3)											\
-	register u64 p1 asm("3") = a1;												\
-	register u64 p2 asm("4") = a2;												\
-	register u64 p3 asm("5") = a3;												\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
 	register u64 p4 asm("6");													\
 	register u64 p5 asm("7");													\
 	register u64 p6 asm("8");													\
 	register u64 p7 asm("9");													\
 	register u64 p8 asm("10");													\
-	register u64 scn asm("11") = syscall;										\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
@@ -79,15 +79,15 @@
 
 
 #define lv2syscall4(syscall,a1,a2,a3,a4)										\
-	register u64 p1 asm("3") = a1;												\
-	register u64 p2 asm("4") = a2;												\
-	register u64 p3 asm("5") = a3;												\
-	register u64 p4 asm("6") = a4;												\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
 	register u64 p5 asm("7");													\
 	register u64 p6 asm("8");													\
 	register u64 p7 asm("9");													\
 	register u64 p8 asm("10");													\
-	register u64 scn asm("11") = syscall;										\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
@@ -97,15 +97,15 @@
 
 
 #define lv2syscall5(syscall,a1,a2,a3,a4,a5)										\
-	register u64 p1 asm("3") = a1;												\
-	register u64 p2 asm("4") = a2;												\
-	register u64 p3 asm("5") = a3;												\
-	register u64 p4 asm("6") = a4;												\
-	register u64 p5 asm("7") = a5;												\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7") = (a5);											\
 	register u64 p6 asm("8");													\
 	register u64 p7 asm("9");													\
 	register u64 p8 asm("10");													\
-	register u64 scn asm("11") = syscall;										\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
@@ -115,15 +115,15 @@
 
 
 #define lv2syscall6(syscall,a1,a2,a3,a4,a5,a6)									\
-	register u64 p1 asm("3") = a1;												\
-	register u64 p2 asm("4") = a2;												\
-	register u64 p3 asm("5") = a3;												\
-	register u64 p4 asm("6") = a4;												\
-	register u64 p5 asm("7") = a5;												\
-	register u64 p6 asm("8") = a6;												\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7") = (a5);											\
+	register u64 p6 asm("8") = (a6);											\
 	register u64 p7 asm("9");													\
 	register u64 p8 asm("10");													\
-	register u64 scn asm("11") = syscall;										\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
@@ -133,15 +133,15 @@
 
 
 #define lv2syscall7(syscall,a1,a2,a3,a4,a5,a6,a7)								\
-	register u64 p1 asm("3") = a1;												\
-	register u64 p2 asm("4") = a2;												\
-	register u64 p3 asm("5") = a3;												\
-	register u64 p4 asm("6") = a4;												\
-	register u64 p5 asm("7") = a5;												\
-	register u64 p6 asm("8") = a6;												\
-	register u64 p7 asm("9") = a7;												\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7") = (a5);											\
+	register u64 p6 asm("8") = (a6);											\
+	register u64 p7 asm("9") = (a7);											\
 	register u64 p8 asm("10");													\
-	register u64 scn asm("11") = syscall;										\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\
@@ -151,15 +151,15 @@
 
 
 #define lv2syscall8(syscall,a1,a2,a3,a4,a5,a6,a7,a8)							\
-	register u64 p1 asm("3") = a1;												\
-	register u64 p2 asm("4") = a2;												\
-	register u64 p3 asm("5") = a3;												\
-	register u64 p4 asm("6") = a4;												\
-	register u64 p5 asm("7") = a5;												\
-	register u64 p6 asm("8") = a6;												\
-	register u64 p7 asm("9") = a7;												\
-	register u64 p8 asm("10") = a8												\
-	register u64 scn asm("11") = syscall;										\
+	register u64 p1 asm("3") = (a1);											\
+	register u64 p2 asm("4") = (a2);											\
+	register u64 p3 asm("5") = (a3);											\
+	register u64 p4 asm("6") = (a4);											\
+	register u64 p5 asm("7") = (a5);											\
+	register u64 p6 asm("8") = (a6);											\
+	register u64 p7 asm("9") = (a7);											\
+	register u64 p8 asm("10") = (a8);											\
+	register u64 scn asm("11") = (syscall);										\
 	__asm__ __volatile__("sc"													\
 						 : "=r"(p1), "=r"(p2), "=r"(p3), "=r"(p4),				\
 						   "=r"(p5), "=r"(p6), "=r"(p7), "=r"(p8), "=r"(scn)	\

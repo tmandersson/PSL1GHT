@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <spu_intrinsics.h>
-#include "spu_event.h"
+
+#include <sys/spu_event.h>
 
 int spu_thread_throw_event(uint8_t spup,uint32_t data0,uint32_t data1)
 {

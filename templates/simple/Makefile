@@ -4,7 +4,7 @@
 
 PREFIX          := ppu
 
-TARGET		:= audiosync.pkg
+TARGET		:= audiosync.self
 
 TITLE		:= Template - PSL1GHT
 APPID		:= TEST00003
@@ -75,12 +75,15 @@ clean:
 %.elf: $(OFILES)
 	$(LD) $(OFILES) $(LDFLAGS) -o $@
 
+%.self: %.elf
+	$(MAKE_SELF) $< $@ $(CONTENTID) >> /dev/null
+
 %.pkg: %.elf
 	@rm -Rf pkg
 	@mkdir -p pkg
 	@mkdir -p pkg/USRDIR
 	@cp $(ICON0) pkg
-	@$(MAKE_SELF) $< pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
-	@$(MAKE_SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) pkg/PARAM.SFO
-	@$(MAKE_PKG) --contentid $(CONTENTID) pkg/ $@ >> /dev/null
+	$(MAKE_SELF) $< pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
+	$(MAKE_SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) pkg/PARAM.SFO
+	$(MAKE_PKG) --contentid $(CONTENTID) pkg/ $@ >> /dev/null
 	@rm -Rf pkg

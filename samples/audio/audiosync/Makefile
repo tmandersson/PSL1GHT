@@ -1,135 +1,89 @@
-#---------------------------------------------------------------------------------
-# Clear the implicit built in rules
-#---------------------------------------------------------------------------------
-.SUFFIXES:
-#---------------------------------------------------------------------------------
-ifeq ($(strip $(PSL1GHT)),)
-$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
-endif
+##
+## Configuration
+##
 
-include $(PSL1GHT)/ppu_rules
+PREFIX          := ppu
 
-#---------------------------------------------------------------------------------
-# TARGET is the name of the output
-# BUILD is the directory where object files & intermediate files will be placed
-# SOURCES is a list of directories containing source code
-# INCLUDES is a list of directories containing extra header files
-#---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	source
-DATA		:=	data
-INCLUDES	:=	include
+TARGET		:= audiosync.self
 
-#---------------------------------------------------------------------------------
-# options for code generation
-#---------------------------------------------------------------------------------
+TITLE		:= Template - PSL1GHT
+APPID		:= TEST00003
+CONTENTID	:= UP0001-$(APPID)_00-0000000000000000
+ICON0		:= /usr/local/ps3dev/bin/ICON0.PNG
+SFOXML		:= /usr/local/ps3dev/bin/sfo.xml
 
-CFLAGS		=	-O2 -Wall -mcpu=cell $(MACHDEP) $(INCLUDE)
-CXXFLAGS	=	$(CFLAGS)
+FLAGS		:= -std=gnu99
+INCLUDES	:=
+LIBS		:= -laudio -lrt -llv2 -lm
 
-LDFLAGS		=	$(MACHDEP) -Wl,-Map,$(notdir $@).map
+##
+## Tools
+##
 
-#---------------------------------------------------------------------------------
-# any extra libraries we wish to link with the project
-#---------------------------------------------------------------------------------
-LIBS	:=	-laudio -lrt -llv2 -lm
+AS		:= $(PREFIX)-as
+CC		:= $(PREFIX)-gcc
+CPP		:= $(PREFIX)-g++
+LD		:= $(PREFIX)-g++
 
-#---------------------------------------------------------------------------------
-# list of directories containing libraries, this must be the top level containing
-# include and lib
-#---------------------------------------------------------------------------------
-LIBDIRS	:=
+ASFLAGS		:=
+CFLAGS		:= -Wall -pedantic -O3 $(FLAGS) -I$(PSL1GHT)/$(PREFIX)/include $(INCLUDES)
+CPPFLAGS	:= $(CFLAGS)
+LDFLAGS		:= -L$(PSL1GHT)/$(PREFIX)/lib $(LIBS)
 
-#---------------------------------------------------------------------------------
-# no real need to edit anything past this point unless you need to add additional
-# rules for different file extensions
-#---------------------------------------------------------------------------------
-ifneq ($(BUILD),$(notdir $(CURDIR)))
-#---------------------------------------------------------------------------------
+MAKE_SELF	:= make_self_npdrm
+MAKE_SFO	:= sfo.py
+MAKE_PKG	:= pkg.py
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
+##
+## Files
+##
 
-export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
-					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
+RAWFILES	:= $(shell find * -name "*.raw" -print )
+CFILES		:= $(shell find * -name "*.c"   -print )
+CPPFILES	:= $(shell find * -name "*.cpp" -print )
+SFILES		:= $(shell find * -name "*.s"   -print )
 
-export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+OFILES		:= ${RAWFILES:.raw=.o} ${CFILES:.c=.o} ${CPPFILES:.cpp=.o} ${SFILES:.s=.o}
 
-#---------------------------------------------------------------------------------
-# automatically build a list of object files for our project
-#---------------------------------------------------------------------------------
-CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
-CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
-sFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
-SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
-BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+##
+## Rules
+##
 
-#---------------------------------------------------------------------------------
-# use CXX for linking C++ projects, CC for standard C
-#---------------------------------------------------------------------------------
-ifeq ($(strip $(CPPFILES)),)
-	export LD	:=	$(CC)
-else
-	export LD	:=	$(CXX)
-endif
+default: $(TARGET)
 
-export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
-					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
-					$(sFILES:.s=.o) $(SFILES:.S=.o)
-
-#---------------------------------------------------------------------------------
-# build a list of include paths
-#---------------------------------------------------------------------------------
-export INCLUDE	:=	$(foreach dir,$(INCLUDES), -I$(CURDIR)/$(dir)) \
-					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-					$(LIBPSL1GHT_INC) \
-					-I$(CURDIR)/$(BUILD)
-
-#---------------------------------------------------------------------------------
-# build a list of library paths
-#---------------------------------------------------------------------------------
-export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					$(LIBPSL1GHT_LIB)
-
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
-.PHONY: $(BUILD) clean
-
-#---------------------------------------------------------------------------------
-$(BUILD):
-	@[ -d $@ ] || mkdir -p $@
-	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-
-#---------------------------------------------------------------------------------
 clean:
-	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self
+	rm -f $(OFILES) $(TARGET)
 
-#---------------------------------------------------------------------------------
-run:
-	ps3load $(OUTPUT).self
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
+%.o: %.cpp
+	$(CPP) $(CPPFLAGS) -c $< -o $@
 
-#---------------------------------------------------------------------------------
-else
+%.o: %.raw
+	@bin2s -a 64 $< | $(AS) $(ASFLAGS) -o $@
+	@echo "extern const u8"  `(echo $(<F) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"_end[];" >  `(echo $< | tr . _)`.h
+	@echo "extern const u8"  `(echo $(<F) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"[];"     >> `(echo $< | tr . _)`.h
+	@echo "extern const u32" `(echo $(<F) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size";"  >> `(echo $< | tr . _)`.h
 
-DEPENDS	:= $(OFILES:.o=.d)
+%.o: %.s
+	$(AS) $(ASFLAGS) -o $@
 
-#---------------------------------------------------------------------------------
-# main targets
-#---------------------------------------------------------------------------------
-$(OUTPUT).self: $(OUTPUT).elf
-$(OUTPUT).elf: $(OFILES)
+%.a: $(OFILES)
+	$(AR) cru $@ $(OFILES)
 
-#---------------------------------------------------------------------------------
-# This rule links in binary data with the .bin extension
-#---------------------------------------------------------------------------------
-%.raw.o	:	%.raw
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	@$(bin2o)
+%.elf: $(OFILES)
+	$(LD) $(OFILES) $(LDFLAGS) -o $@
 
--include $(DEPENDS)
+%.self: %.elf
+	$(MAKE_SELF) $< $@ $(CONTENTID) >> /dev/null
 
-#---------------------------------------------------------------------------------
-endif
-#---------------------------------------------------------------------------------
+%.pkg: %.elf
+	@rm -Rf pkg
+	@mkdir -p pkg
+	@mkdir -p pkg/USRDIR
+	@cp $(ICON0) pkg
+	$(MAKE_SELF) $< pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
+	$(MAKE_SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) pkg/PARAM.SFO
+	$(MAKE_PKG) --contentid $(CONTENTID) pkg/ $@ >> /dev/null
+	@rm -Rf pkg

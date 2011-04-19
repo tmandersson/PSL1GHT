@@ -3,11 +3,11 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(PS3DEV)),)
+ifeq ($(strip $(PSL1GHT)),)
 $(error "Please set PS3DEV in your environment. export PS3DEV=<path>")
 endif
 
-include $(PS3DEV)/ppu_rules
+include $(PSL1GHT)/ppu_rules
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output

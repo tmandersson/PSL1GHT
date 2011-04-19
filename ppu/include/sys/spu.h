@@ -102,34 +102,41 @@ to the Cell Broadband Engine documentation.
 #include <ppu-lv2.h>
 #include <lv2/spu.h>
 
-#define MFC_LSA									0x3004
-#define MFC_EAH									0x3008
-#define MFC_EAL									0x300C
-#define MFC_Size								0x3010
-#define MFC_Class_CMD							0x3014
-#define MFC_CMD_Status							0x3014
-#define MFC_QStatus								0x3104
-#define Prxy_QueryType							0x3204
-#define Prxy_QueryMask							0x321C
-#define Prxy_TagStatus							0x322C
-#define SPU_Out_MBox							0x4004
-#define SPU_In_MBox								0x400C
-#define SPU_MBox_Status							0x4014
-#define SPU_RunCtrl								0x401C
-#define SPU_Status								0x4024
-#define SPU_NextPC								0x4034
-#define SPU_Sig_Notify_1						0x1400C
-#define SPU_Sig_Notify_2						0x1C00C
+/* MFC channel registers */
+#define MFC_LSA									0x3004	//!< local store address
+#define MFC_EAH									0x3008	//!< effective address high
+#define MFC_EAL									0x300C	//!< effective address low
+#define MFC_Size								0x3010	//!< size of MFC DMA transfer
+#define MFC_Class_CMD							0x3014	//!< class of MFC command
+#define MFC_CMD_Status							0x3014	//!< MFC command status
+#define MFC_QStatus								0x3104	//!< MFC query status
+#define Prxy_QueryType							0x3204	//!< Proxy query type
+#define Prxy_QueryMask							0x321C	//!< Proxy Query mask
+#define Prxy_TagStatus							0x322C	//!< Proxy tag status
+#define SPU_Out_MBox							0x4004	//!< Outbound mailbox
+#define SPU_In_MBox								0x400C	//!< Inbound mailbox
+#define SPU_MBox_Status							0x4014	//!< Outbound mailbox status
+#define SPU_RunCtrl								0x401C	//!< SPU Run control
+#define SPU_Status								0x4024	//!< SPU status
+#define SPU_NextPC								0x4034	//!< SPU next PC
+#define SPU_Sig_Notify_1						0x1400C	//!< Signal notification 1
+#define SPU_Sig_Notify_2						0x1C00C	//!< Signal notification 2
 
 //! No thread attributes
 #define SPU_THREAD_ATTR_NONE					0x00
+//! Enables interrupts.
 #define SPU_THREAD_ATTR_ASYNC_INT_ENABLE		0x01
+//! Synchronize SPU decrementer with PPU time base
 #define SPU_THREAD_ATTR_DEC_SYNC_TB_ENABLE		0x02
 
+//! User SPU thread event
 #define SPU_THREAD_EVENT_USER					0x01
+//! DMA SPU thread event
 #define SPU_THREAD_EVENT_DMA					0x02
 
+//! SPU thread event user key
 #define SPU_THREAD_EVENT_USER_KEY				0xFFFFFFFF53505501ULL
+//! SPU thread event DMA key
 #define SPU_THREAD_EVENT_DMA_KEY				0xFFFFFFFF53505502ULL
 
 //! Configure signal notification register 1 to overwrite mode
@@ -141,14 +148,22 @@ to the Cell Broadband Engine documentation.
 //! Configure signal notification register 2 to OR mode
 #define SPU_SIGNAL2_OR							0x02
 
-
+//! Base of memory-mapped SPU thread resources
 #define SPU_THREAD_BASE							0xF0000000ULL
+//! Offset between resources for consecutive SPU threads
 #define SPU_THREAD_OFFSET						0x00100000ULL
+//! Base of memory-mapped raw SPU program resources
 #define SPU_RAW_BASE							0xE0000000ULL
+//! Offset between resources for consecutive raw SPU programs
 #define SPU_RAW_OFFSET							0x00100000ULL
+//! Offset from the beginning of a SPU thread/raw program's resources for local store memory
 #define SPU_LOCAL_OFFSET						0x00000000ULL
+//! Offset from the beginning of a SPU thread/raw program's resources for IO registers
 #define SPU_PROBLEM_OFFSET						0x00040000ULL
 
+/*! \brief Get base offset for a raw SPU program.
+\param spu SPU number (0-5)
+*/
 #define SPU_RAW_GET_BASE_OFFSET(spu) \
 	(SPU_RAW_BASE + (SPU_RAW_OFFSET*(spu)))
 
@@ -160,6 +175,9 @@ to the Cell Broadband Engine documentation.
 #define SPU_RAW_GET_PROBLEM_STORAGE(spu,reg) \
 	(SPU_RAW_GET_BASE_OFFSET(spu) + SPU_PROBLEM_OFFSET + (reg))
 
+/*! \brief Get base offset for a SPU thread.
+\param spu SPU thread id
+*/
 #define SPU_THREAD_GET_BASE_OFFSET(spu) \
 	(SPU_THREAD_BASE + (SPU_THREAD_OFFSET*(spu)))
 
@@ -203,8 +221,8 @@ typedef struct _sys_spu_thread_group_attr
 {
 	u32 nameSize;		//!< Size of the name string in bytes (including terminating null byte).
 	u32 nameAddress;	//!< Effective address of the thread group's name string.
-	u32 groupType;
-	u32 memContainer;
+	u32 groupType;		//!< Thread group type (\c 0 for normal thread groups).
+	u32 memContainer;	//!< Memory container id (\c 0 for normal thread groups).
 } sysSpuThreadGroupAttribute;
 
 /*! \brief Initialize the SPU management.
@@ -217,7 +235,8 @@ typedef struct _sys_spu_thread_group_attr
 */
 LV2_SYSCALL sysSpuInitialize(u32 spus,u32 rawspus) 
 { 
-	return lv2syscall2(169,spus,rawspus); 
+	lv2syscall2(169,spus,rawspus); 
+	return_to_user_prog(s32);
 }
 
 /*! \brief Allocate a raw SPU.
@@ -230,7 +249,8 @@ LV2_SYSCALL sysSpuInitialize(u32 spus,u32 rawspus)
 */
 LV2_SYSCALL sysSpuRawCreate(u32 *spu,u32 *attributes)
 {
-	return lv2syscall2(160,(u64)spu,(u64)attributes);
+	lv2syscall2(160,(u64)spu,(u64)attributes);
+	return_to_user_prog(s32);
 }
 
 /*! \brief De-allocate a raw SPU.
@@ -241,7 +261,8 @@ LV2_SYSCALL sysSpuRawCreate(u32 *spu,u32 *attributes)
 */
 LV2_SYSCALL sysSpuRawDestroy(u32 spu)
 {
-	return lv2syscall1(161,spu);
+	lv2syscall1(161,spu);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Create an interrupt tag for a raw SPU.
@@ -258,7 +279,8 @@ LV2_SYSCALL sysSpuRawDestroy(u32 spu)
 */
 LV2_SYSCALL sysSpuCreateInterrupTag(u32 spu,u32 classid,u32 hardwarethread,u32 *tag)
 {
-	return lv2syscall4(150,spu,classid,hardwarethread,(u64)tag);
+	lv2syscall4(150,spu,classid,hardwarethread,(u64)tag);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Set the value of the interrupt mask register for a raw SPU.
@@ -273,7 +295,8 @@ LV2_SYSCALL sysSpuCreateInterrupTag(u32 spu,u32 classid,u32 hardwarethread,u32 *
 */
 LV2_SYSCALL sysSpuSetIntMask(u32 spu,u32 classid,u64 mask)
 {
-	return lv2syscall3(151,spu,classid,mask);
+	lv2syscall3(151,spu,classid,mask);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get the value of the interrupt mask register for a raw SPU.
@@ -288,7 +311,8 @@ LV2_SYSCALL sysSpuSetIntMask(u32 spu,u32 classid,u64 mask)
 */
 LV2_SYSCALL sysSpuGetIntMask(u32 spu,u32 classid,u64 *mask)
 {
-	return lv2syscall3(152,spu,classid,(u64)mask);
+	lv2syscall3(152,spu,classid,(u64)mask);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Set the value of the interrupt status register for a raw SPU.
@@ -303,7 +327,8 @@ LV2_SYSCALL sysSpuGetIntMask(u32 spu,u32 classid,u64 *mask)
 */
 LV2_SYSCALL sysSpuRawSetIntStat(u32 spu, u32 classid, u64 stat)
 { 
-	return lv2syscall3(153, spu, classid, stat);
+	lv2syscall3(153, spu, classid, stat);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get the value of the interrupt status register for a raw SPU.
@@ -318,7 +343,8 @@ LV2_SYSCALL sysSpuRawSetIntStat(u32 spu, u32 classid, u64 stat)
 */
 LV2_SYSCALL sysSpuRawGetIntStat(u32 spu, u32 classid, u64* stat)
 {
-	return lv2syscall3(154, spu, classid, (u64)stat);
+	lv2syscall3(154, spu, classid, (u64)stat);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Read from the raw SPU's outbound interrupt mailbox register.
@@ -331,7 +357,8 @@ LV2_SYSCALL sysSpuRawGetIntStat(u32 spu, u32 classid, u64* stat)
 */
 LV2_SYSCALL sysSpuRawReadPuintMb(u32 spu, u32* value)
 {
-	return lv2syscall2(163, spu, (u64)value);
+	lv2syscall2(163, spu, (u64)value);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Configure the raw SPU's signal notification.
@@ -348,7 +375,8 @@ LV2_SYSCALL sysSpuRawReadPuintMb(u32 spu, u32* value)
 */
 LV2_SYSCALL sysSpuRawSetConfiguration(u32 spu, u32 value)
 {
-	return lv2syscall2(196, spu, value);
+	lv2syscall2(196, spu, value);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get the configuration of the raw SPU's signal notification.
@@ -366,7 +394,8 @@ LV2_SYSCALL sysSpuRawSetConfiguration(u32 spu, u32 value)
 */
 LV2_SYSCALL sysSpuRawGetConfirugation(u32 spu, u32* value)
 {
-	return lv2syscall2(197, spu, (u64)value);
+	lv2syscall2(197, spu, (u64)value);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Recover a raw SPU from a page fault.
@@ -377,7 +406,8 @@ LV2_SYSCALL sysSpuRawGetConfirugation(u32 spu, u32* value)
 */
 LV2_SYSCALL sysSpuRawRecoverPageFault(u32 spu)
 {
-	return lv2syscall1(199, spu);
+	lv2syscall1(199, spu);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Create a SPU image from an ELF file.
@@ -390,7 +420,8 @@ LV2_SYSCALL sysSpuRawRecoverPageFault(u32 spu)
 */
 LV2_SYSCALL sysSpuImageOpen(sysSpuImage* image, const char* path)
 { 
-	return lv2syscall2(156, (u64)image, (u64)path);
+	lv2syscall2(156, (u64)image, (u64)path);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Create a SPU image from an open binary file.
@@ -405,7 +436,8 @@ LV2_SYSCALL sysSpuImageOpen(sysSpuImage* image, const char* path)
 */
 LV2_SYSCALL sysSpuImageOpenFd(sysSpuImage* image, s32 fd, u64 offset)
 { 
-	return lv2syscall3(260, (u64)image, fd, offset);
+	lv2syscall3(260, (u64)image, fd, offset);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Initialize a SPU thread.
@@ -426,7 +458,8 @@ LV2_SYSCALL sysSpuImageOpenFd(sysSpuImage* image, s32 fd, u64 offset)
 */
 LV2_SYSCALL sysSpuThreadInitialize(u32* thread, u32 group, u32 spu, sysSpuImage* image, sysSpuThreadAttribute* attributes, sysSpuThreadArgument* arguments)
 {
-	return lv2syscall6(172, (u64)thread, group, spu, (u64)image, (u64)attributes, (u64)arguments);
+	lv2syscall6(172, (u64)thread, group, spu, (u64)image, (u64)attributes, (u64)arguments);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Set the SPU thread arguments.
@@ -439,7 +472,8 @@ LV2_SYSCALL sysSpuThreadInitialize(u32* thread, u32 group, u32 spu, sysSpuImage*
 */
 LV2_SYSCALL sysSpuThreadSetArguments(u32 thread, sysSpuThreadArgument* arguments)
 { 
-	return lv2syscall2(166, thread, (u64)arguments);
+	lv2syscall2(166, thread, (u64)arguments);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get the exit status of a thread.
@@ -454,27 +488,32 @@ LV2_SYSCALL sysSpuThreadSetArguments(u32 thread, sysSpuThreadArgument* arguments
 */
 LV2_SYSCALL sysSpuThreadGetExitStatus(u32 thread, s32* status)
 {
-	return lv2syscall2(165, thread, (u64)status);
+	lv2syscall2(165, thread, (u64)status);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysSpuThreadConnectEvent(u32 thread, u32 queue, u32 type, u8 spup)
 {
-	return lv2syscall4(191, thread, queue, type, spup);
+	lv2syscall4(191, thread, queue, type, spup);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysSpuThreadDisconnectEvent(u32 thread, u32 type, u8 spup) 
 { 
-	return lv2syscall3(192, thread, type, spup); 
+	lv2syscall3(192, thread, type, spup); 
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysSpuThreadBindQueue(u32 thread, u32 queue, u32 spuq_num) 
 { 
-	return lv2syscall3(193, thread, queue, spuq_num); 
+	lv2syscall3(193, thread, queue, spuq_num); 
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysSpuThreadUnbindQueue(u32 thread, u32 spuq_num) 
 { 
-	return lv2syscall2(194, thread, spuq_num); 
+	lv2syscall2(194, thread, spuq_num); 
+	return_to_user_prog(s32);
 }
 
 /*! \brief Write a value to a SPU thread's local store memory.
@@ -492,7 +531,8 @@ LV2_SYSCALL sysSpuThreadUnbindQueue(u32 thread, u32 spuq_num)
 */
 LV2_SYSCALL sysSpuThreadWriteLocalStorage(u32 thread, u32 address, u64 value, u32 type) 
 { 
-	return lv2syscall4(181, thread, address, value, type); 
+	lv2syscall4(181, thread, address, value, type); 
+	return_to_user_prog(s32);
 }
 
 /*! \brief Read a value From the SPU thread's local store memory.
@@ -510,7 +550,8 @@ LV2_SYSCALL sysSpuThreadWriteLocalStorage(u32 thread, u32 address, u64 value, u3
 */
 LV2_SYSCALL sysSpuThreadReadLocalStorage(u32 thread, u32 address, u64* value, u32 type) 
 { 
-	return lv2syscall4(182, thread, address, (u64)value, type); 
+	lv2syscall4(182, thread, address, (u64)value, type); 
+	return_to_user_prog(s32);
 }
 
 /*! \brief Write to the SPU thread's signal notification register.
@@ -527,7 +568,8 @@ LV2_SYSCALL sysSpuThreadReadLocalStorage(u32 thread, u32 address, u64* value, u3
 */
 LV2_SYSCALL sysSpuThreadWriteSignal(u32 thread,u32 signal,u32 value)
 {
-	return lv2syscall3(184,thread,signal,value);
+	lv2syscall3(184,thread,signal,value);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Configure the SPU thread's signal notification.
@@ -545,7 +587,8 @@ LV2_SYSCALL sysSpuThreadWriteSignal(u32 thread,u32 signal,u32 value)
 */
 LV2_SYSCALL sysSpuThreadSetConfiguration(u32 thread, u64 value) 
 { 
-	return lv2syscall2(187, thread, value); 
+	lv2syscall2(187, thread, value); 
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get the configuration of the SPU thread's signal notification.
@@ -564,7 +607,8 @@ LV2_SYSCALL sysSpuThreadSetConfiguration(u32 thread, u64 value)
 */
 LV2_SYSCALL sysSpuThreadGetConfiguration(u32 thread, u64* value) 
 { 
-	return lv2syscall2(188, thread, (u64)value); 
+	lv2syscall2(188, thread, (u64)value); 
+	return_to_user_prog(s32);
 }
 
 /*! \brief Write to the SPU thread's inbound mailbox register.
@@ -578,7 +622,8 @@ LV2_SYSCALL sysSpuThreadGetConfiguration(u32 thread, u64* value)
 */
 LV2_SYSCALL sysSpuThreadWriteMb(u32 thread, u32 value) 
 { 
-	return lv2syscall2(190, thread, value); 
+	lv2syscall2(190, thread, value); 
+	return_to_user_prog(s32);
 }
 
 /*! \brief Recover from a SPU thread page fault.
@@ -590,7 +635,8 @@ LV2_SYSCALL sysSpuThreadWriteMb(u32 thread, u32 value)
 */
 LV2_SYSCALL sysSpuThreadRecoverPageFault(u32 thread) 
 { 
-	return lv2syscall1(198, thread); 
+	lv2syscall1(198, thread); 
+	return_to_user_prog(s32);
 }
 
 /*! \brief Create a SPU thread group.
@@ -608,7 +654,8 @@ LV2_SYSCALL sysSpuThreadRecoverPageFault(u32 thread)
 */
 LV2_SYSCALL sysSpuThreadGroupCreate(u32 *group,u32 num,u32 prio,sysSpuThreadGroupAttribute *attr)
 {
-	return lv2syscall4(170,(u64)group,num,prio,(u64)attr);
+	lv2syscall4(170,(u64)group,num,prio,(u64)attr);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Destroy a SPU thread group.
@@ -620,7 +667,8 @@ LV2_SYSCALL sysSpuThreadGroupCreate(u32 *group,u32 num,u32 prio,sysSpuThreadGrou
 */
 LV2_SYSCALL sysSpuThreadGroupDestroy(u32 group)
 {
-	return lv2syscall1(171,group);
+	lv2syscall1(171,group);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Start a SPU thread group.
@@ -632,7 +680,8 @@ LV2_SYSCALL sysSpuThreadGroupDestroy(u32 group)
 */
 LV2_SYSCALL sysSpuThreadGroupStart(u32 group)
 {
-	return lv2syscall1(173,group);
+	lv2syscall1(173,group);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Suspend a SPU thread group.
@@ -644,7 +693,8 @@ LV2_SYSCALL sysSpuThreadGroupStart(u32 group)
 */
 LV2_SYSCALL sysSpuThreadGroupSuspend(u32 group)
 {
-	return lv2syscall1(174,group);
+	lv2syscall1(174,group);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Resume a SPU thread group.
@@ -656,7 +706,8 @@ LV2_SYSCALL sysSpuThreadGroupSuspend(u32 group)
 */
 LV2_SYSCALL sysSpuThreadGroupResume(u32 group)
 {
-	return lv2syscall1(175,group);
+	lv2syscall1(175,group);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Yield a SPU thread group.
@@ -668,7 +719,8 @@ LV2_SYSCALL sysSpuThreadGroupResume(u32 group)
 */
 LV2_SYSCALL sysSpuThreadGroupYield(u32 group)
 {
-	return lv2syscall1(176,group);
+	lv2syscall1(176,group);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Terminate a SPU thread group.
@@ -680,7 +732,8 @@ LV2_SYSCALL sysSpuThreadGroupYield(u32 group)
 */
 LV2_SYSCALL sysSpuThreadGroupTerminate(u32 group,u32 value)
 {
-	return lv2syscall2(177,group,value);
+	lv2syscall2(177,group,value);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Wait for a SPU thread group to finish its execution.
@@ -696,7 +749,8 @@ LV2_SYSCALL sysSpuThreadGroupTerminate(u32 group,u32 value)
 */
 LV2_SYSCALL sysSpuThreadGroupJoin(u32 group,u32 *cause,u32 *status)
 {
-	return lv2syscall3(178,group,(u64)cause,(u64)status);
+	lv2syscall3(178,group,(u64)cause,(u64)status);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Set a SPU thread group's priority.
@@ -710,7 +764,8 @@ LV2_SYSCALL sysSpuThreadGroupJoin(u32 group,u32 *cause,u32 *status)
 */
 LV2_SYSCALL sysSpuThreadGroupSetPriority(u32 group,u32 prio)
 {
-	return lv2syscall2(179,group,prio);
+	lv2syscall2(179,group,prio);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get a SPU thread group's priority.
@@ -724,27 +779,32 @@ LV2_SYSCALL sysSpuThreadGroupSetPriority(u32 group,u32 prio)
 */
 LV2_SYSCALL sysSpuThreadGroupGetPriority(u32 group,u32 *prio)
 {
-	return lv2syscall2(180,group,(u64)prio);
+	lv2syscall2(180,group,(u64)prio);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysSpuThreadGroupConnectEvent(u32 group,u32 eventQ,u32 eventType)
 {
-	return lv2syscall3(185,group,eventQ,eventType);
+	lv2syscall3(185,group,eventQ,eventType);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysSpuThreadGroupDisconnectEvent(u32 group,u32 eventType)
 {
-	return lv2syscall2(186,group,eventType);
+	lv2syscall2(186,group,eventType);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysSpuThreadGroupConnectEventAllThreads(u32 group,u32 eventQ,u64 req,u8 *spup)
 {
-	return lv2syscall4(251,group,eventQ,req,(u64)spup);
+	lv2syscall4(251,group,eventQ,req,(u64)spup);
+	return_to_user_prog(s32);
 }
 
 LV2_SYSCALL sysSpuThreadGroupDisonnectEventAllThreads(u32 group,u8 spup)
 {
-	return lv2syscall2(252,group,spup);
+	lv2syscall2(252,group,spup);
+	return_to_user_prog(s32);
 }
 
 /*! \brief Get a SPU thread group's priority.

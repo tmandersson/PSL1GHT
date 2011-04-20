@@ -125,7 +125,6 @@ LV2_SYSCALL sysThreadRecoverPageFault(sys_ppu_thread_t threadid)
 */
 LV2_SYSCALL sysThreadGetStackInformation(sys_ppu_thread_stack_t *info)
 {
-        // s32 ret = 0;
 	struct _sys_ppu_thread_stack_t_32 {
 		u32 addr;
 		u32 size;

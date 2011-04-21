@@ -492,24 +492,70 @@ LV2_SYSCALL sysSpuThreadGetExitStatus(u32 thread, s32* status)
 	return_to_user_prog(s32);
 }
 
+/*! \brief Connect an event queue to a SPU thread.
+ \param thread
+ Thread identifier.
+ \param queue
+ Event queue identifier.
+ \param type
+ Event queue type. \n
+ Possible values are:
+ - \ref SPU_THREAD_EVENT_USER
+ - \ref SPU_THREAD_EVENT_DMA
+ \param spup
+ SPU event port number (value in <code>0..63</code> interval).
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuThreadConnectEvent(u32 thread, u32 queue, u32 type, u8 spup)
 {
 	lv2syscall4(191, thread, queue, type, spup);
 	return_to_user_prog(s32);
 }
 
+/*! \brief Disconnect an event queue from a SPU thread.
+ \param thread
+ Thread identifier.
+ \param type
+ Event queue type. \n
+ Possible values are:
+ - \ref SPU_THREAD_EVENT_USER
+ - \ref SPU_THREAD_EVENT_DMA
+ \param spup
+ SPU event port number.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuThreadDisconnectEvent(u32 thread, u32 type, u8 spup) 
 { 
 	lv2syscall3(192, thread, type, spup); 
 	return_to_user_prog(s32);
 }
 
+/*! \brief Bind an event queue to a SPU thread.
+ \param thread
+ Thread identifier.
+ \param queue
+ Event queue identifier.
+ \param spuq_num
+ Event queue binding id.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuThreadBindQueue(u32 thread, u32 queue, u32 spuq_num) 
 { 
 	lv2syscall3(193, thread, queue, spuq_num); 
 	return_to_user_prog(s32);
 }
 
+/*! \brief Unbind an event queue from a SPU thread.
+ \param thread
+ Thread identifier.
+ \param spuq_num
+ Event queue binding id.
+ \return
+ zero if no error occured, nonzero otherwise.
+*/
 LV2_SYSCALL sysSpuThreadUnbindQueue(u32 thread, u32 spuq_num) 
 { 
 	lv2syscall2(194, thread, spuq_num); 

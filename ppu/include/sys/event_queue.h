@@ -133,8 +133,7 @@ LV2_SYSCALL sysEventQueueDrain(sys_event_queue_t eventQ)
 
 This function creates an event port for sending events thru a connected event queue.
 \param portId Pointer to receive the event port id.
-\param portType Type of the port to create.
-
+\param portType Type of the port to create. \n
 Possible values:
 - \ref SYS_EVENT_PORT_LOCAL
 \param name User defined name or \ref SYS_EVENT_PORT_NO_NAME.

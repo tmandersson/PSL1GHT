@@ -146,7 +146,7 @@ typedef struct _osk_seperate_window_option
 	oskLayoutInfo *inputFieldLayoutInfo;
 	oskLayoutInfo *inputPanelLayoutInfo;
 	u32 reserved;
-} oskSeperateWindowOption;
+} oskSeparateWindowOption;
 
 s32 oskSetInitialInputDevice(oskInputDevice input);
 s32 oskGetSize(u16 *width, u16 *height, oskType type);

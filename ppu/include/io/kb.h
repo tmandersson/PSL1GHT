@@ -1,3 +1,7 @@
+/*! \file kb.h
+\brief PS3 keyboard management.
+*/
+
 #pragma once
 
 #include <ppu-types.h>
@@ -131,57 +135,61 @@ extern "C" {
 #define KB_RAWKEY_BACKSLASH_106			0x87
 #define KB_RAWKEY_YEN_106				0x89
 
-/* Keyboard Led State */
+/*! \brief Keyboard Led State. */
 typedef struct KbLed {
 	union {
 		u32 leds;
 		struct {
-		u32 reserved	: 27;	/* Reserved MSB */
-		u32 kana		: 1;	/* LED Kana 0:OFF 1:ON Bit4 */
-		u32 compose		: 1;	/* LED Compose 0:OFF 1:ON Bit3 */
-		u32 scroll_lock	: 1;	/* LED Scroll Lock 0:OFF 1:ON Bit2 */
-		u32 caps_lock	: 1;	/* LED Caps Lock 0:OFF 1:ON Bit1 */
-		u32 num_lock	: 1;	/* LED Num Lock 0:OFF 1:ON Bit0 LSB */
+		u32 reserved	: 27;	/*!< \brief Reserved MSB */
+		u32 kana		: 1;	/*!< \brief LED Kana 0:OFF 1:ON Bit4 */
+		u32 compose		: 1;	/*!< \brief LED Compose 0:OFF 1:ON Bit3 */
+		u32 scroll_lock	: 1;	/*!< \brief LED Scroll Lock 0:OFF 1:ON Bit2 */
+		u32 caps_lock	: 1;	/*!< \brief LED Caps Lock 0:OFF 1:ON Bit1 */
+		u32 num_lock	: 1;	/*!< \brief LED Num Lock 0:OFF 1:ON Bit0 LSB */
 		}_KbLedS;
 	}_KbLedU;
 } KbLed;
 
-/* Keyboard Modifier Key State */
+/*! \brief Keyboard Modifier Key State. */
 typedef struct KbMkey {
 	union {
 		u32 mkeys;
 		struct {
-		u32 reserved	: 24;	/* Reserved MSB */
-		u32 r_win		: 1;	/* Modifier Key Right WIN 0:OFF 1:ON Bit7 */
-		u32 r_alt		: 1;	/* Modifier Key Right ALT 0:OFF 1:ON Bit6 */
-		u32 r_shift		: 1;	/* Modifier Key Right SHIFT 0:OFF 1:ON Bit5 */		
-		u32 r_ctrl		: 1;	/* Modifier Key Right CTRL 0:OFF 1:ON Bit4 */
-		u32 l_win		: 1;	/* Modifier Key Left WIN 0:OFF 1:ON Bit3 */
-		u32 l_alt		: 1;	/* Modifier Key Left ALT 0:OFF 1:ON Bit2 */
-		u32 l_shift		: 1;	/* Modifier Key Left SHIFT 0:OFF 1:ON Bit1 */
-		u32 l_ctrl		: 1;	/* Modifier Key Left CTRL 0:OFF 1:ON Bit0 LSB */
+		u32 reserved	: 24;	/*!< \brief Reserved MSB */
+		u32 r_win		: 1;	/*!< \brief Modifier Key Right WIN 0:OFF 1:ON Bit7 */
+		u32 r_alt		: 1;	/*!< \brief Modifier Key Right ALT 0:OFF 1:ON Bit6 */
+		u32 r_shift		: 1;	/*!< \brief Modifier Key Right SHIFT 0:OFF 1:ON Bit5 */		
+		u32 r_ctrl		: 1;	/*!< \brief Modifier Key Right CTRL 0:OFF 1:ON Bit4 */
+		u32 l_win		: 1;	/*!< \brief Modifier Key Left WIN 0:OFF 1:ON Bit3 */
+		u32 l_alt		: 1;	/*!< \brief Modifier Key Left ALT 0:OFF 1:ON Bit2 */
+		u32 l_shift		: 1;	/*!< \brief Modifier Key Left SHIFT 0:OFF 1:ON Bit1 */
+		u32 l_ctrl		: 1;	/*!< \brief Modifier Key Left CTRL 0:OFF 1:ON Bit0 LSB */
 		/* For Macintosh Keyboard ALT & WIN correspond respectively to OPTION & APPLE keys */
 		}_KbMkeyS;
 	}_KbMkeyU;
 } KbMkey;
 
+/*! \brief Keyboard input data data structure. */
 typedef struct KbData {
-	KbLed led;
-	KbMkey mkey;
-	s32 nb_keycode; /* Number of key codes (0 equal no data) */
-	u16 keycode[MAX_KEYCODES];
+	KbLed led;					/*!< \brief Keyboard Led State */
+	KbMkey mkey;				/*!< \brief Keyboard Modifier Key State */
+	s32 nb_keycode;				/*!< \brief Number of key codes (0 equal no data) */
+	u16 keycode[MAX_KEYCODES];	/*!< \brief Keycode values */
 } KbData;
 
+/*! \brief Keyboard input mode values. */
 typedef enum KbRmode {
-	KB_RMODE_INPUTCHAR	= 0,	/* Character Input Mode */
-	KB_RMODE_PACKET		= 1		/* Packet Mode */
+	KB_RMODE_INPUTCHAR	= 0,	/*!< \brief Character Input Mode */
+	KB_RMODE_PACKET		= 1		/*!< \brief Packet Mode */
 } KbRmode;
 
+/*! \brief Keyboard raw or ASCII mode values. */
 typedef enum KbCodeType {
-	KB_CODETYPE_RAW		= 0,	/* Obtain device code as RAW code type */
-	KB_CODETYPE_ASCII	= 1		/* Obtain device code as ASCII code type */
+	KB_CODETYPE_RAW		= 0,	/*!< \brief Obtain device code as RAW code type */
+	KB_CODETYPE_ASCII	= 1		/*!< \brief Obtain device code as ASCII code type */
 } KbCodeType;
 
+/*! \brief Keyboard mapping values. */
 typedef enum KbMapping {
 	KB_MAPPING_101						= 0,
 	KB_MAPPING_106						= 1,
@@ -206,6 +214,7 @@ typedef enum KbMapping {
 	KB_MAPPING_CANADIAN_FRENCH_CANADA	= 20
 } KbMapping;
 
+/*! \brief Keyboard info data structure. */
 typedef struct KbInfo {
 	u32 max;					/* max kb allowed to connect */
 	u32 connected;				/* how many kb connected */
@@ -214,95 +223,96 @@ typedef struct KbInfo {
 								   value 0: Not connected and 1: Connected */
 } KbInfo;
 
+/*! \brief Keyboard config data structure. */
 typedef struct KbConfig {
 	u32 mapping;	/* See KbMapping enum definition */
 	u32 rmode;		/* See KbRmode enum definition */
 	u32 codetype;	/* See KbCodeType enum definition */
 } KbConfig;
 
-/**
+/*!
  * \brief Initialize Keyboard library
  *
- * \param[in] max : maximum keyboard allowed to connect (max limit is 7)
+ * \param[in] max maximum keyboard allowed to connect (max limit is 7)
  * \return 0 if OK or else error code
  */
 s32 ioKbInit(const u32 max);
 
-/**
+/*!
  * \brief Close/End Keyboard library
  *
  * \return 0 if OK or else error code
  */
 s32 ioKbEnd(void);
 
-/**
+/*!
  * \brief Read data from keyboard data buffer
  *
- * \param[in] kb_no : keyboard port number
- * \param[out] data : keyboard data
+ * \param[in] kb_no keyboard port number
+ * \param[out] data keyboard data
  * \return 0 if OK or else error code
  */
 s32 ioKbRead(const u32 kb_no, KbData* data);
 
-/**
+/*!
  * \brief Set Keyboard data read mode
  *
- * \param[in] kb_no : keyboard port number
- * \param[in] kb_rmode : keyboard read mode
+ * \param[in] kb_no keyboard port number
+ * \param[in] kb_rmode keyboard read mode
  * \return 0 if OK or else error code
  */
 s32 ioKbSetReadMode(const u32 kb_no, const KbRmode kb_rmode);
 
-/**
+/*!
  * \brief Set Keyboard code type
  *
- * \param[in] kb_no : keyboard port number
- * \param[in] kb_codetype : keyboard code type setting
+ * \param[in] kb_no keyboard port number
+ * \param[in] kb_codetype keyboard code type setting
  * \return 0 if OK or else error code
  */
 s32 ioKbSetCodeType(const u32 kb_no, const KbCodeType kb_codetype);
 
-/**
+/*!
  * \brief Convert Keyboard device key code
  *
- * \param[in] mapping : keyboard mapping
- * \param[in] mkey : keyboard modifier key state
- * \param[in] led : keyboard led state
- * \param[in] rawcode : keyboard key code to convert
+ * \param[in] mapping keyboard mapping
+ * \param[in] mkey keyboard modifier key state
+ * \param[in] led keyboard led state
+ * \param[in] rawcode keyboard key code to convert
  * \return Converted keyboard code
  */
 u16 ioKbCnvRawCode(const KbMapping mapping, const KbMkey mkey, const KbLed led, const u16 rawcode);
 
-/**
+/*!
  * \brief Control Keyboard LED
  *
- * \param[in] kb_no : keyboard port number
- * \param[in] led_state : keyboard led state to set
+ * \param[in] kb_no keyboard port number
+ * \param[in] led_state keyboard led state to set
  * \return 0 if OK or else error code
  */ 
 s32 ioKbSetLEDStatus(const u32 kb_no, const KbLed led_state);
 
-/**
+/*!
  * \brief Get Keyboard Information
  *
- * \param[in] kb_info : keyboard connection info
+ * \param[in] kb_info keyboard connection info
  * \return 0 if OK or else error code
  */ 
 s32 ioKbGetInfo(KbInfo* kb_info);
 
-/**
- * \brief Get Keyboard Configuration
+/*!
+ * \brief Get Keyboard Configuration.
  *
- * \param[in] kb_no : keyboard port number
- * \param[in] kb_config : keyboard configuration
+ * \param[in] kb_no keyboard port number
+ * \param[in] kb_config keyboard configuration
  * \return 0 if OK or else error code
  */ 
 s32 ioKbGetConfiguration(const u32 kb_no, KbConfig* kb_config);
 
-/**
- * \brief Clear Keyboard Buffer Data
+/*!
+ * \brief Clear Keyboard Buffer Data.
  *
- * \param[in] kb_no : keyboard port number
+ * \param[in] kb_no keyboard port number
  * \return 0 if OK or else error code
  */ 
 s32 ioKbClearBuf(const u32 kb_no);

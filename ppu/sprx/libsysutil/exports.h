@@ -44,4 +44,16 @@ EXPORT(sysUtilRegisterCallbackEx, 0x9d98afa0);
 EXPORT(sysUtilCheckCallback, 0x189a74da);
 EXPORT(sysUtilUnregisterCallback, 0x02ff3c1b);
 
+/* Save utility support */
+EXPORT(sysSaveListLoad2, 0x1dfbfdd6);
+EXPORT(sysSaveListSave2, 0x2de0d663);
+EXPORT(sysSaveListAutoLoad, 0x21425307);
+EXPORT(sysSaveListAutoSave, 0x4dd03a4e);
+EXPORT(sysSaveFixedLoad2, 0x2a8eada2);
+EXPORT(sysSaveFixedSave2, 0x2aae9ef5);
+EXPORT(sysSaveAutoLoad2, 0xfbd5c856);
+EXPORT(sysSaveAutoSave2, 0x8b7ed64b);
+EXPORT(sysSaveDelete2, 0xedadd797);
+
+
 #endif

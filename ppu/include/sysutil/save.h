@@ -29,7 +29,7 @@ typedef enum {
 
 typedef enum {
   SYS_SAVE_SORT_ORDER_DESCENDING = 0,
-  SYS_SAVE_SORT_TYPE_ASCENDING,
+  SYS_SAVE_SORT_ORDER_ASCENDING,
 } sysSaveSortOrder;
 
 typedef enum {
@@ -43,7 +43,7 @@ typedef enum {
 
 typedef enum {
   SYS_SAVE_NEW_SAVE_POSITION_TOP = 0,
-  SYS_SAVE_NEW_SAVE_POSITON_BOTTOM,
+  SYS_SAVE_NEW_SAVE_POSITION_BOTTOM,
 } sysSaveNewSavePosition;
 
 
@@ -231,6 +231,19 @@ typedef void (* sysSaveFileCallback) (sysSaveCallbackResult *result,
 typedef void (* sysSaveFixedCallback) (sysSaveCallbackResult *result,
     sysSaveListIn *in, sysSaveFixedOut *out);
 
+
+#define SYS_SAVE_RETURN_DONE			0
+#define SYS_SAVE_RETURN_CANCELED		1
+#define SYS_SAVE_RETURN_ERROR			0x8002b400
+
+#define SYS_SAVE_RETURN_ERROR_CALLBACK		(SYS_SAVE_RETURN_ERROR | 1)
+#define SYS_SAVE_RETURN_ERROR_HDD_ERROR		(SYS_SAVE_RETURN_ERROR | 2)
+#define SYS_SAVE_RETURN_ERROR_INTERNAL		(SYS_SAVE_RETURN_ERROR | 3)
+#define SYS_SAVE_RETURN_ERROR_INVALID_ARG	(SYS_SAVE_RETURN_ERROR | 4)
+#define SYS_SAVE_RETURN_ERROR_NO_SPACE_LEFT	(SYS_SAVE_RETURN_ERROR | 5)
+#define SYS_SAVE_RETURN_ERROR_CORRUPTED		(SYS_SAVE_RETURN_ERROR | 6)
+#define SYS_SAVE_RETURN_ERROR_FAILED		(SYS_SAVE_RETURN_ERROR | 7)
+#define SYS_SAVE_RETURN_ERROR_ALREADY_IN_USE	(SYS_SAVE_RETURN_ERROR | 8)
 
 s32 sysSaveListLoad2 (u32 version,
     sysSaveListSettings *listSettings,

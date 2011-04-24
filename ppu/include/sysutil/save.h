@@ -292,7 +292,7 @@ s32 sysSaveListAutoSave (u32 version,
     mem_container_t container,
     void *user_data);
 
-s32 sysSaveFixedLoad2(u32 version,
+s32 sysSaveFixedLoad2 (u32 version,
     sysSaveListSettings *listSettings,
     sysSaveBufferSettings *bufferSettings,
     sysSaveFixedCallback fixedCb,
@@ -301,7 +301,7 @@ s32 sysSaveFixedLoad2(u32 version,
     mem_container_t container,
     void *user_data);
 
-s32 sysSaveFixedSave2(u32 version,
+s32 sysSaveFixedSave2 (u32 version,
     sysSaveListSettings *listSettings,
     sysSaveBufferSettings *bufferSettings,
     sysSaveFixedCallback fixedCb,
@@ -310,7 +310,7 @@ s32 sysSaveFixedSave2(u32 version,
     mem_container_t container,
     void *user_data);
 
-s32 sysSaveAutoLoad2(s32 version,
+s32 sysSaveAutoLoad2 (s32 version,
     const char *directoryName,
     sysSaveErrorDialogMode errorDialogMode,
     sysSaveBufferSettings *bufferSettings,
@@ -319,7 +319,7 @@ s32 sysSaveAutoLoad2(s32 version,
     mem_container_t container,
     void *user_data);
 
-s32 sysSaveAutoSave2(s32 version,
+s32 sysSaveAutoSave2 (s32 version,
     const char *directoryName,
     sysSaveErrorDialogMode errorDialogMode,
     sysSaveBufferSettings *bufferSettings,

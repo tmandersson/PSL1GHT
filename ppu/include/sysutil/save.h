@@ -77,8 +77,8 @@ typedef enum {
 typedef struct {
   sysSaveSortType sortType;
   sysSaveSortOrder sortOrder;
-  char *pathPrefix;
-  void *unused;
+  u32 pathPrefix; // char *
+  u32 reserved; // void *
 } sysSaveListSettings;
 
 typedef struct {
@@ -86,7 +86,7 @@ typedef struct {
   u32 maxFiles;
   u32 reserved[6];
   u32 bufferSize;
-  void *buffer;
+  u32 buffer; // void *
 } sysSaveBufferSettings;
 
 #define SYS_SAVE_CALLBACK_RESULT_DONE		1
@@ -101,8 +101,8 @@ typedef struct {
   s32 result;
   u32 incrementProgress;
   s32 missingSpaceKB;
-  char *customErrorMessage;
-  void *user_data;
+  u32 customErrorMessage; // char *
+  u32 user_data; // void *
 } sysSaveCallbackResult;
 
 typedef struct {
@@ -112,33 +112,38 @@ typedef struct {
 } sysSaveDirectoryList;
 
 typedef struct {
-  char *title;
+  u32 title; // char *
   u32 iconBufferSize;
-  void *iconBuffer;
-  void *reserved;
+  u32 iconBuffer; // void *
+  u32 reserved; // void *
 } sysSaveNewSaveGameIcon;
 
 typedef struct {
   sysSaveNewSavePosition position;
-  char *directoryName;
-  sysSaveNewSaveGameIcon *icon;
-  void *reserved;
+  u32 directoryName; // char *
+  u32 icon; // sysSaveNewSaveGameIcon *
+  u32 reserved; // void *
 } sysSaveNewSaveGame;
 
 typedef struct {
-  u32 maxDirectories; /* total directories found */
-  u32 numDirectories; /* number of directories in directoryList */
-  sysSaveDirectoryList *directoryList; /* list of directories found */
+  /* total directories found */
+  u32 maxDirectories;
+  /* number of directories in directoryList */
+  u32 numDirectories;
+  /* list of directories found */
+  u32 directoryList; // sysSaveDirectoryList *
   u8 reserved[64];
 } sysSaveListIn;
 
 typedef struct {
-  sysSaveFocusPosition focus; /* Where to put the focus of the cursor */
-  char *focusDirectoryName; /* The name of the directory to focus to */
+  /* Where to put the focus of the cursor */
+  sysSaveFocusPosition focus;
+  /* The name of the directory to focus to */
+  u32 focusDirectoryName; // char *
   u32 numDirectories;
-  sysSaveDirectoryList *directoryList;
-  sysSaveNewSaveGame *newSaveGame;
-  void *reserved;
+  u32 directoryList; // sysSaveDirectoryList *
+  u32 newSaveGame; // sysSaveNewSaveGame *
+  u32 reserved; // void *
 } sysSaveListOut;
 
 #define SYS_SAVE_BIND_NO_ERROR		0x00
@@ -182,18 +187,22 @@ typedef struct {
   sysSaveDirectoryStatus directoryStatus;
   sysSaveSystemFileParam getParam;
   u32 bindingInformation;
-  s32 sizeKB; /* Size of the save data */
-  s32 systemSizeKB; /* Size of system file */
-  u32 totalFiles; /* total files in the save data */
-  u32 numFiles; /* Number of files in the the file list */
-  sysSaveFileStatus *fileList;
+  /* Size of the save data */
+  s32 sizeKB;
+  /* Size of system file */
+  s32 systemSizeKB;
+  /* total files in the save data */
+  u32 totalFiles;
+  /* Number of files in the the file list */
+  u32 numFiles;
+  u32 fileList; // sysSaveFileStatus *
   u8 reserved[64];
 } sysSaveStatusIn;
 
 typedef struct {
-  sysSaveSystemFileParam *setParam;
+  u32 setParam; // sysSaveSystemFileParam *
   sysSaveRecreateMode recreateMode;
-  void *reserved;
+  u32 reserved; // void *
 } sysSaveStatusOut;
 
 typedef struct {
@@ -203,20 +212,20 @@ typedef struct {
 
 typedef struct {
   sysSaveFileOperation fileOperation;
-  void *reserved;
+  u32 reserved; // void *
   sysSaveFileType fileType;
   u8 protectedFileID[SYS_SAVE_MAX_PROTECTED_FILE_ID];
-  char *filename;
+  u32 filename; // char *
   u32 offset;
   u32 size;
   u32 bufferSize;
-  void *buffer;
+  u32 buffer; // void *
 } sysSaveFileOut;
 
 typedef struct {
-  char *directoryName;
-  sysSaveNewSaveGameIcon *icon;
-  void *reserved;
+  u32 directoryName; // char *
+  u32 icon; // sysSaveNewSaveGameIcon *
+  u32 reserved; // void *
 } sysSaveFixedOut;
 
 typedef void (* sysSaveListCallback) (sysSaveCallbackResult *result,

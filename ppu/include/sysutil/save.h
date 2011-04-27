@@ -3,7 +3,6 @@
 
 #include <ppu-types.h>
 #include <time.h>
-#include <sys/memory.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -260,7 +259,7 @@ s32 sysSaveListLoad2 (u32 version,
     sysSaveListCallback listCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data);
 
 s32 sysSaveListSave2 (u32 version,
@@ -269,7 +268,7 @@ s32 sysSaveListSave2 (u32 version,
     sysSaveListCallback listCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data);
 
 s32 sysSaveListAutoLoad (u32 version,
@@ -279,7 +278,7 @@ s32 sysSaveListAutoLoad (u32 version,
     sysSaveFixedCallback fixedCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data);
 
 s32 sysSaveListAutoSave (u32 version,
@@ -289,7 +288,7 @@ s32 sysSaveListAutoSave (u32 version,
     sysSaveFixedCallback fixedCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data);
 
 s32 sysSaveFixedLoad2 (u32 version,
@@ -298,7 +297,7 @@ s32 sysSaveFixedLoad2 (u32 version,
     sysSaveFixedCallback fixedCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data);
 
 s32 sysSaveFixedSave2 (u32 version,
@@ -307,7 +306,7 @@ s32 sysSaveFixedSave2 (u32 version,
     sysSaveFixedCallback fixedCb,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data);
 
 s32 sysSaveAutoLoad2 (s32 version,
@@ -316,7 +315,7 @@ s32 sysSaveAutoLoad2 (s32 version,
     sysSaveBufferSettings *bufferSettings,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data);
 
 s32 sysSaveAutoSave2 (s32 version,
@@ -325,10 +324,10 @@ s32 sysSaveAutoSave2 (s32 version,
     sysSaveBufferSettings *bufferSettings,
     sysSaveStatusCallback statusCb,
     sysSaveFileCallback fileCb,
-    mem_container_t container,
+    sys_mem_container_t container,
     void *user_data);
 
-s32 sysSaveDelete2(mem_container_t container);
+s32 sysSaveDelete2(sys_mem_container_t container);
 
 #ifdef __cplusplus
 	}

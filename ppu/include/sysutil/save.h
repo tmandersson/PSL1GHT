@@ -4,12 +4,7 @@
 #include <ppu-types.h>
 #include <time.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#define SYS_SAVE_CURRENT_VERSION 0
-
+/* Maximum string/array sizes */
 #define SYS_SAVE_MAX_DIRECTORY_NAME		32
 #define SYS_SAVE_MAX_FILE_NAME			13
 #define SYS_SAVE_DIRECTORY_LIST_MAX		2048
@@ -20,6 +15,43 @@ extern "C" {
 #define SYS_SAVE_MAX_DETAIL			1024
 #define SYS_SAVE_MAX_PROTECTED_FILE_ID		16
 
+/* Current version value for the save data */
+#define SYS_SAVE_CURRENT_VERSION 0
+
+/* Result values for the callback */
+#define SYS_SAVE_CALLBACK_RESULT_DONE		1
+#define SYS_SAVE_CALLBACK_RESULT_CONTINUE 	0
+#define SYS_SAVE_CALLBACK_RESULT_NO_SPACE_LEFT	-1
+#define SYS_SAVE_CALLBACK_RESULT_ERROR		-2
+#define SYS_SAVE_CALLBACK_RESULT_CORRUPTED	-3
+#define SYS_SAVE_CALLBACK_RESULT_NOT_FOUND	-4
+#define SYS_SAVE_CALLBACK_RESULT_ERROR_CUSTOM	-5
+
+/* Flags for the binding information */
+#define SYS_SAVE_BIND_NO_ERROR		0x00
+#define SYS_SAVE_BIND_ANOTHER_CONSOLE	0x01
+#define SYS_SAVE_BIND_ANOTHER_DISC	0x02
+#define SYS_SAVE_BIND_ANOTHER_APP	0x04
+#define SYS_SAVE_BIND_NO_USER_INFO	0x08
+#define SYS_SAVE_BIND_OTHER_USER	0x10
+
+/* Return values from the API calls */
+#define SYS_SAVE_RETURN_DONE			0
+#define SYS_SAVE_RETURN_CANCELED		1
+#define SYS_SAVE_RETURN_ERROR			0x8002b400
+
+#define SYS_SAVE_RETURN_ERROR_CALLBACK		(SYS_SAVE_RETURN_ERROR | 1)
+#define SYS_SAVE_RETURN_ERROR_HDD_ERROR		(SYS_SAVE_RETURN_ERROR | 2)
+#define SYS_SAVE_RETURN_ERROR_INTERNAL		(SYS_SAVE_RETURN_ERROR | 3)
+#define SYS_SAVE_RETURN_ERROR_INVALID_ARG	(SYS_SAVE_RETURN_ERROR | 4)
+#define SYS_SAVE_RETURN_ERROR_NO_SPACE_LEFT	(SYS_SAVE_RETURN_ERROR | 5)
+#define SYS_SAVE_RETURN_ERROR_CORRUPTED		(SYS_SAVE_RETURN_ERROR | 6)
+#define SYS_SAVE_RETURN_ERROR_FAILED		(SYS_SAVE_RETURN_ERROR | 7)
+#define SYS_SAVE_RETURN_ERROR_ALREADY_IN_USE	(SYS_SAVE_RETURN_ERROR | 8)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum {
   SYS_SAVE_SORT_TYPE_TIMESTAMP = 0,
@@ -88,13 +120,6 @@ typedef struct {
   void *buffer ATTRIBUTE_PRXPTR;
 } sysSaveBufferSettings;
 
-#define SYS_SAVE_CALLBACK_RESULT_DONE		1
-#define SYS_SAVE_CALLBACK_RESULT_CONTINUE 	0
-#define SYS_SAVE_CALLBACK_RESULT_NO_SPACE_LEFT	-1
-#define SYS_SAVE_CALLBACK_RESULT_ERROR		-2
-#define SYS_SAVE_CALLBACK_RESULT_CORRUPTED	-3
-#define SYS_SAVE_CALLBACK_RESULT_NOT_FOUND	-4
-#define SYS_SAVE_CALLBACK_RESULT_ERROR_CUSTOM	-5
 
 typedef struct {
   s32 result;
@@ -144,13 +169,6 @@ typedef struct {
   sysSaveNewSaveGame *newSaveGame ATTRIBUTE_PRXPTR;
   void *reserved ATTRIBUTE_PRXPTR;
 } sysSaveListOut;
-
-#define SYS_SAVE_BIND_NO_ERROR		0x00
-#define SYS_SAVE_BIND_ANOTHER_CONSOLE	0x01
-#define SYS_SAVE_BIND_ANOTHER_DISC	0x02
-#define SYS_SAVE_BIND_ANOTHER_APP	0x04
-#define SYS_SAVE_BIND_NO_USER_INFO	0x08
-#define SYS_SAVE_BIND_OTHER_USER	0x10
 
 typedef struct {
   time_t atime;
@@ -239,19 +257,6 @@ typedef void (* sysSaveFileCallback) (sysSaveCallbackResult *result,
 typedef void (* sysSaveFixedCallback) (sysSaveCallbackResult *result,
     sysSaveListIn *in, sysSaveFixedOut *out);
 
-
-#define SYS_SAVE_RETURN_DONE			0
-#define SYS_SAVE_RETURN_CANCELED		1
-#define SYS_SAVE_RETURN_ERROR			0x8002b400
-
-#define SYS_SAVE_RETURN_ERROR_CALLBACK		(SYS_SAVE_RETURN_ERROR | 1)
-#define SYS_SAVE_RETURN_ERROR_HDD_ERROR		(SYS_SAVE_RETURN_ERROR | 2)
-#define SYS_SAVE_RETURN_ERROR_INTERNAL		(SYS_SAVE_RETURN_ERROR | 3)
-#define SYS_SAVE_RETURN_ERROR_INVALID_ARG	(SYS_SAVE_RETURN_ERROR | 4)
-#define SYS_SAVE_RETURN_ERROR_NO_SPACE_LEFT	(SYS_SAVE_RETURN_ERROR | 5)
-#define SYS_SAVE_RETURN_ERROR_CORRUPTED		(SYS_SAVE_RETURN_ERROR | 6)
-#define SYS_SAVE_RETURN_ERROR_FAILED		(SYS_SAVE_RETURN_ERROR | 7)
-#define SYS_SAVE_RETURN_ERROR_ALREADY_IN_USE	(SYS_SAVE_RETURN_ERROR | 8)
 
 s32 sysSaveListLoad2 (u32 version,
     sysSaveListSettings *listSettings,

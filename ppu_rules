@@ -53,12 +53,12 @@ PACKAGE_FINALIZE := package_finalize
 
 %.pkg: %.self
 	@echo building pkg ... $(notdir $@)
-	@mkdir -p $(BUILDDIR)/pkg
-	@mkdir -p $(BUILDDIR)/pkg/USRDIR
-	@cp $(ICON0) $(BUILDDIR)/pkg/
-	@$(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
-	@$(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
-	@if test -n "$(PKGFILES)" -a -d "$(PKGFILES)"; then cp -rf $(PKGFILES)/* $(BUILDDIR)/pkg/; fi
-	@$(PKG) --contentid $(CONTENTID) $(BUILDDIR)/pkg/ $@ >> /dev/null
-	@cp $@ $(basename $@).geohot.pkg
-	@$(PACKAGE_FINALIZE) $(basename $@).geohot.pkg
+	$(VERB) mkdir -p $(BUILDDIR)/pkg
+	$(VERB) mkdir -p $(BUILDDIR)/pkg/USRDIR
+	$(VERB) cp $(ICON0) $(BUILDDIR)/pkg/
+	$(VERB) $(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
+	$(VERB) $(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
+	$(VERB) if test -n "$(PKGFILES)" -a -d "$(PKGFILES)"; then cp -rf $(PKGFILES)/* $(BUILDDIR)/pkg/; fi
+	$(VERB) $(PKG) --contentid $(CONTENTID) $(BUILDDIR)/pkg/ $@ >> /dev/null
+	$(VERB) cp $@ $(basename $@).geohot.pkg
+	$(VERB) $(PACKAGE_FINALIZE) $(basename $@).geohot.pkg

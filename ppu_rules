@@ -21,10 +21,12 @@ include $(PSL1GHT)/base_rules
 
 PKG			:=	pkg.py
 SFO			:=	sfo.py
-SFOXML		:=	sfo.xml
+SFOXML		:=	$(PSL1GHT)/bin/sfo.xml
+ICON0		:=	$(PSL1GHT)/bin/ICON0.PNG
 
 SPRX		:=	sprxlinker$(POSTFIX)
 CGCOMP		:=	cgcomp$(POSTFIX)
+PS3LOAD		:=	ps3load$(POSTFIX)
 
 FSELF		:=	fself.py
 FSELF_NPDRM	:=	$(FSELF) -n
@@ -51,3 +53,12 @@ PACKAGE_FINALIZE := package_finalize
 
 %.pkg: %.self
 	@echo building pkg ... $(notdir $@)
+	@mkdir -p $(BUILDDIR)/pkg
+	@mkdir -p $(BUILDDIR)/pkg/USRDIR
+	@cp $(ICON0) $(BUILDDIR)/pkg/
+	@$(SELF_NPDRM) $(BUILDDIR)/$(basename $(notdir $<)).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
+	@$(SFO) --title "$(TITLE)" --appid "$(APPID)" -f $(SFOXML) $(BUILDDIR)/pkg/PARAM.SFO
+	@if test -n "$(PKGFILES)" -a -d "$(PKGFILES)"; then cp -rf $(PKGFILES)/* $(BUILDDIR)/pkg/; fi
+	@$(PKG) --contentid $(CONTENTID) $(BUILDDIR)/pkg/ $@ >> /dev/null
+	@cp $@ $(basename $@).geohot.pkg
+	@$(PACKAGE_FINALIZE) $(basename $@).geohot.pkg

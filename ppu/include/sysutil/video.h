@@ -166,7 +166,7 @@ s32 videoGetResolution(s32 resolutionId,videoResolution *resolution);
 \return zero if no error, nonzero otherwise.
 \todo verify the parameters signification.
 */
-s32 videoConfigure(s32 videoOut,videoConfiguration *config,s32 *option,s32 blocking);
+s32 videoConfigure(s32 videoOut,videoConfiguration *config,void *option,s32 blocking);
 
 #ifdef __cplusplus
 	}

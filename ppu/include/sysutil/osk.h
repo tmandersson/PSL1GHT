@@ -220,29 +220,29 @@ typedef struct _osk_layout_info
 /*! \brief On-screen keyboard input field information data structure. */
 typedef struct _osk_input_field_info
 {
-	u16 *message;		//!< Buffer for message
-	u16 *startText;		//!< Initial message.
-	s32 maxLength;		//!< Maximum number of characters.
+	u16 *message ATTRIBUTE_PRXPTR;			//!< Buffer for message
+	u16 *startText ATTRIBUTE_PRXPTR;		//!< Initial message.
+	s32 maxLength;							//!< Maximum number of characters.
 } oskInputFieldInfo;
 
 /*! \brief On-screen keyboard return parameters data structure. */
 typedef struct _osk_cb_return_param
 {
-	oskInputFieldResult res;	//!< Result status.
-	s32 len;					//!< Number of characters entered.
-	u16 *str;					//!< Array of characters entered.
+	oskInputFieldResult res;				//!< Result status.
+	s32 len;								//!< Number of characters entered.
+	u16 *str ATTRIBUTE_PRXPTR;				//!< Array of characters entered.
 } oskCallbackReturnParam;
 
 /*! \brief  On-screen keyboard separate window options data structure. */
 typedef struct _osk_separate_window_option
 {
-	oskContinuousMode continuous;			//!< Continuous mode.
-	s32 mask;			//!< Devices mask. Either \c 0 or \ref OSK_DEVICE_MASK_PAD.
-	s32 inputWidth;							//!< Input field width.
-	f32 inputFieldTransparency;				//!< Input field transparency.
-	oskLayoutInfo *inputFieldLayoutInfo;	//!< Input field layout info.
-	oskLayoutInfo *inputPanelLayoutInfo;	//!< Input panel layout info.
-	u32 reserved;							//!< Reserved.
+	oskContinuousMode continuous;							//!< Continuous mode.
+	s32 mask;												//!< Devices mask. Either \c 0 or \ref OSK_DEVICE_MASK_PAD.
+	s32 inputWidth;											//!< Input field width.
+	f32 inputFieldTransparency;								//!< Input field transparency.
+	oskLayoutInfo *inputFieldLayoutInfo ATTRIBUTE_PRXPTR;	//!< Input field layout info.
+	oskLayoutInfo *inputPanelLayoutInfo ATTRIBUTE_PRXPTR;	//!< Input panel layout info.
+	u32 reserved;											//!< Reserved.
 } oskSeparateWindowOption;
 
 /*! \brief Set initial input device.

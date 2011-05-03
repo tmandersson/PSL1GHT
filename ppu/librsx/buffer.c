@@ -35,8 +35,3 @@ void rsxFinish(gcmContextData *context,u32 ref_value)
 	while(ctrl->ref!=ref_value) usleep(30);
 }
 
-s32 rsxAddressToOffset(void *ptr,u32 *offset)
-{
-	return gcmAddressToOffset(ptr,offset);
-}
-

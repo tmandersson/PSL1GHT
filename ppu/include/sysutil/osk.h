@@ -341,7 +341,7 @@ s32 oskAddSupportLanguage(u32 lang);
 \param[in] inputInfo Input information.
 \return zero if no error occured, nonzero otherwise.
 */
-s32 oskLoadAsync(mem_container_t container, const oskParam *param, const oskInputFieldInfo *inputInfo);
+s32 oskLoadAsync(sys_mem_container_t container, const oskParam *param, const oskInputFieldInfo *inputInfo);
 
 /*! \brief Set the on-screen keyboard initial key layout.
 \param[in] layout Initial key layout.

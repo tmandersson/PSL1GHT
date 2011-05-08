@@ -26,7 +26,7 @@ ICON0		:=	$(PSL1GHT)/bin/ICON0.PNG
 
 SPRX		:=	sprxlinker$(POSTFIX)
 CGCOMP		:=	cgcomp$(POSTFIX)
-PS3LOAD		:=	ps3load$(POSTFIX)
+PS3LOADAPP	:=	ps3load$(POSTFIX)
 
 FSELF		:=	fself.py
 FSELF_NPDRM	:=	$(FSELF) -n

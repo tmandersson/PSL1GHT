@@ -191,7 +191,7 @@ SECTIONS
 	.rodata         : { *(.rodata .rodata.* .gnu.linkonce.r.*) } : hdr_srodata
 	.rodata1        : { *(.rodata1) } : hdr_srodata
 
-	.spu_image		: { *(.spu_image .spu_image.*) } :ph_srodata
+	.spu_image		: { *(.spu_image .spu_image.*) } : hdr_srodata
 	
 	. = ALIGN(64K);
 
@@ -240,7 +240,7 @@ SECTIONS
 	
 	. = ALIGN(256M);
 
-	.rsx_image	: { *(.rsx_*) } :ph_rsx
+	.rsx_image	: { *(.rsx_*) } : hdr_rsx
 		
 	_end = .;
 	__end = .;

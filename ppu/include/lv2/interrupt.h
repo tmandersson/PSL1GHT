@@ -52,7 +52,7 @@ LV2_SYSCALL _sysInterruptThreadDisestablish(sys_interrupt_thread_handle_t ih,
 	return_to_user_prog(s32);
 }
 
-static inline void sys_interrupt_thread_eoi(void) 
+static inline void sysInterruptThreadEOI(void) 
 {
 	lv2syscall0(88);
 }

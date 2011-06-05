@@ -300,8 +300,17 @@ int closesocket(int socket)
 
 int poll(struct pollfd fds[],nfds_t nfds,int timeout)
 {
-	if(LIBNET_INITIALZED)
-		return netErrno(netPoll(fds,nfds,timeout));
+	if(LIBNET_INITIALZED) {
+		int ret;
+		int i;
+
+		for (i = 0; i < nfds; i++)
+			fds[i].fd = FD(fds[i].fd);
+		ret = netPoll(fds,nfds,timeout);
+		for (i = 0; i < nfds; i++)
+			fds[i].fd |= SOCKET_FD_MASK;
+		return netErrno(ret);
+	}
 
 	errno = ENOSYS;
 	return -1;

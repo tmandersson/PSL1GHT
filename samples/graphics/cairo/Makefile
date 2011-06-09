@@ -9,10 +9,6 @@ endif
 
 include $(PSL1GHT)/ppu_rules
 
-TITLE          =       cairo_sample
-APPID          =       CAIRO0001
-CONTENTID      =       UP0001-CAIRO0001_00-0000111122223334
-
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
 # BUILD is the directory where object files & intermediate files will be placed
@@ -24,6 +20,10 @@ BUILD		:=	build
 SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
+
+TITLE		:=       Cairo sample - PSL1GHT
+APPID		:=       CAIRO0001
+CONTENTID	:=       UP0001-$(APPID)_00-0000000000000000
 
 #---------------------------------------------------------------------------------
 # options for code generation

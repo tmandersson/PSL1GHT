@@ -27,12 +27,12 @@ static int SocketFD;
 
 void debugPrintf(const char* fmt, ...)
 {
-	char buffer[0x800];
-	va_list arg;
-	va_start(arg, fmt);
-	vsnprintf(buffer, sizeof(buffer), fmt, arg);
-	va_end(arg);
-	netSend(SocketFD, buffer, strlen(buffer), 0);
+  char buffer[0x800];
+  va_list arg;
+  va_start(arg, fmt);
+  vsnprintf(buffer, sizeof(buffer), fmt, arg);
+  va_end(arg);
+  netSend(SocketFD, buffer, strlen(buffer), 0);
 }
 
 void debugInit()

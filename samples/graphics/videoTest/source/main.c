@@ -4,6 +4,8 @@
 #include <ppu-lv2.h>
 
 #include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
 #include <assert.h>
@@ -14,95 +16,44 @@
 #include <rsx/rsx.h>
 
 #include <io/pad.h>
+#include "rsxutil.h"
 
-gcmContextData *context; // Context to keep track of the RSX buffer.
+#define MAX_BUFFERS 2
 
-videoResolution res; // Screen Resolution
-
-int currentBuffer = 0;
-s32 *buffer[2]; // The buffer we will be drawing into.
-
-void waitFlip() { // Block the PPU thread untill the previous flip operation has finished.
-  while(gcmGetFlipStatus() != 0)
-    usleep(200);
-  gcmResetFlipStatus();
-}
-
-void flip(s32 buffer) {
-  assert(gcmSetFlip(context, buffer) == 0);
-  rsxFlushBuffer(context);
-  gcmSetWaitFlip(context); // Prevent the RSX from continuing until the flip has finished.
-}
-
-// Initilize everything. You can probally skip over this function.
-void init_screen() {
-  // Allocate a 1Mb buffer, alligned to a 1Mb boundary to be our shared IO memory with the RSX.
-  void *host_addr = memalign(1024*1024, 1024*1024);
-  assert(host_addr != NULL);
-
-  // Initilise Reality, which sets up the command buffer and shared IO memory
-  context = rsxInit(0x10000, 1024*1024, host_addr); 
-  assert(context != NULL);
-
-  videoState state;
-  assert(videoGetState(0, 0, &state) == 0); // Get the state of the display
-  assert(state.state == 0); // Make sure display is enabled
-
-  // Get the current resolution
-  assert(videoGetResolution(state.displayMode.resolution, &res) == 0);
-
-  // Configure the buffer format to xRGB
-  videoConfiguration vconfig;
-  memset(&vconfig, 0, sizeof(videoConfiguration));
-  vconfig.resolution = state.displayMode.resolution;
-  vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
-  vconfig.pitch = res.width * 4;
-  vconfig.aspect=state.displayMode.aspect;
-
-  assert(videoConfigure(0, &vconfig, NULL, 0) == 0);
-  assert(videoGetState(0, 0, &state) == 0); 
-
-  s32 buffer_size = 4 * res.width * res.height; // each pixel is 4 bytes
-  printf("buffers will be 0x%x bytes\n", buffer_size);
-	
-  gcmSetFlipMode(GCM_FLIP_VSYNC); // Wait for VSYNC to flip
-
-  // Allocate two buffers for the RSX to draw to the screen (double buffering)
-  buffer[0] = rsxMemalign(16, buffer_size);
-  buffer[1] = rsxMemalign(16, buffer_size);
-  assert(buffer[0] != NULL && buffer[1] != NULL);
-
-  u32 offset[2];
-  assert(rsxAddressToOffset(buffer[0], &offset[0]) == 0);
-  assert(rsxAddressToOffset(buffer[1], &offset[1]) == 0);
-  // Setup the display buffers
-  assert(gcmSetDisplayBuffer(0, offset[0], res.width * 4, res.width, res.height) == 0);
-  assert(gcmSetDisplayBuffer(1, offset[1], res.width * 4, res.width, res.height) == 0);
-
-  gcmResetFlipStatus();
-  flip(1);
-}
-
-void drawFrame(int *buffer, long frame) {
+void drawFrame(rsxBuffer *buffer, long frame) {
   s32 i, j;
-  for(i = 0; i < res.height; i++) {
-    s32 color = (i / (res.height * 1.0) * 256);
+  for(i = 0; i < buffer->height; i++) {
+    s32 color = (i / (buffer->height * 1.0) * 256);
     // This should make a nice black to green graident
     color = (color << 8) | ((frame % 255) << 16);
-    for(j = 0; j < res.width; j++)
-      buffer[i* res.width + j] = color;
+    for(j = 0; j < buffer->width; j++)
+      buffer->ptr[i* buffer->width + j] = color;
   }
-
 }
 
-s32 main(s32 argc, const char* argv[])
+int main(s32 argc, const char* argv[])
 {
+  gcmContextData *context;
+  void *host_addr = NULL;
+  rsxBuffer buffers[MAX_BUFFERS];
+  int currentBuffer = 0;
   padInfo padinfo;
   padData paddata;
+  u16 width;
+  u16 height;
   int i;
 	
-  init_screen();
+  /* Allocate a 1Mb buffer, alligned to a 1Mb boundary                          
+   * to be our shared IO memory with the RSX. */
+  host_addr = memalign (1024*1024, HOST_SIZE);
+  context = initScreen (host_addr, HOST_SIZE);
   ioPadInit(7);
+
+  getResolution(&width, &height);
+  for (i = 0; i < MAX_BUFFERS; i++)
+    makeBuffer( &buffers[i], width, height, i);
+
+  flip(context, MAX_BUFFERS - 1);
 
   long frame = 0; // To keep track of how many frames we have rendered.
 	
@@ -114,19 +65,31 @@ s32 main(s32 argc, const char* argv[])
       if(padinfo.status[i]){
 	ioPadGetData(i, &paddata);
 				
-	if(paddata.BTN_CROSS){
-	  return 0;
+	if(paddata.BTN_START){
+	  goto end;
 	}
       }
 			
     }
 
     waitFlip(); // Wait for the last flip to finish, so we can draw to the old buffer
-    drawFrame(buffer[currentBuffer], frame++); // Draw into the unused buffer
-    flip(currentBuffer); // Flip buffer onto screen
-    currentBuffer = !currentBuffer;
+    drawFrame(&buffers[currentBuffer], frame++); // Draw into the unused buffer
+    flip(context, buffers[currentBuffer].id); // Flip buffer onto screen
+
+    currentBuffer++;
+    if (currentBuffer >= MAX_BUFFERS)
+      currentBuffer = 0;
   }
+  
+ end:
+
+  gcmSetWaitFlip(context);
+  for (i = 0; i < MAX_BUFFERS; i++)
+    rsxFree(buffers[i].ptr);
+
+  rsxFinish(context, 1);
+  free(host_addr);
+  ioPadEnd();
 	
   return 0;
 }
-

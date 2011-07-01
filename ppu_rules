@@ -59,6 +59,12 @@ TARGET		?= $(notdir $(CURDIR))
 	@echo $(notdir $<)
 	$(VERB) $(CGCOMP) -f $^ $@
 
+.eboot: $(TARGET).self
+	@echo building EBOOT.BIN ...
+	$(VERB) mkdir -p $(BUILDDIR)/pkg
+	$(VERB) mkdir -p $(BUILDDIR)/pkg/USRDIR
+	$(VERB) $(SELF_NPDRM) $(BUILDDIR)/$(TARGET).elf $(BUILDDIR)/pkg/USRDIR/EBOOT.BIN $(CONTENTID) >> /dev/null
+
 %.pkg: %.self
 	@echo building pkg ... $(notdir $@)
 	$(VERB) mkdir -p $(BUILDDIR)/pkg

@@ -11,6 +11,9 @@ ifndef VERBOSE
   VERB := @
 endif
 
+#dont' auto-delete elf & self files
+.PRECIOUS: %.elf %.self
+
 #---------------------------------------------------------------------------------
 # the prefix on the compiler executables
 #---------------------------------------------------------------------------------

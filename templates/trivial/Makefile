@@ -27,10 +27,10 @@ BUILDDIR=build
 #
 # The title that appears in XMB. Do not quote.
 #TITLE=Sample
-#
+
 # Icon that appears in XMB. Needs to be of certain properties.
 #ICON=file.png
-#
+
 # ID of your application. Also the installation directory
 # (/dev_hdd0/game/$APPID/)
 # note: if APPID is of wrong format, the PS3 modifies the install directory!
@@ -48,13 +48,16 @@ run:
 	ps3load $(TARGET).self
 
 clean:
-	rm -rf $(TARGET).geohot.pkg $(TARGET).pkg $(BUILDDIR)/*
+	rm -rf $(TARGET).geohot.pkg $(TARGET).pkg $(TARGET).self $(BUILDDIR)/*
 
-# Start a FTP server on the PS3, then run 'make push' to update your binary.
-# This works when you have once installed the .pkg on the PS3
-# You might need to modify the settings below
-push:
+# "ps3load" for FW 3.55. 
+# build the .self file normally, start a FTP server on the PS3, and 
+# run 'make push' to update the binary. Run application from XMB.
+# You need to install the .pkg only once
+# You probably need to modify the settings below
+push: .eboot
 	curlftpfs ftp://root:openbox@10.0.0.5  ~/mount/ 
 	cp build/pkg/USRDIR/EBOOT.BIN ~/mount/dev_hdd0/game/$(APPID)/USRDIR/EBOOT.BIN
 	fusermount -u ~/mount/
+
 

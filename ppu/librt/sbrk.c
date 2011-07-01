@@ -75,7 +75,14 @@ static void sbrk_init()
 	if(!region_list_append(&__sbrk_curr_regionentry,0,0,0)) return;
 }
 
-static void sbrk_deinit() __attribute__((destructor(103)));
+/* sbrk_deinit() can not be a destructor, because it needs to be called
+   after __deregister_frame_info() which does memory deallocations.
+   Put a call directly into .fini instead.  Since this file will always
+   appear after crtbegin.o in the link order, this will place the call
+   to sbrk_deinit() after the call to __do_global_dtors_aux(), which
+   is what we want. */
+asm ("\t.section\t.fini\n\tbl .sbrk_deinit\n\tnop\n\t.previous");
+static void sbrk_deinit() __attribute__((used));
 static void sbrk_deinit()
 {
 	while(__sbrk_curr_regionentry) {

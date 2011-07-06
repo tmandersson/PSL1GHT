@@ -37,8 +37,8 @@ PACKAGE_FINALIZE := package_finalize
 #Package settings - allow for user overrides!
 TITLE		?= Untitled PSL1GHT homebrew by $(USER)
 APPID		?= UNTITLED1
-SFOXML		?= $(PSL1GHT)/bin/sfo.xml
-ICON0		?= $(PSL1GHT)/bin/ICON0.PNG
+SFOXML		?= $(PS3DEV)/bin/sfo.xml
+ICON0		?= $(PS3DEV)/bin/ICON0.PNG
 CONTENTID	?= UP0001-$(APPID)_00-0000000000000000
 TARGET		?= $(notdir $(CURDIR))
 

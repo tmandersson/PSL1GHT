@@ -947,7 +947,7 @@ void rsxSetTransferImage(gcmContextData *context,const u8 mode,const u32 dstOffs
 	RSX_CONTEXT_CURRENTP[22] = ((height << 16) | width);
 	RSX_CONTEXT_CURRENTP[23] = (srcPitch | (GCM_TRANSFER_ORIGIN_CORNER << 16) | (GCM_TRANSFER_INTERPOLATOR_NEAREST << 24));
 	RSX_CONTEXT_CURRENTP[24] = srcOffset;
-	RSX_CONTEXT_CURRENTP[25] = 0;
+	RSX_CONTEXT_CURRENTP[25] = ((srcY << 16) | srcX);
 
 	RSX_CONTEXT_CURRENT_END(26);
 }

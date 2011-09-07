@@ -290,39 +290,68 @@
 #define GCM_TRANSFER_SURFACE                               0
 #define GCM_TRANSFER_SWIZZLE                               1
 
+/*! \brief Convert pixel component values using dithering. */
 #define GCM_TRANSFER_CONVERSION_DITHER                     0
+/*! \brief Convert pixel component values by truncation (\em ie, ignore lower bits). */
 #define GCM_TRANSFER_CONVERSION_TRUNCATE                   1
+/*! \brief Convert pixel component values by subtraction/truncation. */
 #define GCM_TRANSFER_CONVERSION_SUBTRACT_TRUNCATE          2
 
+/*! \brief Pixel format is 1-bit alpha, 5-bit red, 5-bit green, 5-bit blue */
 #define GCM_TRANSFER_SCALE_FORMAT_A1R5G5B5                 1
+/*! \brief Pixel format is 1-bit unused, 5-bit red, 5-bit green, 5-bit blue */
 #define GCM_TRANSFER_SCALE_FORMAT_X1R5G5B5                 2
+/*! \brief Pixel format is 8-bit alpha, 8-bit red, 8-bit green, 8-bit blue */
 #define GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8                 3
+/*! \brief Pixel format is 8-bit unused, 8-bit red, 8-bit green, 8-bit blue */
 #define GCM_TRANSFER_SCALE_FORMAT_X8R8G8B8                 4
+/*! \brief Pixel format is 8-bit red chrominance, 8-bit luminance, 8-bit blue chrominance, 8-bit alpha */
 #define GCM_TRANSFER_SCALE_FORMAT_CR8YB8CB8YA8             5
+/*! \brief Pixel format is 8-bit luminance, 8-bit red chrominance, 8-bit alpha, 8-bit blue chrominance */
 #define GCM_TRANSFER_SCALE_FORMAT_YB8CR8YA8CB8             6
+/*! \brief Pixel format is 5-bit red, 6-bit green, 5-bit blue */
 #define GCM_TRANSFER_SCALE_FORMAT_R5G6B5                   7
+/*! \brief Pixel format is 8-bit grayscale */
 #define GCM_TRANSFER_SCALE_FORMAT_Y8                       8
+/*! \brief Pixel format is 8-bit alpha */
 #define GCM_TRANSFER_SCALE_FORMAT_AY8                      9
+/*! \brief Pixel format is EYB8ECR8EYA8ECB8 */
 #define GCM_TRANSFER_SCALE_FORMAT_EYB8ECR8EYA8ECB8         0xa
+/*! \brief Pixel format is ECR8EYB8ECB8EYA8 */
 #define GCM_TRANSFER_SCALE_FORMAT_ECR8EYB8ECB8EYA8         0xb
+/*! \brief Pixel format is 8-bit alpha, 8-bit blue, 8-bit green, 8-bit red */
 #define GCM_TRANSFER_SCALE_FORMAT_A8B8G8R8                 0xc
+/*! \brief Pixel format is 8-bit unused, 8-bit blue, 8-bit green, 8-bit red */
 #define GCM_TRANSFER_SCALE_FORMAT_X8B8G8R8                 0xd
 
+/*! \brief Copy source image, perform logical \c AND with destination. */
 #define GCM_TRANSFER_OPERATION_SRCCOPY_AND                 0
+/*! \brief Perform ROP (raster operation), and logical \c AND with destination. */
 #define GCM_TRANSFER_OPERATION_ROP_AND                     1
+/*! \brief Perform blending, and logical \c AND with destination. */
 #define GCM_TRANSFER_OPERATION_BLEND_AND                   2
+/*! \brief Copy source image. */
 #define GCM_TRANSFER_OPERATION_SRCCOPY                     3
+/*! \brief Copy pre-multiplied source image. */
 #define GCM_TRANSFER_OPERATION_SRCCOPY_PREMULT             4
+/*! \brief Blend pre-multiplied source image. */
 #define GCM_TRANSFER_OPERATION_BLEND_PREMULT               5
 
+/*! \brief Origin is the center of the source image. */
 #define GCM_TRANSFER_ORIGIN_CENTER                         1
+/*! \brief Origin is the topleft cornet of the source image. */
 #define GCM_TRANSFER_ORIGIN_CORNER                         2
 
-#define GCM_TRANSFER_INTERPOLATOR_NEAREST                  0 /* point sampling */
-#define GCM_TRANSFER_INTERPOLATOR_LINEAR                   1 /* bilinear interpolation */
+/*! \brief Use point sampling interpolation. */
+#define GCM_TRANSFER_INTERPOLATOR_NEAREST                  0
+/*! \brief Use point linear interpolation. */
+#define GCM_TRANSFER_INTERPOLATOR_LINEAR                   1
 
-#define GCM_TRANSFER_SURFACE_FORMAT_R5G5B5                 4
+/*! \brief Source surface pixel format is 5-bit red, 6-bit green, 5-bit blue. */
+#define GCM_TRANSFER_SURFACE_FORMAT_R5G6B5                 4
+/*! \brief Source surface pixel format is 8-bit alpha, 8-bit red, 8-bit green, 8-bit blue. */
 #define GCM_TRANSFER_SURFACE_FORMAT_A8R8G8B8               0xa
+/*! \brief Source surface pixel format is Y32. */
 #define GCM_TRANSFER_SURFACE_FORMAT_Y32                    0xb
 
 #ifdef __cplusplus
@@ -564,17 +593,21 @@ typedef struct _gcmTexture
     u32 offset;
 } gcmTexture;
 
-/*! \brief Specify scaled image blit geometry and format for rsxSetTransferImage() */
+/*! \brief Specify scaled image blit geometry and format for rsxSetTransferScaleSurface(). */
 typedef struct _gcmTransferScale
 {
-    /*! \brief Not sure what this dones. Possible values:
+    /*! \brief Conversion to perform when converting pixels to lower bit precision.
+
+      Possible values:
          - \ref GCM_TRANSFER_CONVERSION_DITHER
          - \ref GCM_TRANSFER_CONVERSION_TRUNCATE
          - \ref GCM_TRANSFER_CONVERSION_SUBTRACT_TRUNCATE
      */ 
     u32 conversion;
 
-    /*! \brief Format of image data. Possible values:
+    /*! \brief Format of source image pixels.
+
+      Possible values:
          - \ref GCM_TRANSFER_SCALE_FORMAT_A1R5G5B5
          - \ref GCM_TRANSFER_SCALE_FORMAT_X1R5G5B5
          - \ref GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8
@@ -591,7 +624,9 @@ typedef struct _gcmTransferScale
      */ 
     u32 format;
 
-    /*! \brief Blit operation. Possible values:
+    /*! \brief Blit operation.
+
+      Possible values:
          - \ref GCM_TRANSFER_OPERATION_SRCCOPY_AND
          - \ref GCM_TRANSFER_OPERATION_ROP_AND
          - \ref GCM_TRANSFER_OPERATION_BLEND_AND
@@ -640,29 +675,36 @@ typedef struct _gcmTransferScale
     /*! \brief Pitch size, in bytes, of the source image data (width multiplied by the number of bytes in each pixel). */
     u16 pitch;
 
-    /*! \brief How the origin of each pixel is determined. Possible values:
+    /*! \brief How the origin of each pixel is determined.
+
+      Possible values:
         - \ref GCM_TRANSFER_ORIGIN_CENTER
         - \ref GCM_TRANSFER_ORIGIN_CORNER
      */ 
     u8 origin;
 
-    /*! \brief Sampling for scaled blits. Possible values:
-        - \ref GCM_TRANSFER_INTERPOLATOR_NEAREST: no interpolation
-        - \ref GCM_TRANSFER_INTERPOLATOR_LINEAR: bilinear interpolation
+    /*! \brief Sampling for scaled blits.
+
+      Possible values:
+        - \ref GCM_TRANSFER_INTERPOLATOR_NEAREST
+        - \ref GCM_TRANSFER_INTERPOLATOR_LINEAR
      */ 
     u8 interp;
 
-    /*! \brief Image data offset, e.g., a value returned by gcmAddressToOffset() or gcmMapMainMemory(). */
+    /*! \brief Image data offset, e.g., a value returned by gcmAddressToOffset()
+      or gcmMapMainMemory(). */
     u32 offset;
 
-    /*! \brief X origin of destination rectangle. */
+    /*! \brief X origin of the blit rectangle in the source image.
+      Format is 16-bit fixed point, see rsxGetFixedUint16(). */
     u16 inX;
 
-    /*! \brief Y origin of destination rectangle. */
+    /*! \brief Y origin of the blit rectangle in the source image.
+      Format is 16-bit fixed point, see rsxGetFixedUint16(). */
     u16 inY;
 } gcmTransferScale;
 
-/*! \brief Specify destination surface characteristics for rsxSetTransferImage(). */
+/*! \brief Specify destination surface characteristics for rsxSetTransferScaleSurface(). */
 typedef struct _gcmTransferSurface
 {
     /*! \brief Format of destination surface. Possible values are:

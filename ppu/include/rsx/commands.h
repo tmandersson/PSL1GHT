@@ -84,16 +84,96 @@ void rsxDrawVertex2f(gcmContextData *context,u8 idx,f32 x,f32 y);
 void rsxDrawVertex3f(gcmContextData *context,u8 idx,f32 x,f32 y,f32 z);
 void rsxDrawVertex4f(gcmContextData *context,u8 idx,f32 x,f32 y,f32 z,f32 w);
 void rsxSetScissor(gcmContextData *context,u16 x,u16 y,u16 w,u16 h);
+
+/*! \brief Specify the value used for depth buffer comparisons.
+\param context Pointer to the context object.
+\param func Specifies the depth comparison function. Possible values are:
+ - \ref GCM_NEVER
+ - \ref GCM_LESS
+ - \ref GCM_EQUAL
+ - \ref GCM_LEQUAL
+ - \ref GCM_GREATER
+ - \ref GCM_NOTEQUAL
+ - \ref GCM_GEQUAL
+ - \ref GCM_ALWAYS
+*/
 void rsxSetDepthFunc(gcmContextData *context,u32 func);
+
+/*! \brief Enable or disable the depth test.
+
+If depth test is enabled, the GPU performs depth comparisons and updates the
+depth buffer.
+Note that even if the depth buffer exists and the depth mask is non-zero,
+the depth buffer is not updated if the depth test is disabled.
+\param context Pointer to the context object.
+\param enable Enable flag. Possible values are:
+ - \ref GCM_TRUE
+ - \ref GCM_FALSE
+*/
 void rsxSetDepthTestEnable(gcmContextData *context,u32 enable);
+
+/*! \brief Clear the render surface.
+
+This function clears the chosen selection of color components, depth and stencil
+values for all pixels in the destination surface. The clear color can be chosen
+using \ref rsxSetClearColor, and the clear value for the depth buffer is set
+using \ref rsxSetClearDepthValue.
+
+\param context Pointer to the context object.
+\param clear_mask A selection of components to be cleared. Must be an OR
+combination of the following values:
+ - \ref GCM_CLEAR_Z
+ - \ref GCM_CLEAR_S
+ - \ref GCM_CLEAR_R
+ - \ref GCM_CLEAR_G
+ - \ref GCM_CLEAR_B
+ - \ref GCM_CLEAR_A
+The value of \ref GCM_CLEAR_M can also be chosen, to clear all RGBA components,
+depth and stencil buffers.
+*/
 void rsxClearSurface(gcmContextData *context,u32 clear_mask);
+
+/*! \brief Set the clear depth value.
+
+This value is used by the \ref rsxClearSurface function.
+\param context Pointer to the context object.
+\param value Color value 
+*/
 void rsxSetClearDepthValue(gcmContextData *context,u32 value);
 void rsxSetReturnCommand(gcmContextData *context);
 void rsxSetCallCommand(gcmContextData *context,u32 offset);
 void rsxSetJumpCommand(gcmContextData *context,u32 offset);
 void rsxSetNopCommand(gcmContextData *context,u32 count);
+
+/*! \brief Set the clear color.
+
+The clear color value is used by the \ref rsxClearSurface function.
+\param context Pointer to the context object.
+\param color The clear color value.
+*/
 void rsxSetClearColor(gcmContextData *context,u32 color);
+
+/*! \brief Enable or disable write access to the framebuffer color components.
+\param context Pointer to the context object.
+\param mask A selection of the components to enable write access. It is an OR
+combination of the following values:
+ - \ref GCM_COLOR_MASK_B
+ - \ref GCM_COLOR_MASK_G
+ - \ref GCM_COLOR_MASK_R
+ - \ref GCM_COLOR_MASK_A
+*/
 void rsxSetColorMask(gcmContextData *context,u32 mask);
+
+/*! \brief Enable or disable write access to the framebuffer color components
+(Multiple Render Target output).
+\param context Pointer to the context object.
+\param mask A selection of the components to enable write access. It is an OR
+combination of the following values:
+ - \ref GCM_COLOR_MASK_B
+ - \ref GCM_COLOR_MASK_G
+ - \ref GCM_COLOR_MASK_R
+ - \ref GCM_COLOR_MASK_A
+*/
 void rsxSetColorMaskMRT(gcmContextData *context,u32 mask);
 
 /*! \brief Setup the render surface.

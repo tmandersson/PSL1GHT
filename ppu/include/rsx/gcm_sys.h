@@ -68,26 +68,45 @@
 /*! \brief Do not use multiple samples. */
 #define GCM_TF_CENTER_1                                    0
 
+/*! \brief blue color component */
 #define GCM_COLOR_MASK_B                                   0x00000001
+/*! \brief green color component */
 #define GCM_COLOR_MASK_G                                   0x00000100
+/*! \brief red color component */
 #define GCM_COLOR_MASK_R                                   0x00010000
+/*! \brief alpha component */
 #define GCM_COLOR_MASK_A                                   0x01000000
 
+/*! \brief clear the Z buffer (depth buffer) */
 #define GCM_CLEAR_Z                                        0x01
+/*! \brief clear the stencil buffer */
 #define GCM_CLEAR_S                                        0x02
+/*! \brief clear the red components */
 #define GCM_CLEAR_R                                        0x10
+/*! \brief clear the green components */
 #define GCM_CLEAR_G                                        0x20
+/*! \brief clear the blue components */
 #define GCM_CLEAR_B                                        0x40
+/*! \brief clear the alpha components */
 #define GCM_CLEAR_A                                        0x80
+/*! \brief clear all RGBA components, Z buffer and stencil buffer */
 #define GCM_CLEAR_M                                        0xf3
 
+/*! \brief depth test never passes. */
 #define GCM_NEVER                                          0x0200
+/*! \brief depth test passes if the incoming depth value is less than the stored depth value. */
 #define GCM_LESS                                           0x0201
+/*! \brief depth test passes if the incoming depth value is equal to the stored depth value. */
 #define GCM_EQUAL                                          0x0202
+/*! \brief depth test passes if the incoming depth value is less than or equal to the stored depth value. */
 #define GCM_LEQUAL                                         0x0203
+/*! \brief depth test passes if the incoming depth value is greater than the stored depth value. */
 #define GCM_GREATER                                        0x0204
+/*! \brief depth test passes if the incoming depth value is not equal to the stored depth value. */
 #define GCM_NOTEQUAL                                       0x0205
+/*! \brief depth test passes if the incoming depth value is greater than or equal to the stored depth value. */
 #define GCM_GEQUAL                                         0x0206
+/*! \brief depth test always passes. */
 #define GCM_ALWAYS                                         0x0207
 
 /*! \brief culling of front face */

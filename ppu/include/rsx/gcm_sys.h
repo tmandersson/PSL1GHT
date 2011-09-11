@@ -262,29 +262,52 @@
 /*! \brief Smooth shading */
 #define GCM_SHADE_MODEL_SMOOTH                             0x1D01
 
+/*! \brief blend factors are zero */
 #define GCM_ZERO                                           0
+/*! \brief blend factors are one */
 #define GCM_ONE                                            1
+/*! \brief blend factors are the source color components */
 #define GCM_SRC_COLOR                                      0x0300
+/*! \brief blend factors are one minus source color components */
 #define GCM_ONE_MINUS_SRC_COLOR                            0x0301
+/*! \brief blend factors are the source alpha component */
 #define GCM_SRC_ALPHA                                      0x0302
+/*! \brief blend factors are one minus the source alpha component */
 #define GCM_ONE_MINUS_SRC_ALPHA                            0x0303
+/*! \brief blend factors are the destination alpha component */
 #define GCM_DST_ALPHA                                      0x0304
+/*! \brief blend factors are one minus the destination alpha component */
 #define GCM_ONE_MINUS_DST_ALPHA                            0x0305
+/*! \brief blend factors are the destination color components */
 #define GCM_DST_COLOR                                      0x0306
+/*! \brief blend factors are one minus the destination color components */
 #define GCM_ONE_MINUS_DST_COLOR                            0x0307
+/*! \brief blend factors are set to saturate the output */
 #define GCM_SRC_ALPHA_SATURATE                             0x0308
+/*! \brief blend factors are the constant color components */
 #define GCM_CONSTANT_COLOR                                 0x8001
+/*! \brief blend factors are one minus the constant color components */
 #define GCM_ONE_MINUS_CONSTANT_COLOR                       0x8002
+/*! \brief blend factors are the constant color alpha component */
 #define GCM_CONSTANT_ALPHA                                 0x8003
+/*! \brief blend factors are one minus the constant color alpha component */
 #define GCM_ONE_MINUS_CONSTANT_ALPHA                       0x8004
 
+/*! \brief use scaled source plus destination */
 #define GCM_FUNC_ADD                                       0x8006
+/*! \brief use the minimum of source and destination color components */
 #define GCM_MIN                                            0x8007
+/*! \brief use the maximum of source and destination color components */
 #define GCM_MAX                                            0x8008
+/*! \brief use scaled source minus destination */
 #define GCM_FUNC_SUBTRACT                                  0x800a
+/*! \brief use scaled destination minus source */
 #define GCM_FUNC_REVERSE_SUBTRACT                          0x800b
+/*! \brief use scaled destination minus source (signed) */
 #define GCM_FUNC_REVERSE_SUBTRACT_SIGNED                   0xf005
+/*! \brief use scaled source plus destination (signed) */
 #define GCM_FUNC_ADD_SIGNED                                0xf006
+/*! \brief use scaled destination plus source (signed) */
 #define GCM_FUNC_REVERSE_ADD_SIGNED                        0xf007
 
 #define GCM_TRANSFER_SURFACE                               0

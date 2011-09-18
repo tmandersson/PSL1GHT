@@ -198,8 +198,7 @@ void blit_scale(displayData *vdat, Bitmap *bitmap,
   scale.conversion = GCM_TRANSFER_CONVERSION_TRUNCATE;
   scale.format = GCM_TRANSFER_SCALE_FORMAT_A8R8G8B8;
   scale.origin = GCM_TRANSFER_ORIGIN_CORNER;
-  scale.operation = GCM_TRANSFER_OPERATION_SRCCOPY;
-  //scale.operation = GCM_TRANSFER_OPERATION_BLEND_AND;
+  scale.operation = GCM_TRANSFER_OPERATION_SRCCOPY_AND;
   scale.interp = GCM_TRANSFER_INTERPOLATOR_NEAREST;
   scale.clipX = 0;
   scale.clipY = 0;
@@ -272,6 +271,11 @@ int main(int argc, const char* argv[])
                                  GCM_CLEAR_A |
                                  GCM_CLEAR_S |
                                  GCM_CLEAR_Z);
+
+    /* Enable blending (for rsxSetTransferScaleSurface) */
+    rsxSetBlendFunc(vdat.context, GCM_SRC_ALPHA, GCM_ONE_MINUS_SRC_ALPHA, GCM_SRC_ALPHA, GCM_ONE_MINUS_SRC_ALPHA);
+    rsxSetBlendEquation(vdat.context, GCM_FUNC_ADD, GCM_FUNC_ADD);
+    rsxSetBlendEnable(vdat.context, GCM_TRUE);
 
     /* Display the whole PSL1GHT image */
     blit_simple(&vdat, &bitmap, vdat.res.width/4, 100, 0, 0, bitmap.width, bitmap.height);

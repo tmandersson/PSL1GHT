@@ -42,8 +42,13 @@ void bitmapSetXpm(Bitmap *bitmap, char * xpm[]) {
 
   /* read palette */
   memset(palette, 0, sizeof(palette));
-  for (ln = 1; ln <= ncolors; ++ln)
-    palette[(unsigned char)xpm[ln][0]] = strtol(&xpm[ln][5], NULL, 16);
+  for (ln = 1; ln <= ncolors; ++ln) {
+    u32 color = strtol(&xpm[ln][5], NULL, 16);
+    /* black color is transparent, others are opaque */
+    if (color != 0)
+      color |= 0xff000000;
+    palette[(unsigned char)xpm[ln][0]] = color;
+  }
 
   /* convert image */
   pix = bitmap->pixels;

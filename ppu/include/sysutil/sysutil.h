@@ -7,6 +7,7 @@
 
 #include <ppu-types.h>
 
+/*! \brief Return value */
 #define SYSUTIL_OK                              0
 
 /*! \brief Event slot 0 */

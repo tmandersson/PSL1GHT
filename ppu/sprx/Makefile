@@ -1,102 +1,70 @@
-#---------------------------------------------------------------------------------
-.SUFFIXES:
-#---------------------------------------------------------------------------------
-
-ifeq ($(strip $(PSL1GHT)),)
-$(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
-endif
-
-include	$(PSL1GHT)/ppu_rules
-
-BUILD		:=	build
-SOURCES		:=	../common .
-INCLUDES	:=	.
-
-#---------------------------------------------------------------------------------
-ifeq ($(strip $(PLATFORM)),)
-#---------------------------------------------------------------------------------
-export BASEDIR		:= $(CURDIR)
-export DEPS			:= $(BASEDIR)/deps
-export LIBS			:= $(BASEDIR)/lib
-
-#---------------------------------------------------------------------------------
-# automatically build a list of object files for our project
-#---------------------------------------------------------------------------------
-export CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
-export CPPFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
-export sFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
-export SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
-
-export OFILES		:=	$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
-						$(sFILES:.s=.o) $(SFILES:.S=.o)
-
-export VPATH		:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
-
-export INCLUDE		:=	$(foreach dir,$(INCLUDES), -iquote $(CURDIR)/$(dir)) \
-						-I$(BASEDIR)/../../include
-
-#---------------------------------------------------------------------------------
-else
-#---------------------------------------------------------------------------------
-
-export LIBDIR		:= $(LIBS)/$(PLATFORM)
-export DEPSDIR		:= $(DEPS)/$(PLATFORM)
-
-#---------------------------------------------------------------------------------
-endif
-#---------------------------------------------------------------------------------
-
-
-LIBRARY		:= $(LIBDIR)/libspurs
-
-#---------------------------------------------------------------------------------
-LD			:=	$(PREFIX)ld
-
-CFLAGS		:= -O2 -mregnames -Wall -mcpu=cell $(MACHDEP) $(INCLUDE) -Wa,-mcell
-ASFLAGS		:= $(MACHDEP) -mregnames -mcpu=cell -D__ASSEMBLY__ -Wa,-mcell $(INCLUDE)
-
-#---------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------------
-
-all: ppu
-
-#---------------------------------------------------------------------------------
-ppu:
-#---------------------------------------------------------------------------------
-	@[ -d $(LIBS)/ppu ] || mkdir -p $(LIBS)/ppu
-	@[ -d $(DEPS)/ppu ] || mkdir -p $(DEPS)/ppu
-	@[ -d ppu ] || mkdir -p ppu
-	@$(MAKE) PLATFORM=ppu lib -C ppu -f $(CURDIR)/Makefile
-
-#---------------------------------------------------------------------------------
-install: all
-#---------------------------------------------------------------------------------
-	@[ -d $(PSL1GHT)/ppu/lib ] || mkdir -p $(PSL1GHT)/ppu/lib
-	@cp -frv $(CURDIR)/lib/ppu/*.a $(PSL1GHT)/ppu/lib
-
-#---------------------------------------------------------------------------------
-$(LIBRARY).a: sprx.o spurs_wrapper.o
-#---------------------------------------------------------------------------------
-
-.PHONY: lib ppu install
-
-#---------------------------------------------------------------------------------
-lib: $(LIBRARY).a
-#---------------------------------------------------------------------------------
-
-libexport.o: libexport.c
-	@$(CC) $(DEPSOPT) -S -m32 $(INCLUDE) $< -o libexport.S
-	@$(CC) $(DEPSOPT) -c libexport.S -o $@
-
-sprx.o: exports.o libexport.o
-		@$(LD) -r exports.o libexport.o -o $@
-#---------------------------------------------------------------------------------
+all:
+	@$(MAKE) -C libio --no-print-directory
+	@$(MAKE) -C liblv2 --no-print-directory
+	@$(MAKE) -C liblv2dbg --no-print-directory
+	@$(MAKE) -C libnet --no-print-directory
+	@$(MAKE) -C libnetctl --no-print-directory
+	@$(MAKE) -C libgem --no-print-directory
+	@$(MAKE) -C libcamera --no-print-directory
+	@$(MAKE) -C libaudio --no-print-directory
+	@$(MAKE) -C libpngdec --no-print-directory
+	@$(MAKE) -C libjpgdec --no-print-directory
+	@$(MAKE) -C libgcm_sys --no-print-directory
+	@$(MAKE) -C libresc --no-print-directory
+	@$(MAKE) -C libssl --no-print-directory
+	@$(MAKE) -C libhttp --no-print-directory
+	@$(MAKE) -C libhttputil --no-print-directory
+	@$(MAKE) -C libsysfs --no-print-directory
+	@$(MAKE) -C libsysutil --no-print-directory
+	@$(MAKE) -C libsysmodule --no-print-directory
+	@$(MAKE) -C libvdec --no-print-directory
+	@$(MAKE) -C libusb --no-print-directory
+	@$(MAKE) -C libspurs --no-print-directory
+	
+install:
+	@$(MAKE) -C libio install --no-print-directory
+	@$(MAKE) -C liblv2 install --no-print-directory
+	@$(MAKE) -C liblv2dbg install --no-print-directory
+	@$(MAKE) -C libnet install --no-print-directory
+	@$(MAKE) -C libnetctl install --no-print-directory
+	@$(MAKE) -C libgem install --no-print-directory
+	@$(MAKE) -C libcamera install --no-print-directory
+	@$(MAKE) -C libaudio install --no-print-directory
+	@$(MAKE) -C libpngdec install --no-print-directory
+	@$(MAKE) -C libjpgdec install --no-print-directory
+	@$(MAKE) -C libgcm_sys install --no-print-directory
+	@$(MAKE) -C libresc install --no-print-directory
+	@$(MAKE) -C libssl install --no-print-directory
+	@$(MAKE) -C libhttp install --no-print-directory
+	@$(MAKE) -C libhttputil install --no-print-directory
+	@$(MAKE) -C libsysfs install --no-print-directory
+	@$(MAKE) -C libsysutil install --no-print-directory
+	@$(MAKE) -C libsysmodule install --no-print-directory
+	@$(MAKE) -C libvdec install --no-print-directory
+	@$(MAKE) -C libusb install --no-print-directory
+	@$(MAKE) -C libspurs install --no-print-directory
+	
 clean:
-#---------------------------------------------------------------------------------
-	@echo clean ...
-	@rm -rf ppu
-	@rm -rf $(DEPS)
-	@rm -rf $(LIBS)
-
--include $(DEPSDIR)/*.d
+	@$(MAKE) -C libio clean --no-print-directory
+	@$(MAKE) -C liblv2 clean --no-print-directory
+	@$(MAKE) -C liblv2dbg clean --no-print-directory
+	@$(MAKE) -C libnet clean --no-print-directory
+	@$(MAKE) -C libnetctl clean --no-print-directory
+	@$(MAKE) -C libgem clean --no-print-directory
+	@$(MAKE) -C libcamera clean --no-print-directory
+	@$(MAKE) -C libaudio clean --no-print-directory
+	@$(MAKE) -C libpngdec clean --no-print-directory
+	@$(MAKE) -C libjpgdec clean --no-print-directory
+	@$(MAKE) -C libgcm_sys clean --no-print-directory
+	@$(MAKE) -C libresc clean --no-print-directory
+	@$(MAKE) -C libssl clean --no-print-directory
+	@$(MAKE) -C libhttp clean --no-print-directory
+	@$(MAKE) -C libhttputil clean --no-print-directory
+	@$(MAKE) -C libsysfs clean --no-print-directory
+	@$(MAKE) -C libsysutil clean --no-print-directory
+	@$(MAKE) -C libsysmodule clean --no-print-directory
+	@$(MAKE) -C libvdec clean --no-print-directory
+	@$(MAKE) -C libusb clean --no-print-directory
+	@$(MAKE) -C libspurs  clean --no-print-directory
+	
+.PHONY: all clean install

@@ -18,7 +18,7 @@
 #include "rsxutil.h"
 
 #define GCM_LABEL_INDEX		255
-//graphics
+// graphics
 gcmContextData *context;
 void *host_addr = NULL;
 rsxBuffer buffers[MAX_BUFFERS];
@@ -26,26 +26,28 @@ int currentBuffer = 0;
 u16 width;
 u16 height;
 
-//extern gcmContextData *context;
-//extern void *host_addr;
-//extern rsxBuffer buffers[MAX_BUFFERS];
-//extern int currentBuffer;
-//extern u16 width;
-//extern u16 height;
-static void waitRSXIdle(gcmContextData *context);
+// extern gcmContextData *context;
+// extern void *host_addr;
+// extern rsxBuffer buffers[MAX_BUFFERS];
+// extern int currentBuffer;
+// extern u16 width;
+// extern u16 height;
+static void waitRSXIdle (gcmContextData * context);
 
 static u32 depth_pitch;
 static u32 depth_offset;
 static u32 *depth_buffer;
 
-void waitFlip ()
+void
+waitFlip ()
 {
   while (gcmGetFlipStatus () != 0)
-    usleep (200);  /* Sleep, to not stress the cpu. */
+    usleep (200);		/* Sleep, to not stress the cpu. */
   gcmResetFlipStatus ();
 }
 
-int flip (gcmContextData *context, s32 buffer)
+int
+flip (gcmContextData * context, s32 buffer)
 {
   if (gcmSetFlip (context, buffer) == 0) {
     rsxFlushBuffer (context);
@@ -57,14 +59,14 @@ int flip (gcmContextData *context, s32 buffer)
   return FALSE;
 }
 
-
-int makeBuffer (rsxBuffer * buffer, u16 width, u16 height, int id)
+int
+makeBuffer (rsxBuffer * buffer, u16 width, u16 height, int id)
 {
-  int depth = sizeof(u32);
+  int depth = sizeof (u32);
   int pitch = depth * width;
   int size = depth * width * height;
 
-  buffer->ptr = (uint32_t*) rsxMemalign (64, size);
+  buffer->ptr = (uint32_t *) rsxMemalign (64, size);
 
   if (buffer->ptr == NULL)
     goto error;
@@ -82,14 +84,15 @@ int makeBuffer (rsxBuffer * buffer, u16 width, u16 height, int id)
 
   return TRUE;
 
- error:
+  error:
   if (buffer->ptr != NULL)
     rsxFree (buffer->ptr);
 
   return FALSE;
 }
 
-int getResolution (u16 *width, u16 *height)
+int
+getResolution (u16 * width, u16 * height)
 {
   videoState state;
   videoResolution resolution;
@@ -106,44 +109,51 @@ int getResolution (u16 *width, u16 *height)
   }
   return FALSE;
 }
-int startScreen()
+
+int
+startScreen ()
 {
-	int i;
-	int ret;
-	 /* Allocate a 1Mb buffer, alligned to a 1Mb boundary                          
-	   * to be our shared IO memory with the RSX. */
-	  host_addr = memalign (1024*1024, HOST_SIZE);
-	  ret = initScreen (host_addr, HOST_SIZE);
-	 if(ret)
-	{
-		return 0;
-	}
-	 
+  int i;
+  int ret;
 
-	 getResolution(&width, &height);
-	  for (i = 0; i < MAX_BUFFERS; i++)
-	    makeBuffer( &buffers[i], width, height, i);
+  /* Allocate a 1Mb buffer, alligned to a 1Mb boundary * to be our shared IO
+   * memory with the RSX. */
+  host_addr = memalign (1024 * 1024, HOST_SIZE);
+  ret = initScreen (host_addr, HOST_SIZE);
+  if (ret) {
+    return 0;
+  }
 
-	  flip(context, MAX_BUFFERS - 1);
-	return 1;
-	
+  getResolution (&width, &height);
+  for (i = 0; i < MAX_BUFFERS; i++)
+    makeBuffer (&buffers[i], width, height, i);
+
+  flip (context, MAX_BUFFERS - 1);
+  return 1;
+
 }
-void endScreen()
-{
-	int i;
-	gcmSetWaitFlip(context);
-	for (i = 0; i < MAX_BUFFERS; i++)
-	    rsxFree(buffers[i].ptr);
 
-	rsxFinish(context, 1);
-	free(host_addr);
-}
-int initScreen (void *host_addr, u32 size)
+void
+endScreen ()
 {
- // gcmContextData *context = NULL; /* Context to keep track of the RSX buffer. */
+  int i;
+
+  gcmSetWaitFlip (context);
+  for (i = 0; i < MAX_BUFFERS; i++)
+    rsxFree (buffers[i].ptr);
+
+  rsxFinish (context, 1);
+  free (host_addr);
+}
+
+int
+initScreen (void *host_addr, u32 size)
+{
+  // gcmContextData *context = NULL; /* Context to keep track of the RSX
+  // buffer. */
   videoState state;
   videoConfiguration vconfig;
-  videoResolution res; /* Screen Resolution */
+  videoResolution res;		/* Screen Resolution */
 
   /* Initilise Reality, which sets up the command buffer and shared IO memory */
   context = rsxInit (CB_SIZE, size, host_addr);
@@ -163,13 +173,13 @@ int initScreen (void *host_addr, u32 size)
     goto error;
 
   /* Configure the buffer format to xRGB */
-  memset (&vconfig, 0, sizeof(videoConfiguration));
+  memset (&vconfig, 0, sizeof (videoConfiguration));
   vconfig.resolution = state.displayMode.resolution;
   vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
-  vconfig.pitch = res.width * sizeof(u32);
+  vconfig.pitch = res.width * sizeof (u32);
   vconfig.aspect = state.displayMode.aspect;
 
-  waitRSXIdle(context);
+  waitRSXIdle (context);
 
   if (videoConfigure (0, &vconfig, NULL, 0) != 0)
     goto error;
@@ -177,17 +187,17 @@ int initScreen (void *host_addr, u32 size)
   if (videoGetState (0, 0, &state) != 0)
     goto error;
 
-  gcmSetFlipMode (GCM_FLIP_VSYNC); // Wait for VSYNC to flip
+  gcmSetFlipMode (GCM_FLIP_VSYNC);	// Wait for VSYNC to flip
 
-  depth_pitch = res.width * sizeof(u32);
-  depth_buffer = (u32 *) rsxMemalign (64, (res.height * depth_pitch)* 2);
+  depth_pitch = res.width * sizeof (u32);
+  depth_buffer = (u32 *) rsxMemalign (64, (res.height * depth_pitch) * 2);
   rsxAddressToOffset (depth_buffer, &depth_offset);
 
-  gcmResetFlipStatus();
+  gcmResetFlipStatus ();
 
   return 0;
 
- error:
+  error:
   if (context)
     rsxFinish (context, 0);
 
@@ -197,20 +207,21 @@ int initScreen (void *host_addr, u32 size)
   return 1;
 }
 
-
-static void waitFinish(gcmContextData *context, u32 sLabelVal)
+static void
+waitFinish (gcmContextData * context, u32 sLabelVal)
 {
   rsxSetWriteBackendLabel (context, GCM_LABEL_INDEX, sLabelVal);
 
   rsxFlushBuffer (context);
 
-  while(*(vu32 *) gcmGetLabelAddress (GCM_LABEL_INDEX) != sLabelVal)
-    usleep(30);
+  while (*(vu32 *) gcmGetLabelAddress (GCM_LABEL_INDEX) != sLabelVal)
+    usleep (30);
 
   sLabelVal++;
 }
 
-static void waitRSXIdle(gcmContextData *context)
+static void
+waitRSXIdle (gcmContextData * context)
 {
   u32 sLabelVal = 1;
 
@@ -219,10 +230,11 @@ static void waitRSXIdle(gcmContextData *context)
 
   sLabelVal++;
 
-  waitFinish(context, sLabelVal);
+  waitFinish (context, sLabelVal);
 }
 
-void setRenderTarget(gcmContextData *context, rsxBuffer *buffer)
+void
+setRenderTarget (gcmContextData * context, rsxBuffer * buffer)
 {
   gcmSurface sf;
 
@@ -248,7 +260,7 @@ void setRenderTarget(gcmContextData *context, rsxBuffer *buffer)
   sf.depthPitch = depth_pitch;
 
   sf.type = GCM_TF_TYPE_LINEAR;
-  sf.antiAlias 	= GCM_TF_CENTER_1;
+  sf.antiAlias = GCM_TF_CENTER_1;
 
   sf.width = buffer->width;
   sf.height = buffer->height;

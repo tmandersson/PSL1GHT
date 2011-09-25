@@ -3,6 +3,7 @@
 
 #include <ppu-types.h>
 #include <vec_types.h>
+#include <spurs/types.h>
 
 #define MOVE_VERSION						2
 #define MAX_MOVES							4

@@ -45,6 +45,10 @@ ifneq (,$(findstring Darwin,$(shell uname -s)))
 	LDFLAGS		+= -mmacosx-version-min=10.4 -arch i386 -arch ppc -Wl,-syslibroot,$(SDK)
 endif
 
+ifneq (,$(findstring SunOS,$(UNAME)))
+	PLATFORM_LIBS	:= -lresolv -lsocket -lnsl
+endif
+
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------

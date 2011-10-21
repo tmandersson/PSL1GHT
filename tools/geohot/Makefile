@@ -45,6 +45,11 @@ ifneq (,$(findstring BSD,$(UNAME)))
 	LDFLAGS += -L/usr/local/lib -lgmp -lcrypto -lz
 endif
 
+ifneq (,$(findstring SunOS,$(UNAME)))
+        CFLAGS += -I/opt/csw/include
+        LDFLAGS += -L/opt/csw/lib -R/opt/csw/lib -lgmp -lcrypto -lz
+endif
+
 ifneq (,$(findstring Linux,$(UNAME)))
 	LDFLAGS += -lgmp -lcrypto -lz
 	OS		:= Linux

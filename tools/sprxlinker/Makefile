@@ -40,6 +40,10 @@ ifneq (,$(findstring BSD,$(UNAME)))
 	LDFLAGS += -lelf
 endif
 
+ifneq (,$(findstring SunOS,$(UNAME)))
+        LDFLAGS += -lelf
+endif
+
 ifneq (,$(findstring Linux,$(UNAME)))
 	LDFLAGS += -lelf
 	OS		:= Linux

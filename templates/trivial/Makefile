@@ -10,10 +10,10 @@
 
 #OFILES is what is linked into your binary
 #the object files are made automatically from the corresponding c/cpp files
-OFILES=source/main.o 
+OFILES=source/main.o
 
 #The CFLAGS are not set by the framework makefiles. These are sound defaults.
-CFLAGS=-I/opt/ps3dev/ppu/include/ -std=gnu99
+CFLAGS=-I$(PS3DEV)/ppu/include -std=gnu99
 
 LDFLAGS=
 
@@ -53,16 +53,5 @@ run:
 	ps3load $(TARGET).self
 
 clean:
-	rm -rf $(TARGET).geohot.pkg $(TARGET).pkg $(TARGET).self $(BUILDDIR)/*
-
-# "ps3load" for FW 3.55. 
-# build the .self file normally, start a FTP server on the PS3, and 
-# run 'make push' to update the binary. Run application from XMB.
-# You need to install the .pkg only once
-# You probably need to modify the settings below
-push: .eboot
-	curlftpfs ftp://root:openbox@10.0.0.5  ~/mount/ 
-	cp build/pkg/USRDIR/EBOOT.BIN ~/mount/dev_hdd0/game/$(APPID)/USRDIR/EBOOT.BIN
-	fusermount -u ~/mount/
-
+	rm -rf $(TARGET)*.pkg $(TARGET)*.self $(BUILDDIR)
 

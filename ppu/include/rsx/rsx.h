@@ -108,6 +108,10 @@ that the buffer is empty when that function returns.
 \param context Pointer to the context object.
 */
 void rsxFlushBuffer(gcmContextData *context);
+
+/*! \brief Reset the RSX command buffer.
+\param context Pointer to the context object.
+*/
 void rsxResetCommandBuffer(gcmContextData *context);
 void rsxFinish(gcmContextData *context,u32 ref_value);
 void rsxSetupContextData(gcmContextData *context,const u32 *addr,const u32 size,gcmContextCallback cb);
@@ -122,11 +126,13 @@ static inline s32 rsxAddressToOffset(void *ptr,u32 *offset)
 	return gcmAddressToOffset(ptr,offset);
 }
 
+/*! \brief Convert a floating point coordinate into 32-bit signed fixed point format. */
 static inline s32 rsxGetFixedSint32(const f32 f)
 {
 	return (s32)(f*1048576.0f);
 }
 
+/*! \brief Convert a floating point coordinate into 16-bit unsigned fixed point format. */
 static inline u16 rsxGetFixedUint16(const f32 f)
 {
 	return (u16)(f*16.0f);
